@@ -25,6 +25,8 @@ here. Results on a title are reported by build hash (see [docs/title-runs.md](..
 
 ## Building and testing
 
-See `runtime/README.md` and the test scripts under `scripts/`. The engine's own test suites need their original
-toolchain (CMake, a C++20 compiler, the Vulkan SDK, Python 3.10+ with pytest for `tests/`); they are not yet part
-of this repository's CI.
+See [docs/engine-dev.md](../docs/engine-dev.md): toolchain, local commands, what CI runs (engine-translator and engine-runtime on every change under `engine/`), the known-gaps list, and what an engine pull request needs.
+
+## Names from upstream
+
+`gta6rt` (the runtime executable), `LEONIDA_*` environment variables and references to `docs/...` pages inside `engine/` come from upstream and are kept so the daily sync stays clean. The upstream docs pages were not imported; read them in the Leonida continuation.

@@ -11,6 +11,10 @@ other projects use them.
 
 **Never:** game data, keys, decryption, links to leaks, code from incompatible licences (see CONTRIBUTING.md).
 
+## Priority
+
+First a stable, playable build, as fast as possible: tasks labelled `priority:playable` (docs/engine-plan.md, "Priority"). Everything else supports it or follows it.
+
 ## The engine track (alongside every phase)
 
 The recompiler in `engine/`, imported from the Leonida continuation with its history and kept in step with it
@@ -18,7 +22,7 @@ by a daily sync (docs/engine-sync.md). Work on it follows the same rules as ever
 real titles is reported by build hash (docs/title-runs.md): loads, imports resolved, device created, first frame,
 menu, in world, playable. The phases below make it correct; the engine track makes it run. Its tasks, with the ready-made tools for each: [docs/engine-plan.md](docs/engine-plan.md).
 
-## Phase 0: Foundation (now)
+## Phase 0: Foundation (done)
 
 The machinery that lets people and agents join without anyone onboarding them.
 
@@ -69,4 +73,5 @@ available).
 
 All phases after 0 run at once; tasks only wait for their own dependencies. Labels: `area:shaders`,
 `area:results`, `area:system`, `area:graphics`, `area:audio`, `area:storage`, `area:input`, `area:platforms`,
-`area:infra`, `area:docs`, `area:i18n`.
+`area:infra`, `area:docs`, `area:i18n`; the engine track adds `area:cpu`, `area:hooking`, `area:recomp`,
+`area:difftest`, `area:diagnostics`, `area:memory`, `area:gpu` (docs/engine-plan.md).

@@ -2,6 +2,8 @@
 
 How far the engine gets on a real title, reported without naming or sharing anything from it.
 
+**State today:** no build is registered in `builds/` yet, so reports go in as `unregistered` until a maintainer registers the first build from two matching hashes. The build profile `tools/local_run.py --profile` needs, for the title the engine was developed against, is the Leonida continuation (github.com/ubiquitarianism/leonida): clone it and pass its folder.
+
 1. **Builds are hashes.** `builds/<id>.json` registers a build by the SHA-256 and size of its executable, under a
    neutral id. A maintainer adds a build after two people have confirmed the hash from their own copies.
 2. **Check your copy:** `python3 -I tools/check_build.py <your install dir> <list>` with a one-line list

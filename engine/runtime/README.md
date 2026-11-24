@@ -1,3 +1,7 @@
+> **Imported from the Leonida continuation.** Names such as `gta6rt` and `LEONIDA_*`, and links to `../docs/...`
+> pages, are upstream's: those pages were not imported (read them in ubiquitarianism/leonida). Building and
+> testing here: [docs/engine-dev.md](../../docs/engine-dev.md).
+
 # gta6rt
 
 `gta6rt` is the native Windows runtime for the Xbox Series build. It is deliberately small: the game

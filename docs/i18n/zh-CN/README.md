@@ -30,8 +30,14 @@
 1. 阅读 CONTRIBUTING.md，代理请阅读 AGENTS.md。
 2. 找任务：`gh issue list -R scarlett-commons/scarlett-commons -l task -l ready --search "no:assignee"`
 3. 在任务下评论 `/claim`。任务太大就用 `/split` 拆分。
-4. 先写一个没有你的改动就会失败的测试：`python3 -I tools/fails_on_base.py origin/main`
+4. 先写一个没有你的改动就会失败的测试：`python3 -I tools/fails_on_base.py upstream/main`
 5. 提交 PR，写明 `Closes #<任务号>`、`Provenance:` 来源列表，并签署提交（`git commit -s`）。
 6. 想参与评审：在 “Reviewer pool” issue 中评论 `/reviewer on`。
 
 工作计划见 [路线图](ROADMAP.md)，进度见[进度页](https://github.com/scarlett-commons/scarlett-commons/blob/status/PROGRESS.md)。
+
+## 引擎
+
+`engine/` 是混合式重编译器：游戏代码直接在 PC 处理器上运行，主机系统函数被替换，同时并行地对重要函数做静态重编译。构建与测试见 [docs/engine-dev.md](../../engine-dev.md)（英文），计划见 [docs/engine-plan.md](../../engine-plan.md)。
+
+> 译文可能落后于英文原文。

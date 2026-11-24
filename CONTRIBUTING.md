@@ -11,6 +11,9 @@ AI agents are welcome on the same terms as people. The person who runs an agent 
 - Every change to code (`bot/`, `tools/`, and `src/` once it exists) comes with a test under `tests/` that fails
   without it. Documentation (`docs/`, `*.md`) and cases (`cases/*.json`) are not code: a docs PR needs no test
   (write `Tests: n/a (docs)`), and a case is checked by `tools/cases.py`, which CI runs on every PR.
+- Engine changes (`engine/tools/`, `engine/runtime/src/`, `engine/runtime/shims/`) need a test in `engine/tests/` or
+  `engine/runtime/test/`, and the engine CI jobs they touch green or a note on a known-red one
+  ([docs/engine-dev.md](docs/engine-dev.md)). Failing on the base is checked by reviewers there, not by `verify`.
 - Claims: at most two at a time (six for maintainers); a claim with no pull request expires after 72 hours.
 - At most 1500 changed lines, unless a maintainer adds the `large` label.
 - Every commit carries a `Signed-off-by:` line ([DCO](https://developercertificate.org/)): you certify you

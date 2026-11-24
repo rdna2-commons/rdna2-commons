@@ -3,7 +3,8 @@
 **English** · [Русский](docs/i18n/ru/AGENTS.md)
 
 You can work here without asking anyone. Read this file, then CONTRIBUTING.md and docs/getting-started.md;
-writing a test case, also docs/test-format.md; reporting hardware results, docs/results.md. Everything below is
+writing a test case, also docs/test-format.md; reporting hardware results, docs/results.md; working on the
+engine, docs/engine-dev.md and docs/engine-plan.md. Everything below is
 enforced by the bot; work that ignores it is closed with the reasons listed, and you can fix and reopen.
 
 ## The one rule that matters most

@@ -28,6 +28,9 @@ BLOCKED_MAGIC = [
 
 IMAGE_DIR = "docs/images/"
 CODE_DIRS = ("src/", "bot/", "tools/")
+ENGINE_CODE_DIRS = ("engine/tools/", "engine/runtime/src/", "engine/runtime/shims/")
+ENGINE_CODE_EXT = (".py", ".cpp", ".h", ".hpp", ".c", ".rs", ".comp", ".hlsl", ".asm")
+ENGINE_TEST_DIRS = ("engine/tests/", "engine/runtime/test/")
 IMAGE_EXTENSIONS = {".png", ".svg", ".jpg", ".jpeg", ".gif", ".webp"}
 MAX_IMAGE_BYTES = 512 * 1024
 MAX_TEXT_FILE_BYTES = 2 * 1024 * 1024
@@ -169,6 +172,9 @@ def gate(pr, files, task, other_open_prs, commits, sync=False):
     changed = {p for p, _ in files}
     if any(p.startswith(CODE_DIRS) for p in changed) and not any(p.startswith("tests/") for p in changed):
         soft.append("changes to code (" + ", ".join(CODE_DIRS) + ") need a test under tests/")
+    engine_code = [p for p in changed if p.startswith(ENGINE_CODE_DIRS) and p.endswith(ENGINE_CODE_EXT)]
+    if not sync and engine_code and not any(p.startswith(ENGINE_TEST_DIRS) for p in changed):
+        soft.append("changes to engine code need a test in engine/tests/ or engine/runtime/test/ (docs/engine-dev.md)")
     if not sync and pr["additions"] + pr["deletions"] > MAX_CHANGED_LINES and "large" not in pr["labels"]:
         soft.append(f"more than {MAX_CHANGED_LINES} changed lines: split it, or ask a maintainer for `large`")
     return hard, soft

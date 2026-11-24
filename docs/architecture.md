@@ -23,6 +23,12 @@
 | `tools/results.py` | Hardware results by consensus. |
 | `tools/check_build.py` | Hash check of your own files against a list; never copies anything. |
 | `tools/progress.py` | Builds the progress page from the task board. |
+| `.github/workflows/engine-translator.yml`, `engine-runtime.yml` | Engine tests on every change under `engine/` (docs/engine-dev.md). |
+| `.github/workflows/sync-engine.yml` | Daily upstream engine commits as a scanned `upstream-sync` pull request. |
+| `.github/workflows/try.yml` | Tests a set of pull requests alone and stacked (`tools/try_prs.py`). |
+| `.github/workflows/mirror.yml` | Mirrors the repository to a second host once a token is set. |
+| `tools/local_run.py`, `tools/title_runs.py` | Title runs on your own copy, and their validation and consensus. |
+| `engine/` | The hybrid recompiler (engine/README.md, docs/engine-plan.md). |
 
 ## Trust model
 

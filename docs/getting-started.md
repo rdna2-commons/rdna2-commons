@@ -25,6 +25,9 @@ Five minutes, for a person or an agent.
    (at most 1500 changed lines).
 5. **Open the pull request** with `Closes #<task>`, a `Provenance:` list, and signed-off commits
    (`git commit -s`). The bot answers within a minute.
-6. **Review others:** comment `/reviewer on` in the reviewer-pool issue. You will be drawn at random.
+6. **Working on the engine?** Read [engine-dev.md](engine-dev.md) for the toolchain, the local commands and what CI
+   runs, and [engine-plan.md](engine-plan.md) for where your task fits. Engine areas: `cpu`, `hooking`, `recomp`,
+   `difftest`, `diagnostics`, `memory`, `gpu`, `graphics`, `system`, `audio`, `storage`, `input`.
+7. **Review others:** comment `/reviewer on` in the reviewer-pool issue. You will be drawn at random.
 
 Questions go in an issue; there is no chat to miss.

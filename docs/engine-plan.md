@@ -1,29 +1,40 @@
 # Engine plan: the hybrid recompiler
 
-**English** · how the recompiler in `engine/` gets from "loads" to "plays", broken into one-pull-request tasks.
+How the recompiler in `engine/` gets from "loads" to "plays", broken into one-pull-request tasks.
+How to build and test it: [engine-dev.md](engine-dev.md).
 
-## The approach
+## Priority
 
-1. **Run the title's own x86-64 code natively.** The console CPU (Zen 2) is the same family as a PC's, so code
-   runs as is once the loader maps it and the console's system libraries are replaced. A few instructions Zen 2
-   has and many PCs lack are emulated on the spot.
-2. **Replace the console underneath it:** system services (kernel, runtime classes, storage, audio, input) and the
-   GPU (shaders translated to SPIR-V or DXIL, the console D3D12 on Vulkan or D3D12).
-3. **Recompile function by function.** Hook a function, lift it to C or LLVM with the native calling convention,
-   build it into a replacement DLL, and swap it in only after a differential test shows it does exactly what the
-   original does on recorded inputs. Over time more and more of the title runs as our own source.
+**Priority now: a stable, playable build as fast as possible.** Tasks on that path carry the label [`priority:playable`](https://github.com/scarlett-commons/scarlett-commons/issues?q=is%3Aissue+is%3Aopen+label%3Apriority%3Aplayable): comparing with and porting from VIctory where it is ahead (#137), function swap for patching crash sites (#55, #56, #58), shaders translated on first use (#75), texture tiling (#81), title memory uploads (#86), DirectStorage and BCPack (#110, #111), audio (#115-#117), input (#121, #122), the open GPU bug (#130), and the title-run loop (#124 done, #125). Take these first.
+
+## Two tracks at once
+
+**Track A, playable fast.** Run the title's own x86-64 code natively and replace the console underneath it. The
+console CPU (Zen 2) is the same family as a PC's, so code runs as is once the loader maps it and the console's
+system libraries are replaced (a few instructions Zen 2 has and many PCs lack are emulated on the spot). This is
+how every project that reaches menus or the world got there, without recompiling anything. Where another project
+is ahead and its licence allows (VIctory is GPL-3.0), we take its approach or its code, under our tests. Title-run
+reports (docs/title-runs.md) decide what to fix next.
+
+**Track B, recompile what matters, in parallel.** Static recompilation in layers, each useful on its own:
+
+| Layer | What it gives | Tasks |
+|---|---|---|
+| 1. Native execution | The title runs on the engine | the system, GPU and storage tasks below |
+| 2. Function swap | Replace any function with our own: patch crash sites by hand right away | #55 Zydis → #56 prologue hooks → #58 swap registry |
+| 3. Semi-automatic translation | Decompile a chosen function to C, fix it up, verify, swap it in | #134, with #68 input recording and #69 the differential runner |
+| 4. Automatic lifting | Lift functions in bulk behind one generic register-state wrapper, verify each, swap | #64 lifter choice → #65 wrapper → #67 replacement DLL |
+
+What to recompile first (#135): crash and stop sites from title-run reports, the hottest functions from the
+sampling profiler (#136), and the functions mods need. Track B never blocks track A.
 
 Every task below names the ready-made open-source solution found for it (licences checked: code only from
 GPL-3.0-compatible licences, everything else as reference or as a separate program) or says that none exists.
 Where none existed the work was split further. The research is summarised in [landscape.md](landscape.md).
 
-**Critical path for recompilation:** Zydis → prologue hooks → swap registry → lifter choice → Win64-ABI lifting →
-replacement DLL → input capture → differential runner.
-
-**Gaps no project fills yet:** lifting that keeps the native calling convention; differential testing of x86-64
-code against itself; wave64 LDS and cross-lane code on 32-wide GPUs; synthesising render-target metadata;
-GPU-to-CPU coherency for title memory; merged NGG stages; detiling on the GPU; the audio DSP; swizzled
-DirectStorage destinations.
+**Gaps no project fills yet:** differential testing of x86-64 code against itself; wave64 LDS and cross-lane code
+on 32-wide GPUs; synthesising render-target metadata; GPU-to-CPU coherency for title memory; merged NGG stages;
+detiling on the GPU; the audio DSP; swizzled DirectStorage destinations.
 
 ## Testing and the loop with real titles
 
@@ -55,17 +66,20 @@ hand-written GPU tests on a software Vulkan driver.
 | #61 | Name statically linked CRT and STL functions | `recomp` | #59 |
 | #62 | Fiber and thread audit | `cpu` | — |
 | #63 | Map the console's game cores onto host topology | `cpu` | #62 |
-| #64 | Lifter choice: remill vs RetDec vs Ghidra | `recomp` | #59 |
-| #65 | Lifting pipeline keeping the native Win64 ABI | `recomp` | #64 |
+| #64 | Lifter choice: remill vs RetDec vs Ghidra on 20 functions | `recomp` | #59 |
+| #65 | Layer 4: generic register-state wrapper for lifted functions | `recomp` | #64 |
 | #66 | Calls out of lifted code | `recomp` | #58, #65 |
 | #67 | Build lifted functions into a replacement DLL | `recomp` | #58, #65 |
-| #68 | Capture inputs of a hooked function | `difftest` | #58 |
-| #69 | Native differential runner: original vs lifted | `difftest` | #67, #68 |
+| #68 | Record inputs of a hooked function (registers, pages read and written) | `difftest` | #58 |
+| #69 | Differential runner: original vs replacement on recorded inputs | `difftest` | #58, #68 |
 | #70 | Isolated replay of the original under Unicorn | `difftest` | #69 |
 | #71 | Shadow mode during real runs | `difftest` | #69 |
 | #72 | Per-function port progress census | `recomp` | #51, #69 |
 | #73 | Import trace with arguments | `system` | — |
 | #126 | Patch hot #UD sites into stubs | `cpu` | #55 |
+| #134 | Layer 3: decompile one function to C, fix it up, verify it, swap it in | `recomp` | #59, #69 |
+| #135 | Which functions to recompile first: crash sites, hot functions, mod points | `recomp` | #51 |
+| #136 | Sampling profiler in the runtime (hot functions by module+offset) | `diagnostics` | — |
 
 ## GPU and graphics
 

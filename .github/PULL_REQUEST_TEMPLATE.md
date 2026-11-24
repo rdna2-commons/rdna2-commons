@@ -2,7 +2,7 @@ Closes #
 
 <!-- What changes and why, in a few lines. Reviewers judge the diff against the task, not this text. -->
 
-Tests: <!-- which test fails without this change; or n/a (docs) / tools/cases.py (cases) -->
+Tests: <!-- which test fails without this change; or n/a (docs) / tools/cases.py (cases) / the engine test you added (engine) -->
 
 Provenance:
 - original

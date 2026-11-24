@@ -68,7 +68,7 @@ generated from the task board, and every claim of "works" names the case and the
 
 ## What this means for the plan
 
-- **Phase 1** does not start from zero: Leonida's hand-written semantic tests and AnyXboxX's reference
+- **Phase 1** does not start from zero: Leonida's hand-written semantic tests (now in `engine/tests`) and AnyXboxX's reference
   interpreter are both GPL-3.0 and can be brought in, credited, as the first shared cases and the first oracle.
 - **Phase 2** adapters can cover every translator above, including GPL-2.0 and unlicensed ones, because the
   adapter only runs their program.

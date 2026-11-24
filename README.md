@@ -40,7 +40,7 @@ Consoles and PCs are built from similar parts, but software made for one does no
 console's graphics programs (shaders) and system functions work differently. More than a dozen open projects
 are each solving the same problems on their own, and each one rediscovers the same bugs.
 
-We build **an open static recompiler for Xbox Series X|S** ([engine/](engine/README.md)): it translates the
+We build **an open hybrid recompiler for Xbox Series X|S** (native execution now, static recompilation function by function in parallel) ([engine/](engine/README.md)): it translates the
 console's graphics programs to the PC's (RDNA2 → SPIR-V), loads the title's own code, and stands in for the
 console's system functions (D3D12 → Vulkan and the rest). It starts from the Leonida project's engine, with its
 full history and authors, and follows it automatically.
@@ -54,7 +54,9 @@ The recompiler, broken into tasks with the ready-made tools for each: [docs/engi
 
 ## Status
 
-**Phase 0 of 4: foundation.** The rules, the bot and the documentation are in place; the first test cases are in.
+**Priority now: a stable, playable build as fast as possible.** Tasks on that path carry the label [`priority:playable`](https://github.com/scarlett-commons/scarlett-commons/issues?q=is%3Aissue+is%3Aopen+label%3Apriority%3Aplayable): comparing with and porting from VIctory where it is ahead (#137), function swap for patching crash sites (#55, #56, #58), shaders translated on first use (#75), texture tiling (#81), title memory uploads (#86), DirectStorage and BCPack (#110, #111), audio (#115-#117), input (#121, #122), the open GPU bug (#130), and the title-run loop (#124 done, #125). Take these first.
+
+**Phase 0 (foundation) is done; the engine track is active.** The rules, the bot, the docs, engine CI, the crash report and the one-command local run are in; the first test cases are in.
 Live numbers, every task and who is on it: **[progress page](https://github.com/scarlett-commons/scarlett-commons/blob/status/PROGRESS.md)**
 (regenerated every 6 hours).
 
@@ -64,7 +66,7 @@ Live numbers, every task and who is on it: **[progress page](https://github.com/
 
 | Area | State | What exists | Next |
 |---|---|---|---|
-| **Recompiler engine** | 🔨 imported | RDNA2 → SPIR-V translator, PE loader, console API shims, D3D12 → Vulkan, their tests, 10,560 commits of history; developed against GTA VI (build 1.0.2.1), whose build profile lives in Leonida | Engine CI here; daily upstream sync once its token is set |
+| **Recompiler engine** | 🔨 imported | RDNA2 → SPIR-V translator, PE loader, console API shims, D3D12 → Vulkan, their tests, over 10,000 commits of history; developed against GTA VI (build 1.0.2.1), whose build profile lives in Leonida | Engine CI runs on every change ([engine-dev.md](docs/engine-dev.md)); crash report and local run are in; next: function swap (hooks) and reaching the first frame |
 | **Title runs** | ⏳ waiting | [Reports by build hash](docs/title-runs.md), confirmed when two people agree | First registered build and reports |
 | **Rules and bot** | ✅ working | Rule gate, claims, blind drawn reviewers, tests-must-fail-on-base, fix tasks, `/split`, automerge, protected governance files | Mirror token; first outside reviewers |
 | **Shader cases** | 🔨 started | [Format](docs/test-format.md), validator, 3 cases (f32 add; binary64 FMA as literals and run-time inputs) | f32 rounding and denormals, f16/packed, LDS, wave64 cross-lane, images, buffers |
@@ -72,7 +74,7 @@ Live numbers, every task and who is on it: **[progress page](https://github.com/
 | **Reference interpreter** | ⏳ waiting | A GPL-3.0 candidate exists ([landscape](docs/landscape.md)) | Evaluate and import |
 | **System API specs** | 🟦 ready | Tasks for memory, threads, graphics differences, audio, storage, input | Write them from public sources |
 | **Adapters and compatibility table** | ⏳ waiting | Batch PR tester for any repository (`tools/try_prs.py`) | SPIR-V runner, then adapters for five translators |
-| **Translations** | 🔨 started | README, plan, getting started and roadmap in ru, zh-CN, es | More languages welcome |
+| **Translations** | 🔨 started | README, plan, getting started and roadmap in ru, zh-CN, es; AGENTS and CONTRIBUTING in ru | Engine pages; more languages welcome |
 
 Legend: ✅ working · 🔨 in progress · 🟦 ready to take · ⏳ waiting on other tasks
 
@@ -125,13 +127,16 @@ Details: [docs/architecture.md](docs/architecture.md).
 | [`tools/results.py`](tools/results.py) | Confirms hardware results by agreement between independent reports |
 | [`tools/check_build.py`](tools/check_build.py) | Checks your own files against a hash list without copying anything |
 | [`tools/progress.py`](tools/progress.py) | Builds the progress page, chart and badges |
+| [`tools/local_run.py`](tools/local_run.py) | Builds your own copy with the engine, runs it, writes a scrubbed title-run report |
+| [`tools/title_runs.py`](tools/title_runs.py) | Validates title-run reports and confirms stages by agreement |
+| [`tools/scan_history.py`](tools/scan_history.py) | Runs the game-data guard over every file version in a range of history |
 
 ## FAQ
 
 <details><summary><b>Can I play anything with this?</b></summary>
 
 Not yet, and never from this repository alone: it contains no game. The recompiler turns your own copy into a
-PC build; how far that gets today is on the progress page under "Title runs", and nothing is playable yet.
+PC build; how far that gets today is on the progress page under "Title runs" (no confirmed reports yet).
 </details>
 
 <details><summary><b>Is this legal?</b></summary>

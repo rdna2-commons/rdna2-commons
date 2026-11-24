@@ -94,6 +94,15 @@ class Gate(unittest.TestCase):
         body = "Closes #7\nProvenance:\n- original\n- https://x/y (GPL-2.0-only): a\nfooter"
         self.assertTrue(any("GPL-2.0-only" in h for h in self.run_gate(pr(body=body))[0]))
 
+    def test_engine_code_needs_an_engine_test(self):
+        _, soft = self.run_gate(files=[("engine/runtime/shims/x.cpp", b"int x;\n")])
+        self.assertTrue(any("engine code" in m for m in soft))
+        for test in ("engine/runtime/test/x_test.cpp", "engine/tests/test_x.py"):
+            _, soft = self.run_gate(files=[("engine/runtime/shims/x.cpp", b"int x;\n"), (test, b"t\n")])
+            self.assertFalse(any("engine code" in m for m in soft))
+        _, soft = self.run_gate(files=[("engine/runtime/README.md", b"doc\n")])
+        self.assertFalse(any("engine code" in m for m in soft))
+
     def test_soft_rules(self):
         _, soft = self.run_gate(files=[("src/a.rs", b"x")], commits=["no sign-off"], p=pr(size=2000))
         self.assertEqual(len(soft), 3)

@@ -35,8 +35,14 @@ solo supervisan.
 1. Lee CONTRIBUTING.md, y AGENTS.md si eres un agente.
 2. Busca una tarea: `gh issue list -R scarlett-commons/scarlett-commons -l task -l ready --search "no:assignee"`
 3. Comenta `/claim` en ella. ¿Demasiado grande? Usa `/split`.
-4. Primero una prueba que falle sin tu cambio: `python3 -I tools/fails_on_base.py origin/main`
+4. Primero una prueba que falle sin tu cambio: `python3 -I tools/fails_on_base.py upstream/main`
 5. Abre el PR con `Closes #<tarea>`, una lista `Provenance:` y commits firmados (`git commit -s`).
 6. Para revisar el trabajo de otros: `/reviewer on` en el issue «Reviewer pool».
 
 El plan está en la [hoja de ruta](ROADMAP.md) y el progreso en la [página de progreso](https://github.com/scarlett-commons/scarlett-commons/blob/status/PROGRESS.md).
+
+## El motor
+
+`engine/` es un recompilador híbrido: el código del título se ejecuta directamente en la CPU del PC con las funciones de la consola reemplazadas, y en paralelo se recompilan estáticamente las funciones importantes. Compilar y probar: [docs/engine-dev.md](../../engine-dev.md) (en inglés); plan: [docs/engine-plan.md](../../engine-plan.md).
+
+> Las traducciones pueden ir por detrás del original en inglés.

@@ -33,8 +33,14 @@
 1. Прочитайте CONTRIBUTING.md и AGENTS.md (для агентов).
 2. Найдите задачу: `gh issue list -R scarlett-commons/scarlett-commons -l task -l ready --search "no:assignee"`
 3. Напишите в задаче `/claim`. Слишком большая — `/split`.
-4. Сначала тест, который падает без вашего изменения: `python3 -I tools/fails_on_base.py origin/main`.
+4. Сначала тест, который падает без вашего изменения: `python3 -I tools/fails_on_base.py upstream/main`.
 5. PR с `Closes #<задача>`, списком `Provenance:` и подписанными коммитами (`git commit -s`).
 6. Хотите проверять чужое — `/reviewer on` в issue «Reviewer pool».
 
 План работ — [ROADMAP](ROADMAP.md), прогресс — [страница прогресса](https://github.com/scarlett-commons/scarlett-commons/blob/status/PROGRESS.md).
+
+## Движок
+
+В `engine/` — гибридный рекомпилятор: код игры выполняется напрямую на процессоре ПК, консольные функции заменены, а важные функции параллельно перекомпилируются статически. Как собирать и тестировать — [docs/engine-dev.md](../../engine-dev.md) (англ.), план — [docs/engine-plan.md](../../engine-plan.md).
+
+> Переводы могут отставать от английского оригинала.
