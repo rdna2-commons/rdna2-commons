@@ -1,6 +1,7 @@
 #include "xbox_present.h"
 
 #include "d3d12_trace.h"
+#include "progress_events.h"
 
 #include "../src/vulkan_present.h"
 
@@ -123,6 +124,7 @@ HRESULT XboxPresentation::PresentX(UINT plane_count, const XboxPresentPlaneParam
                                    const XboxPresentParameters* params) {
     // One trace line per present, whatever path the call takes out of present_x: the queue proxy's PresentX slot is
     // past the PC chain, so nothing else records it, and a frame loop's presents could not be counted from a trace.
+    progress_events::frame_presented();  // first_frame and fps milestones for title-run reports
     return d3d12_trace::result("XboxPresentation::PresentX", present_x(plane_count, planes, params));
 }
 

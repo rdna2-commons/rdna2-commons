@@ -25,6 +25,7 @@
 // behind the device before a presenter exists, so WaitFrameEventX returns at once with a fresh non-zero token.
 #include "d3d12_xs_device.h"
 #include "d3d12_trace.h"
+#include "progress_events.h"
 #include "../src/shader_library.h"  // leonida::fspx_payload_from_parts for slot 67
 
 #include <windows.h>
@@ -2191,6 +2192,7 @@ HRESULT create_device_proxy(ID3D12Device* real, REFIID riid, void** out) {
         std::fprintf(stderr, "[rt] d3d12_xs: device proxy %p wraps PC device %p (%u PC vtable slots)\n",
                      static_cast<void*>(proxy), static_cast<void*>(real), slot_count);
     proxy_release(proxy);  // drop the creation reference; `out` holds the caller's reference
+    progress_events::device_created();
     return S_OK;
 }
 
