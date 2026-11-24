@@ -88,6 +88,12 @@ class Gate(unittest.TestCase):
         body = "Closes #7\nProvenance:\n- https://github.com/x/y (MIT): a.rs\n- original\n"
         self.assertEqual(self.run_gate(pr(body=body))[0], [])
 
+    def test_provenance_footer_is_not_an_item(self):
+        body = "Closes #7\n\nProvenance:\n- original\n\nGenerated with some tool\n"
+        self.assertEqual(self.run_gate(pr(body=body))[0], [])
+        body = "Closes #7\nProvenance:\n- original\n- https://x/y (GPL-2.0-only): a\nfooter"
+        self.assertTrue(any("GPL-2.0-only" in h for h in self.run_gate(pr(body=body))[0]))
+
     def test_soft_rules(self):
         _, soft = self.run_gate(files=[("src/a.rs", b"x")], commits=["no sign-off"], p=pr(size=2000))
         self.assertEqual(len(soft), 3)

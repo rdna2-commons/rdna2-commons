@@ -96,7 +96,8 @@ def check_file(path, data):
 
 
 TASK_RE = re.compile(r"(?im)^\s*(?:closes|fixes|resolves)\s+#(\d+)\b")
-PROVENANCE_RE = re.compile(r"(?ims)^\s*provenance:\s*\n((?:\s*-\s*.+\n?)+)")
+# One `- item` per line, no DOTALL: text after the list (a footer) must not be read as an item.
+PROVENANCE_RE = re.compile(r"(?im)^[ \t]*provenance:[ \t]*\n((?:[ \t]*-[ \t]*.+(?:\n|$))+)")
 LICENSE_IN_LINE = re.compile(r"\(([A-Za-z0-9.+\-]+)\)")
 
 
