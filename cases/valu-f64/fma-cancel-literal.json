@@ -1,0 +1,29 @@
+{
+  "id": "valu-f64/fma-cancel-literal",
+  "summary": "v_div_fmas_f64 with VCC = 0 is a binary64 fma with one rounding: fma(a, a, c) = 2^-60 for a = 1 + 2^-30, c = -(1 + 2^-29), operands as literals",
+  "isa": "rdna2",
+  "wave": 32,
+  "group": [1, 1, 1],
+  "sgpr": {},
+  "source": [
+    "s_mov_b64 vcc, 0",
+    "v_mov_b32 v0, 0x00400000",
+    "v_mov_b32 v1, 0x3ff00000",
+    "v_mov_b32 v2, 0x00800000",
+    "v_mov_b32 v3, 0xbff00000",
+    "v_div_fmas_f64 v[4:5], v[0:1], v[0:1], v[2:3]",
+    "v_mov_b32 v6, 0",
+    "buffer_store_dwordx2 v[4:5], v6, s[0:3], 0 offen",
+    "s_endpgm"
+  ],
+  "expect": ["0x00000000", "0x3c300000"],
+  "known": [
+    {
+      "hw_class": "nvidia-turing, nvidia-ampere, nvidia-ada",
+      "when": "translated to GLSL.std.450 Fma on doubles",
+      "words": ["0x00000000", "0x00000000"],
+      "note": "The driver folds the all-constant Fma at pipeline compile time and rounds the product first. Measured on RTX 4090 (621.24), RTX 3070 (621.01), Quadro RTX 4000 (615.71.09); RTX 5060 Laptop (Blackwell) fuses. OpFmaKHR (SPV_KHR_fma) is exact."
+    }
+  ],
+  "provenance": "original (the same probe is in ubiquitarianism/leonida runtime/test/shaders/cs_div_fmas_f64.asm, GPL-3.0, by the same author)"
+}

@@ -1,0 +1,22 @@
+{
+  "id": "valu-f64/fma-cancel-runtime",
+  "summary": "The fma-cancel-literal probe with its operands in user SGPRs, so a driver cannot fold it while compiling",
+  "isa": "rdna2",
+  "wave": 32,
+  "group": [1, 1, 1],
+  "sgpr": {"s4": "0x00400000", "s5": "0x3ff00000", "s6": "0x00800000", "s7": "0xbff00000"},
+  "source": [
+    "s_mov_b64 vcc, 0",
+    "v_mov_b32 v0, s4",
+    "v_mov_b32 v1, s5",
+    "v_mov_b32 v2, s6",
+    "v_mov_b32 v3, s7",
+    "v_div_fmas_f64 v[4:5], v[0:1], v[0:1], v[2:3]",
+    "v_mov_b32 v6, 0",
+    "buffer_store_dwordx2 v[4:5], v6, s[0:3], 0 offen",
+    "s_endpgm"
+  ],
+  "expect": ["0x00000000", "0x3c300000"],
+  "known": [],
+  "provenance": "original (the same probe is in ubiquitarianism/leonida runtime/test/shaders/cs_div_fmas_f64_rt.asm, GPL-3.0, by the same author)"
+}

@@ -1,0 +1,18 @@
+{
+  "id": "valu-f32/add-basic",
+  "summary": "v_add_f32 of 1.5 and 2.25 is exactly 3.75",
+  "isa": "rdna2",
+  "wave": 32,
+  "group": [1, 1, 1],
+  "sgpr": {},
+  "source": [
+    "v_mov_b32 v0, 0x3fc00000",
+    "v_add_f32 v1, 0x40100000, v0",
+    "v_mov_b32 v2, 0",
+    "buffer_store_dword v1, v2, s[0:3], 0 offen",
+    "s_endpgm"
+  ],
+  "expect": ["0x40700000"],
+  "known": [],
+  "provenance": "original"
+}
