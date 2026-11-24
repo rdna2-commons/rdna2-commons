@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="640" height="538" viewBox="0 0 640 538" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13">
-<rect width="640" height="538" fill="#ffffff"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="590" viewBox="0 0 640 590" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13">
+<rect width="640" height="590" fill="#ffffff"/>
 <text x="10" y="24" font-size="15" font-weight="600" fill="#1f2328">Tasks by area</text>
 <text x="10" y="55" fill="#1f2328">shaders</text>
 <rect x="110.0" y="43" width="94.0" height="16" fill="#2da44e"/>
@@ -18,9 +18,10 @@
 <rect x="326.9" y="121" width="253.1" height="16" fill="#d0d7de"/>
 <text x="588" y="133" fill="#57606a">0/13</text>
 <text x="10" y="159" fill="#1f2328">audio</text>
-<rect x="110.0" y="147" width="201.4" height="16" fill="#0969da"/>
-<rect x="311.4" y="147" width="268.6" height="16" fill="#d0d7de"/>
-<text x="588" y="159" fill="#57606a">0/7</text>
+<rect x="110.0" y="147" width="67.1" height="16" fill="#2da44e"/>
+<rect x="177.1" y="147" width="268.6" height="16" fill="#0969da"/>
+<rect x="445.7" y="147" width="134.3" height="16" fill="#d0d7de"/>
+<text x="588" y="159" fill="#57606a">1/7</text>
 <text x="10" y="185" fill="#1f2328">storage</text>
 <rect x="110.0" y="173" width="176.2" height="16" fill="#0969da"/>
 <rect x="286.2" y="173" width="293.8" height="16" fill="#d0d7de"/>
@@ -33,49 +34,62 @@
 <rect x="110.0" y="225" width="470.0" height="16" fill="#d0d7de"/>
 <text x="588" y="237" fill="#57606a">0/2</text>
 <text x="10" y="263" fill="#1f2328">infra</text>
-<rect x="110.0" y="251" width="264.4" height="16" fill="#2da44e"/>
-<rect x="374.4" y="251" width="29.4" height="16" fill="#bf8700"/>
-<rect x="403.8" y="251" width="58.8" height="16" fill="#0969da"/>
-<rect x="462.5" y="251" width="117.5" height="16" fill="#d0d7de"/>
-<text x="588" y="263" fill="#57606a">9/16</text>
+<rect x="110.0" y="251" width="235.0" height="16" fill="#2da44e"/>
+<rect x="345.0" y="251" width="52.2" height="16" fill="#bf8700"/>
+<rect x="397.2" y="251" width="78.3" height="16" fill="#0969da"/>
+<rect x="475.6" y="251" width="104.4" height="16" fill="#d0d7de"/>
+<text x="588" y="263" fill="#57606a">9/18</text>
 <text x="10" y="289" fill="#1f2328">docs</text>
-<rect x="110.0" y="277" width="470.0" height="16" fill="#2da44e"/>
-<text x="588" y="289" fill="#57606a">4/4</text>
-<text x="10" y="315" fill="#1f2328">cpu</text>
-<rect x="110.0" y="303" width="313.3" height="16" fill="#0969da"/>
-<rect x="423.3" y="303" width="156.7" height="16" fill="#d0d7de"/>
-<text x="588" y="315" fill="#57606a">0/6</text>
-<text x="10" y="341" fill="#1f2328">diagnostics</text>
-<rect x="110.0" y="329" width="117.5" height="16" fill="#2da44e"/>
-<rect x="227.5" y="329" width="352.5" height="16" fill="#0969da"/>
-<text x="588" y="341" fill="#57606a">1/4</text>
-<text x="10" y="367" fill="#1f2328">difftest</text>
-<rect x="110.0" y="355" width="470.0" height="16" fill="#d0d7de"/>
-<text x="588" y="367" fill="#57606a">0/4</text>
-<text x="10" y="393" fill="#1f2328">engine</text>
-<rect x="110.0" y="381" width="470.0" height="16" fill="#0969da"/>
-<text x="588" y="393" fill="#57606a">0/1</text>
-<text x="10" y="419" fill="#1f2328">gpu</text>
-<rect x="110.0" y="407" width="144.6" height="16" fill="#0969da"/>
-<rect x="254.6" y="407" width="325.4" height="16" fill="#d0d7de"/>
-<text x="588" y="419" fill="#57606a">0/13</text>
-<text x="10" y="445" fill="#1f2328">hooking</text>
-<rect x="110.0" y="433" width="117.5" height="16" fill="#0969da"/>
-<rect x="227.5" y="433" width="352.5" height="16" fill="#d0d7de"/>
-<text x="588" y="445" fill="#57606a">0/4</text>
-<text x="10" y="471" fill="#1f2328">memory</text>
-<rect x="110.0" y="459" width="313.3" height="16" fill="#0969da"/>
-<rect x="423.3" y="459" width="156.7" height="16" fill="#d0d7de"/>
-<text x="588" y="471" fill="#57606a">0/3</text>
-<text x="10" y="497" fill="#1f2328">recomp</text>
-<rect x="110.0" y="485" width="470.0" height="16" fill="#d0d7de"/>
-<text x="588" y="497" fill="#57606a">0/10</text>
-<rect x="10" y="512" width="12" height="12" fill="#2da44e"/>
-<text x="27" y="522" fill="#57606a">done</text>
-<rect x="72" y="512" width="12" height="12" fill="#bf8700"/>
-<text x="89" y="522" fill="#57606a">in progress</text>
-<rect x="190" y="512" width="12" height="12" fill="#0969da"/>
-<text x="207" y="522" fill="#57606a">ready to take</text>
-<rect x="324" y="512" width="12" height="12" fill="#d0d7de"/>
-<text x="341" y="522" fill="#57606a">waiting on other tasks</text>
+<rect x="110.0" y="277" width="391.7" height="16" fill="#2da44e"/>
+<rect x="501.7" y="277" width="78.3" height="16" fill="#0969da"/>
+<text x="588" y="289" fill="#57606a">5/6</text>
+<text x="10" y="315" fill="#1f2328">i18n</text>
+<rect x="110.0" y="303" width="470.0" height="16" fill="#bf8700"/>
+<text x="588" y="315" fill="#57606a">0/1</text>
+<text x="10" y="341" fill="#1f2328">cpu</text>
+<rect x="110.0" y="329" width="313.3" height="16" fill="#0969da"/>
+<rect x="423.3" y="329" width="156.7" height="16" fill="#d0d7de"/>
+<text x="588" y="341" fill="#57606a">0/6</text>
+<text x="10" y="367" fill="#1f2328">diagnostics</text>
+<rect x="110.0" y="355" width="117.5" height="16" fill="#2da44e"/>
+<rect x="227.5" y="355" width="352.5" height="16" fill="#0969da"/>
+<text x="588" y="367" fill="#57606a">1/4</text>
+<text x="10" y="393" fill="#1f2328">difftest</text>
+<rect x="110.0" y="381" width="470.0" height="16" fill="#d0d7de"/>
+<text x="588" y="393" fill="#57606a">0/5</text>
+<text x="10" y="419" fill="#1f2328">engine</text>
+<rect x="110.0" y="407" width="470.0" height="16" fill="#0969da"/>
+<text x="588" y="419" fill="#57606a">0/1</text>
+<text x="10" y="445" fill="#1f2328">gpu</text>
+<rect x="110.0" y="433" width="36.2" height="16" fill="#bf8700"/>
+<rect x="146.2" y="433" width="72.3" height="16" fill="#0969da"/>
+<rect x="218.5" y="433" width="361.5" height="16" fill="#d0d7de"/>
+<text x="588" y="445" fill="#57606a">0/13</text>
+<text x="10" y="471" fill="#1f2328">hooking</text>
+<rect x="110.0" y="459" width="117.5" height="16" fill="#0969da"/>
+<rect x="227.5" y="459" width="352.5" height="16" fill="#d0d7de"/>
+<text x="588" y="471" fill="#57606a">0/4</text>
+<text x="10" y="497" fill="#1f2328">memory</text>
+<rect x="110.0" y="485" width="313.3" height="16" fill="#0969da"/>
+<rect x="423.3" y="485" width="156.7" height="16" fill="#d0d7de"/>
+<text x="588" y="497" fill="#57606a">0/3</text>
+<text x="10" y="523" fill="#1f2328">recomp</text>
+<rect x="110.0" y="511" width="81.7" height="16" fill="#2da44e"/>
+<rect x="191.7" y="511" width="20.4" height="16" fill="#bf8700"/>
+<rect x="212.2" y="511" width="122.6" height="16" fill="#0969da"/>
+<rect x="334.8" y="511" width="245.2" height="16" fill="#d0d7de"/>
+<text x="588" y="523" fill="#57606a">4/23</text>
+<text x="10" y="549" fill="#1f2328">unsorted</text>
+<rect x="110.0" y="537" width="94.0" height="16" fill="#2da44e"/>
+<rect x="204.0" y="537" width="188.0" height="16" fill="#bf8700"/>
+<rect x="392.0" y="537" width="188.0" height="16" fill="#d0d7de"/>
+<text x="588" y="549" fill="#57606a">1/5</text>
+<rect x="10" y="564" width="12" height="12" fill="#2da44e"/>
+<text x="27" y="574" fill="#57606a">done</text>
+<rect x="72" y="564" width="12" height="12" fill="#bf8700"/>
+<text x="89" y="574" fill="#57606a">in progress</text>
+<rect x="190" y="564" width="12" height="12" fill="#0969da"/>
+<text x="207" y="574" fill="#57606a">ready to take</text>
+<rect x="324" y="564" width="12" height="12" fill="#d0d7de"/>
+<text x="341" y="574" fill="#57606a">waiting on other tasks</text>
 </svg>
