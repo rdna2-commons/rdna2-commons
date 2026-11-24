@@ -1,6 +1,6 @@
 # The plan, without jargon
 
-[Русский](i18n/ru/plan-explained.md)
+**English** · [Русский](i18n/ru/plan-explained.md) · [简体中文](i18n/zh-CN/plan-explained.md) · [Español](i18n/es/plan-explained.md)
 
 **The problem.** A console game is a program written for the console's processor, graphics chip and system.
 The processor in an Xbox Series is the same kind a PC has, so most of the program could run on a PC as is.

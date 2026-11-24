@@ -32,12 +32,39 @@ There are two ways, and the licence matters only for the first:
 | R0Y00/Xbox2Windows | MIT | Python, C++ | Static recompilation research; gfx1013 → DXIL | Code (compatible). Adapter |
 | LooperSalty/AnyXboxX | GPL-3.0 | Python, C++, Rust | Unicorn-based and native loaders; **RDNA2 disassembler and reference interpreter** | Code (compatible): candidate for the reference interpreter (#19) |
 
-## Texture compression
+## Format and reverse-engineering tools
 
-| Project | Licence | Useful to us |
-|---|---|---|
-| Tim0219800/bcpack-decoder | MIT | Clean-room console texture decompression; ships no fitted tables |
-| Ahmet-Dedeler/bcpack-rs | not stated to GitHub | Check its licence file before use |
+Most of these read one title's archives, which is not our business. What is useful to us is the part that is
+**generic to the console**: its texture compression (BCPack), its GPU tiling and swizzle modes (GFX10), its
+audio codecs (XMA2, Opus in its containers) and video (Bink 2). We take only those decoders, only from compatible
+licences, and test them on data we generate ourselves.
+
+| Project | Licence | Generic console part | Use |
+|---|---|---|---|
+| paryzius/ttpf-viewer | MIT | Exact GFX10 tile and mip layouts, cube maps | Code: GFX10 detiling for `area:graphics` cases |
+| Tim0219800/bcpack-decoder | MIT | Clean-room BCPack decoder, no fitted tables; spec in English and French | Code and spec |
+| holdmysocks/SixNG | GPL-3.0 | BCPack decoding for all six BC formats (fitted tables) | Code (compatible), with its caveats |
+| ifBars/rage-texture | GPL-3.0 | Texture library on top of the BCPack entropy layer | Code (compatible) |
+| Ahmet-Dedeler/bcpack-rs | not stated to GitHub (README: MIT OR Apache-2.0) | BCPack entropy layer, BC1 | Check its licence file first |
+| Librett0/vice-lens | MIT | Stream carving by zlib scan, Opus remux | Ideas; nothing title-specific |
+| jaylikesbunda/rpf9-audio | MIT | Opus packet extraction and Ogg remux | Code for audio-format tests |
+| woreksami/ttpf-studio | MIT | GPU unswizzling, BC1-BC7 | Code (compatible) |
+| shrewbrewsh/OpenRPF9 | MIT | Plain BC1-BC7 decoding | Reference |
+| zeozeozeo/rpf9 | Unlicense | Clean-room container library | Reference |
+| rpatty-dev/PercyStar, Ahmet-Dedeler/Percy6Stars | not stated to GitHub | Bink 2, Opus, viewers | Facts only until a licence is clear |
+| breadbbbb/rpf9-explorer, meetox80/6stars, offs/rpf9-extract | none | Viewers and extractors | Facts only |
+
+**How their work becomes ours.** Never by copying their test data (it comes from a title). Instead: take the
+decoder (compatible licence, credited), write a generator that produces our own inputs (random textures
+compressed by an encoder we write, synthetic audio), and pin the decoder's output as a case. Where an encoder
+does not exist, a `known` entry documents what was measured and by whom.
+
+## How the leading projects present themselves
+
+What we took from their READMEs for ours: a status table by subsystem with what is verified by what (xcl,
+VIctory), milestone tables and generated progress badges (xbox-emulator), "what runs and what was compared"
+(Xbox2Windows), a clear "no game data in git" notice up front (SixNG). What we do differently: our status is
+generated from the task board, and every claim of "works" names the case and the independent reports behind it.
 
 ## What this means for the plan
 

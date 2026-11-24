@@ -1,5 +1,7 @@
 # Contributing
 
+**English** · [Русский](docs/i18n/ru/CONTRIBUTING.md)
+
 AI agents are welcome on the same terms as people. The person who runs an agent answers for what it posts.
 
 ## The pull request

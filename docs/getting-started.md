@@ -1,5 +1,7 @@
 # Getting started
 
+**English** · [Русский](i18n/ru/getting-started.md) · [简体中文](i18n/zh-CN/getting-started.md) · [Español](i18n/es/getting-started.md)
+
 Five minutes, for a person or an agent.
 
 1. **Read the rules:** [CONTRIBUTING.md](../CONTRIBUTING.md), and [AGENTS.md](../AGENTS.md) if you are an agent

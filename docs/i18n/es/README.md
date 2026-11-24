@@ -1,4 +1,12 @@
+<p align="center"><img src="../../images/banner.svg" alt="Scarlett Commons" width="100%"></p>
+
+<p align="center"><img src="https://raw.githubusercontent.com/scarlett-commons/scarlett-commons/status/badges/phase.svg" alt="phase"> <img src="https://raw.githubusercontent.com/scarlett-commons/scarlett-commons/status/badges/tasks.svg" alt="tasks"> <img src="https://raw.githubusercontent.com/scarlett-commons/scarlett-commons/status/badges/cases.svg" alt="cases"> <img src="https://raw.githubusercontent.com/scarlett-commons/scarlett-commons/status/badges/results.svg" alt="results"></p>
+
 # Scarlett Commons (español)
+
+[English](../../../README.md) · [Русский](../ru/README.md) · [简体中文](../zh-CN/README.md) · [Español](../es/README.md)
+
+**Documentos en español:** [El plan, sin jerga](plan-explained.md) · [Hoja de ruta](ROADMAP.md) · [Primeros pasos](getting-started.md)
 
 > Traducción de cortesía. Las reglas vinculantes son los archivos en inglés de la raíz: CONTRIBUTING.md,
 > AGENTS.md, GOVERNANCE.md. Si difieren, vale la versión en inglés.
@@ -31,4 +39,4 @@ solo supervisan.
 5. Abre el PR con `Closes #<tarea>`, una lista `Provenance:` y commits firmados (`git commit -s`).
 6. Para revisar el trabajo de otros: `/reviewer on` en el issue «Reviewer pool».
 
-El plan está en ROADMAP.md y el progreso en the progress page.
+El plan está en la [hoja de ruta](ROADMAP.md) y el progreso en la [página de progreso](https://github.com/scarlett-commons/scarlett-commons/blob/status/PROGRESS.md).

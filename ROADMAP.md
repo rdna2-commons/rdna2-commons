@@ -1,5 +1,7 @@
 # Roadmap
 
+**English** · [Русский](docs/i18n/ru/ROADMAP.md) · [简体中文](docs/i18n/zh-CN/ROADMAP.md) · [Español](docs/i18n/es/ROADMAP.md)
+
 This is the plan everyone works from. Each item becomes task issues labelled with its area; the bot hands them
 out in dependency order. Progress is tracked automatically in [the progress page](https://github.com/scarlett-commons/scarlett-commons/blob/status/PROGRESS.md).
 

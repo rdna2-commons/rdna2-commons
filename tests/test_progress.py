@@ -45,6 +45,21 @@ class Progress(unittest.TestCase):
         self.assertIn(">shaders<", chart)
         self.assertIn(">1/2<", chart)
 
+    def test_task_lists_merges_and_badges(self):
+        issues = [dict(issue(1, "shaders", "closed", ["phase:1"]), title="Done one"),
+                  dict(issue(2, "docs", labels=["phase:0", "ready"]), title="Ready | two")]
+        pulls = [{"merged_at": "2026-11-24T09:00:00Z", "user": {"login": "a"}, "number": 7, "title": "A PR"}]
+        page = progress.render(issues, pulls, {}, "now", {"valu-f32": 2})
+        self.assertIn("## Phase 0: Foundation", page)
+        self.assertIn("| 🟦 | [#2](../../issues/2) Ready \| two | docs | — |", page)
+        self.assertIn("| 2026-11-24 | [#7](../../pull/7) A PR | @a |", page)
+        self.assertIn("| @a | 1 |", page)
+        self.assertIn("**2 cases**", page)
+        b = progress.badges(issues, pulls, {}, 2)
+        self.assertIn("1/2 done", b["tasks"])
+        self.assertIn("phase", b["phase"])
+        self.assertIn(">0 of 4<", b["phase"])
+
 
 if __name__ == "__main__":
     unittest.main()

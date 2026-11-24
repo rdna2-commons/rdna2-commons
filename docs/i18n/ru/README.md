@@ -1,4 +1,12 @@
+<p align="center"><img src="../../images/banner.svg" alt="Scarlett Commons" width="100%"></p>
+
+<p align="center"><img src="https://raw.githubusercontent.com/scarlett-commons/scarlett-commons/status/badges/phase.svg" alt="phase"> <img src="https://raw.githubusercontent.com/scarlett-commons/scarlett-commons/status/badges/tasks.svg" alt="tasks"> <img src="https://raw.githubusercontent.com/scarlett-commons/scarlett-commons/status/badges/cases.svg" alt="cases"> <img src="https://raw.githubusercontent.com/scarlett-commons/scarlett-commons/status/badges/results.svg" alt="results"></p>
+
 # Scarlett Commons (русский)
+
+[English](../../../README.md) · [Русский](../ru/README.md) · [简体中文](../zh-CN/README.md) · [Español](../es/README.md)
+
+**Документы на русском:** [План простыми словами](plan-explained.md) · [План работ](ROADMAP.md) · [Как начать](getting-started.md) · [Для ИИ-агентов](AGENTS.md) · [Как внести вклад](CONTRIBUTING.md)
 
 > Перевод для удобства. Обязательные правила — английские файлы в корне: CONTRIBUTING.md, AGENTS.md,
 > GOVERNANCE.md. Если перевод с ними расходится, верна английская версия.
@@ -29,4 +37,4 @@
 5. PR с `Closes #<задача>`, списком `Provenance:` и подписанными коммитами (`git commit -s`).
 6. Хотите проверять чужое — `/reviewer on` в issue «Reviewer pool».
 
-План работ — ROADMAP.md, прогресс — the progress page.
+План работ — [ROADMAP](ROADMAP.md), прогресс — [страница прогресса](https://github.com/scarlett-commons/scarlett-commons/blob/status/PROGRESS.md).

@@ -1,4 +1,12 @@
+<p align="center"><img src="../../images/banner.svg" alt="Scarlett Commons" width="100%"></p>
+
+<p align="center"><img src="https://raw.githubusercontent.com/scarlett-commons/scarlett-commons/status/badges/phase.svg" alt="phase"> <img src="https://raw.githubusercontent.com/scarlett-commons/scarlett-commons/status/badges/tasks.svg" alt="tasks"> <img src="https://raw.githubusercontent.com/scarlett-commons/scarlett-commons/status/badges/cases.svg" alt="cases"> <img src="https://raw.githubusercontent.com/scarlett-commons/scarlett-commons/status/badges/results.svg" alt="results"></p>
+
 # Scarlett Commons（简体中文）
+
+[English](../../../README.md) · [Русский](../ru/README.md) · [简体中文](../zh-CN/README.md) · [Español](../es/README.md)
+
+**中文文档：** [计划（大白话）](plan-explained.md) · [路线图](ROADMAP.md) · [快速开始](getting-started.md)
 
 > 本译文仅为方便阅读。具有约束力的规则以根目录的英文文件为准：CONTRIBUTING.md、AGENTS.md、GOVERNANCE.md。
 
@@ -26,4 +34,4 @@
 5. 提交 PR，写明 `Closes #<任务号>`、`Provenance:` 来源列表，并签署提交（`git commit -s`）。
 6. 想参与评审：在 “Reviewer pool” issue 中评论 `/reviewer on`。
 
-工作计划见 ROADMAP.md，进度见 the progress page。
+工作计划见 [路线图](ROADMAP.md)，进度见[进度页](https://github.com/scarlett-commons/scarlett-commons/blob/status/PROGRESS.md)。
