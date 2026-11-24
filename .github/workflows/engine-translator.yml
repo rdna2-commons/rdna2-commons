@@ -139,7 +139,6 @@ jobs:
           done
           while IFS= read -r g; do
             [[ -z "$g" || "$g" == \#* ]] && continue
-            printf '%s
-' "${failed[@]}" | grep -qxF "$g" || echo "::notice::listed gap now passes: $g"
+            printf '%s\n' "${failed[@]}" | grep -qxF "$g" || echo "::notice::listed gap now passes: $g"
           done < "$gaps"
           exit $new
