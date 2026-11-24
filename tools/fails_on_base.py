@@ -17,6 +17,8 @@ import subprocess
 import sys
 import tempfile
 
+CODE_DIRS = ("src/", "bot/", "tools/")  # keep in step with bot/rules.py
+
 
 def git(*args, cwd=None):
     return subprocess.run(["git", *args], cwd=cwd, check=True, capture_output=True, text=True).stdout
@@ -44,14 +46,14 @@ def main():
     base = sys.argv[1]
     head = sys.argv[2] if len(sys.argv) > 2 else "HEAD"
     files = changed(base, head)
-    src = [f for f in files if f.startswith("src/")]
+    src = [f for f in files if f.startswith(CODE_DIRS)]
     tests = [f for f in files if f.startswith("tests/") and f.endswith(".py")
              and os.path.basename(f).startswith("test_") and not os.path.basename(f).startswith("test_regression_")]
     if not src:
-        print("no src/ changes: nothing to prove")
+        print("no code changes: nothing to prove")
         return 0
     if not tests:
-        print("FAIL: src/ changed but no new or changed tests/test_*.py")
+        print("FAIL: code changed but no new or changed tests/test_*.py")
         return 1
     tmp = tempfile.mkdtemp()
     wt = os.path.join(tmp, "base")
