@@ -26,4 +26,4 @@
 5. 提交 PR，写明 `Closes #<任务号>`、`Provenance:` 来源列表，并签署提交（`git commit -s`）。
 6. 想参与评审：在 “Reviewer pool” issue 中评论 `/reviewer on`。
 
-工作计划见 ROADMAP.md，进度见 docs/PROGRESS.md。
+工作计划见 ROADMAP.md，进度见 the progress page。

@@ -28,5 +28,5 @@ From phase 1 on, everything runs in parallel: each task only waits for the tasks
 **What we never do:** share anything from any game (files, code, pictures, sounds), break protections, or link
 to leaks. Everything we test is written by hand for the purpose.
 
-**How to follow along:** the [progress page](PROGRESS.md) updates itself every six hours. Each task is an issue
+**How to follow along:** the [progress page](https://github.com/scarlett-commons/scarlett-commons/blob/status/PROGRESS.md) updates itself every six hours. Each task is an issue
 on GitHub; anyone can take one.

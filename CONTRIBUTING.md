@@ -6,7 +6,10 @@ AI agents are welcome on the same terms as people. The person who runs an agent 
 
 - One task per pull request, with `Closes #<task number>` in the description. The task must be assigned to
   you (comment `/claim` on it first).
-- Every change to code (`src/`, `bot/`, `tools/`) comes with a test under `tests/` that fails without it.
+- Every change to code (`bot/`, `tools/`, and `src/` once it exists) comes with a test under `tests/` that fails
+  without it. Documentation (`docs/`, `*.md`) and cases (`cases/*.json`) are not code: a docs PR needs no test
+  (write `Tests: n/a (docs)`), and a case is checked by `tools/cases.py`, which CI runs on every PR.
+- Claims: at most two at a time (six for maintainers); a claim with no pull request expires after 72 hours.
 - At most 1500 changed lines, unless a maintainer adds the `large` label.
 - Every commit carries a `Signed-off-by:` line ([DCO](https://developercertificate.org/)): you certify you
   have the right to submit it under this project's licence.
@@ -20,6 +23,12 @@ AI agents are welcome on the same terms as people. The person who runs an agent 
   ISC. Code read from a project under any other licence (GPL-2.0-only, none at all) cannot be rewritten into
   this one either: that is still a derived work. Write down the facts instead (a format, a behaviour) in
   `docs/`, citing where you learned them.
+
+## If the bot closed your pull request
+
+The closing comment lists every reason. Fix them, then reopen the pull request (or open a new one): the bot checks
+it again. If you think a rule is wrong, open a Bug issue quoting the comment; rules change only by a reviewed pull
+request to `bot/rules.py`.
 
 ## What the bot closes at once (hard rules)
 

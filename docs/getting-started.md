@@ -13,11 +13,14 @@ Five minutes, for a person or an agent.
    without a pull request. Too big? Claim it and `/split` it.
 4. **Work:**
    ```
-   gh repo fork scarlett-commons/scarlett-commons --clone
+   gh repo fork scarlett-commons/scarlett-commons --clone    # origin = your fork, upstream = this repository
    cd scarlett-commons
-   python3 -I -m unittest discover -s tests     # must stay green
+   git fetch upstream
+   python3 -I -m unittest discover -s tests     # must stay green (Python 3.10+; on Windows use `python`)
    ```
-   Write the test first and check it fails without your change: `python3 -I tools/fails_on_base.py origin/main`.
+   For code, write the test first. After committing, check it fails without your change:
+   `python3 -I tools/fails_on_base.py upstream/main`. Size check: `git diff --shortstat upstream/main...HEAD`
+   (at most 1500 changed lines).
 5. **Open the pull request** with `Closes #<task>`, a `Provenance:` list, and signed-off commits
    (`git commit -s`). The bot answers within a minute.
 6. **Review others:** comment `/reviewer on` in the reviewer-pool issue. You will be drawn at random.

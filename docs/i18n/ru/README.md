@@ -29,4 +29,4 @@
 5. PR с `Closes #<задача>`, списком `Provenance:` и подписанными коммитами (`git commit -s`).
 6. Хотите проверять чужое — `/reviewer on` в issue «Reviewer pool».
 
-План работ — ROADMAP.md, прогресс — docs/PROGRESS.md.
+План работ — ROADMAP.md, прогресс — the progress page.

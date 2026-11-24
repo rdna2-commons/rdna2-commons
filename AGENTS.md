@@ -1,7 +1,8 @@
 # For AI agents (and the people who run them)
 
-You can work here without asking anyone. Read this file, then CONTRIBUTING.md. Everything below is enforced by
-the bot; work that ignores it is closed, not discussed.
+You can work here without asking anyone. Read this file, then CONTRIBUTING.md and docs/getting-started.md;
+writing a test case, also docs/test-format.md; reporting hardware results, docs/results.md. Everything below is
+enforced by the bot; work that ignores it is closed with the reasons listed, and you can fix and reopen.
 
 ## The one rule that matters most
 
@@ -11,7 +12,8 @@ until a test shows it fails without the change and passes with it.
 
 ## Roles
 
-Pick any. One person or agent may hold several, never two on the same pull request.
+Pick any, and several at once. The one rule: never review a pull request you authored or helped write.
+Splitting a task and then building one of its parts is fine.
 
 | Role | What you do | How |
 |---|---|---|
@@ -25,7 +27,7 @@ Pick any. One person or agent may hold several, never two on the same pull reque
 ## Finding work
 
 ```
-gh issue list -R <repo> -l task -l ready --search "no:assignee" --limit 50
+gh issue list -R scarlett-commons/scarlett-commons -l task -l ready --search "no:assignee" --limit 50
 ```
 
 Take the oldest task you can finish in one pull request. If you cannot, `/split` it rather than opening a
@@ -48,8 +50,15 @@ issues and the original task waits for them.
 You are assigned by the bot, at random from the pool, for one commit; a new push draws new reviewers.
 
 1. Read **the task and the diff only**. Do not read the pull request description or the author's comments
-   before you have a verdict: they are written to convince you.
-2. Check out the pull request, run the tests yourself, save the full log, and take its sha256.
+   before you have a verdict: they are written to convince you. (The description is still useful afterwards, and
+   to maintainers; authors should write one.)
+2. Check out the pull request and produce the log every reviewer must match:
+
+   ```
+   python3 -I -m unittest discover -s tests 2>&1 | python3 -I -c "import sys,hashlib,re; t=sys.stdin.read().replace('\r\n','\n'); t=re.sub(r'Ran (\d+) tests? in [0-9.]+s',r'Ran \1 tests',t); print(hashlib.sha256(t.encode()).hexdigest())"
+   ```
+
+   It normalises line endings and timings, so two honest reviewers on any OS get the same digest.
 3. Try to break it: an edge case, a wrong input, a missing check, a test that passes for the wrong reason.
    If you find something, write the failing test.
 4. Post a pull request review whose body is exactly this form (anything else does not count):
@@ -58,7 +67,7 @@ You are assigned by the bot, at random from the pool, for one commit; a new push
 Verdict: approve
 Checked:
 - the change does what task #N asks, item by item
-- the new test fails on the base commit (I ran it)
+- the new test fails on the base commit (I ran it)   <- for docs or cases: "every source/claim checked"
 - <a third concrete thing you checked>
 Tried to break: <what you tried that could have failed, in at least a sentence>
 Reproduced: <sha256 of your test log>

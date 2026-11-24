@@ -1,4 +1,6 @@
-# Regenerates docs/PROGRESS.md from the task board. Runs trusted code from main only.
+# Regenerates the progress page and chart from the task board, every 6 hours.
+# They are written to the `status` branch, not main: main only changes through reviewed pull requests, and the
+# README embeds the chart from `status`. Runs trusted code from main only.
 name: progress
 on:
   schedule:
@@ -21,15 +23,18 @@ jobs:
         run: |
           gh api --paginate "repos/${{ github.repository }}/issues?state=all&labels=task&per_page=100" | jq -s add > /tmp/issues.json
           gh api --paginate "repos/${{ github.repository }}/pulls?state=all&per_page=100" | jq -s add > /tmp/pulls.json
-      - run: |
-          mkdir -p docs/images
-          python3 -I tools/progress.py /tmp/issues.json /tmp/pulls.json results --svg docs/images/progress.svg > docs/PROGRESS.md
-      - name: Commit if changed
+      - name: Build
         run: |
-          git add docs/PROGRESS.md docs/images/progress.svg
-          # Only the timestamp changed: nothing to commit.
-          if git diff --cached --quiet -I '^Generated ' -- docs/PROGRESS.md docs/images/progress.svg; then exit 0; fi
+          mkdir -p /tmp/status/images
+          python3 -I tools/progress.py /tmp/issues.json /tmp/pulls.json results --svg /tmp/status/images/progress.svg > /tmp/status/PROGRESS.md
+      - name: Publish to the status branch
+        run: |
           git config user.name "commons-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "Progress: regenerate docs/PROGRESS.md"
-          git push
+          if git fetch -q origin status; then git switch -q status; else git switch -q --orphan status; git rm -rq . || true; fi
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -r /tmp/status/. .
+          git add -A
+          if git diff --cached --quiet -I '^Generated '; then exit 0; fi
+          git commit -qm "Progress: regenerate"
+          git push -q origin status

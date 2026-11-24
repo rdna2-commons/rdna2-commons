@@ -1,7 +1,7 @@
 # Roadmap
 
 This is the plan everyone works from. Each item becomes task issues labelled with its area; the bot hands them
-out in dependency order. Progress is tracked automatically in [docs/PROGRESS.md](docs/PROGRESS.md).
+out in dependency order. Progress is tracked automatically in [the progress page](https://github.com/scarlett-commons/scarlett-commons/blob/status/PROGRESS.md).
 
 **Goal:** make the hard, shared parts of running Xbox Series X|S software on PC correct and verified once, for
 every compatibility project, instead of fifteen times. We build knowledge, tests and checked components;

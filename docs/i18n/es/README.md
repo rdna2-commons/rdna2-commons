@@ -31,4 +31,4 @@ solo supervisan.
 5. Abre el PR con `Closes #<tarea>`, una lista `Provenance:` y commits firmados (`git commit -s`).
 6. Para revisar el trabajo de otros: `/reviewer on` en el issue «Reviewer pool».
 
-El plan está en ROADMAP.md y el progreso en docs/PROGRESS.md.
+El plan está en ROADMAP.md y el progreso en the progress page.

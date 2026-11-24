@@ -1,9 +1,11 @@
 """Prove a pull request's tests test something: they must fail on the base code and pass on the new code.
 
 Usage: python -I tools/fails_on_base.py <base ref> [head ref, default HEAD]
+Commit first: it compares <base>...HEAD. In a fork, use the upstream branch, e.g. `upstream/main`.
 
 Takes the test files the pull request adds or changes under tests/, copies them into a worktree of the base
-commit, and runs each there. When the pull request changes code under src/, at least one of those tests must
+commit, and runs each there. When the pull request changes code (bot/, tools/, and src/ once it exists; not docs/
+or cases/), at least one of those tests must
 fail on the base; a test that already passes on the old code proves nothing about the change. Tests whose names
 start with `test_regression_` are exempt (they pin existing behaviour on purpose).
 
@@ -43,6 +45,9 @@ def run_test(root, rel):
 
 
 def main():
+    if len(sys.argv) < 2 or sys.argv[1] in ("-h", "--help"):
+        print(__doc__)
+        return 0 if len(sys.argv) >= 2 else 2
     base = sys.argv[1]
     head = sys.argv[2] if len(sys.argv) > 2 else "HEAD"
     files = changed(base, head)
