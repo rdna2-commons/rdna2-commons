@@ -21,12 +21,14 @@ jobs:
         run: |
           gh api --paginate "repos/${{ github.repository }}/issues?state=all&labels=task&per_page=100" | jq -s add > /tmp/issues.json
           gh api --paginate "repos/${{ github.repository }}/pulls?state=all&per_page=100" | jq -s add > /tmp/pulls.json
-      - run: python3 -I tools/progress.py /tmp/issues.json /tmp/pulls.json results > docs/PROGRESS.md
+      - run: |
+          mkdir -p docs/images
+          python3 -I tools/progress.py /tmp/issues.json /tmp/pulls.json results --svg docs/images/progress.svg > docs/PROGRESS.md
       - name: Commit if changed
         run: |
-          git add docs/PROGRESS.md
+          git add docs/PROGRESS.md docs/images/progress.svg
           # Only the timestamp changed: nothing to commit.
-          if git diff --cached --quiet -I '^Generated ' -- docs/PROGRESS.md; then exit 0; fi
+          if git diff --cached --quiet -I '^Generated ' -- docs/PROGRESS.md docs/images/progress.svg; then exit 0; fi
           git config user.name "commons-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "Progress: regenerate docs/PROGRESS.md"

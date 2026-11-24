@@ -1,0 +1,40 @@
+# Test a set of pull requests alone and stacked. Runs untrusted code, so: read-only token, no secrets, nothing
+# written back except the job summary. Start it from the Actions tab or `gh workflow run try.yml -f prs="12 15"`.
+name: try
+on:
+  workflow_dispatch:
+    inputs:
+      prs:
+        description: "Pull request numbers, space separated"
+        required: true
+      repo:
+        description: "Repository to test (owner/name); default this one"
+        required: false
+      test:
+        description: "Test command"
+        required: false
+        default: "python3 -I -m unittest discover -s tests"
+permissions:
+  contents: read
+jobs:
+  try:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: commons
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.repo || github.repository }}
+          path: target
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Try
+        env:
+          PRS: ${{ inputs.prs }}
+          TEST_CMD: ${{ inputs.test }}
+        run: |
+          case "$PRS" in *[!0-9\ ]*) echo "prs must be numbers"; exit 1;; esac
+          python3 -I commons/tools/try_prs.py --repo target --test "$TEST_CMD" --out "$GITHUB_STEP_SUMMARY" $PRS

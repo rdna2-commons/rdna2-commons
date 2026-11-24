@@ -1,0 +1,16 @@
+name: Bug
+description: Something in this repository is wrong (a tool, a rule, a test, the bot).
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what you expected
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: How to reproduce
+      description: Commands and output. No game files, logs that quote them, or links to them.
+    validations:
+      required: true

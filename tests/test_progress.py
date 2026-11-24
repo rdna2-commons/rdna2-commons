@@ -35,6 +35,16 @@ class Progress(unittest.TestCase):
         self.assertIn("| CONFIRMED | t | `aaaaaaaaa` | nvidia-ada | 2 |", page)
         self.assertIn("No reports yet", progress.render([], [], {}, "now"))
 
+    def test_phases_and_svg(self):
+        issues = [issue(1, "shaders", "closed", ["phase:1"]), issue(2, "shaders", labels=["phase:1"])]
+        page = progress.render(issues, [], {}, "now")
+        self.assertIn("| 1. Shared knowledge |", page)
+        self.assertIn("| 1/2 |", page)
+        chart = progress.svg(progress.count(issues, progress.area_of))
+        self.assertTrue(chart.startswith("<svg"))
+        self.assertIn(">shaders<", chart)
+        self.assertIn(">1/2<", chart)
+
 
 if __name__ == "__main__":
     unittest.main()

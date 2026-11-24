@@ -1,0 +1,23 @@
+name: Task proposal
+description: A unit of work someone can finish in one pull request. A maintainer adds the `task` label.
+labels: []
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What to do
+      description: Concrete and checkable. Say what "done" looks like.
+    validations:
+      required: true
+  - type: input
+    id: depends
+    attributes:
+      label: Depends on
+      description: "Other tasks, as `Depends on #N` lines in the body if any."
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options: [shaders, results, system, graphics, audio, storage, input, platforms, infra, docs, i18n]
+    validations:
+      required: true

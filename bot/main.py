@@ -144,12 +144,12 @@ def task_body(num):
     return (issue or {}).get("body") or ""
 
 
-def assign_reviewers(pr, task):
+def assign_reviewers(pr, task, k=rules.REVIEWERS_PER_PR):
     """Draw reviewers for the current head commit and post a blind brief: the task, not the author's pitch."""
     sha = pr["head"]["sha"]
     if assigned_reviewers(pr["number"], sha):
         return
-    chosen = rules.pick_reviewers(reviewer_pool(), {pr["user"]["login"]}, f"{pr['number']}:{sha}")
+    chosen = rules.pick_reviewers(reviewer_pool(), {pr["user"]["login"]}, f"{pr['number']}:{sha}", k)
     if not chosen:
         return
     spec = task_body(task["number"]) if task else ""
@@ -218,7 +218,22 @@ def gate(number):
             remove_label(number, "needs-fix")
         if "gate-ok" not in info["labels"]:
             add_label(number, "gate-ok")
-        assign_reviewers(pr, task_of(info["body"]))
+        files = [f["filename"] for f in pages(f"/repos/{REPO}/pulls/{number}/files")]
+        protected = rules.protected_paths(files)
+        if protected:
+            if "governance" not in info["labels"]:
+                add_label(number, "governance")
+                comment(number, "This pull request changes files that define the rules or run with write access:\n\n"
+                        + "\n".join(f"- `{p}`" for p in protected)
+                        + f"\n\nIt is welcome, and it is reviewed harder: {rules.GOVERNANCE_REVIEWERS} drawn reviewers, "
+                        f"{rules.GOVERNANCE_QUIET_HOURS} hours without a push, approval by two maintainers, and a "
+                        "maintainer merges it by hand. It is never merged automatically.\n\n"
+                        "Reviewers: check that no rule gets weaker without saying so, that no workflow gains "
+                        "permissions or starts running pull request code with a write token, and that every changed "
+                        "rule has a test.")
+            assign_reviewers(pr, task_of(info["body"]), rules.GOVERNANCE_REVIEWERS)
+        else:
+            assign_reviewers(pr, task_of(info["body"]))
 
 
 def command():
@@ -231,7 +246,8 @@ def command():
     task = {"assignees": [a["login"] for a in issue["assignees"]], "labels": labels(issue)}
     if text.startswith("/claim"):
         held = len(pages(f"/repos/{REPO}/issues?state=open&assignee={urllib.parse.quote(user)}&labels=task"))
-        why = rules.can_claim(task, user, held)
+        limit = rules.MAX_CLAIMS_MAINTAINER if user in maintainers() else rules.MAX_CLAIMS
+        why = rules.can_claim(task, user, held, limit)
         if why:
             comment(num, f"@{user} cannot claim this: {why}.")
         else:
@@ -260,6 +276,25 @@ def command():
     elif text.startswith("/unclaim") and user in task["assignees"]:
         call("DELETE", f"/repos/{REPO}/issues/{num}/assignees", {"assignees": [user]})
         comment(num, f"@{user} released this task.")
+
+
+def propose_maintainers(counts, maint):
+    first = {}
+    for p in pages(f"/repos/{REPO}/pulls?state=closed"):
+        if p.get("merged_at"):
+            u = p["user"]["login"]
+            first[u] = min(first.get(u, p["merged_at"]), p["merged_at"])
+    days = {u: (now() - ts(t)).days for u, t in first.items()}
+    proposed = set()
+    for i in pages(f"/repos/{REPO}/issues?state=all&labels=decision"):
+        m = re.match(r"Proposal: @(\S+) as maintainer", i["title"])
+        if m:
+            proposed.add(m.group(1))
+    for u in rules.maintainer_candidates(counts, days, maint, proposed):
+        call("POST", f"/repos/{REPO}/issues", {
+            "title": f"Proposal: @{u} as maintainer", "labels": ["decision"],
+            "body": f"{MARK}\n@{u} has {counts[u]} merged pull requests over {days[u]} days. Maintainers: approve "
+                    "by a pull request adding them to MAINTAINERS (GOVERNANCE.md), or close this with a reason."})
 
 
 def checks_green(sha):
@@ -292,6 +327,7 @@ def sweep():
                 comment(t["number"], f"Claim by @{who[0]} expired after {rules.CLAIM_HOURS} hours with no pull "
                                      "request. The task is free again.")
     counts, maint, active = merged_counts(), maintainers(), active_people()
+    propose_maintainers(counts, maint)
     deadline = rules.fix_deadline_hours(active)
     for p in open_prs:
         lab = labels(p)
@@ -327,7 +363,19 @@ def sweep():
                    for r in pages(f"/repos/{REPO}/pulls/{p['number']}/reviews")]
         commit = call("GET", f"/repos/{REPO}/commits/{p['head']['sha']}")
         pushed = ts(commit["commit"]["committer"]["date"])
-        ok, why = rules.merge_decision({"author": p["user"]["login"], "labels": lab, "head": p["head"]["sha"]},
+        # Checked from the files again, so removing the label does not make a governance change mergeable.
+        protected = bool(rules.protected_paths(f["filename"] for f in pages(f"/repos/{REPO}/pulls/{p['number']}/files")))
+        if protected:
+            ready, why = rules.governance_status({"author": p["user"]["login"], "head": p["head"]["sha"]}, reviews,
+                                                 checks_green(p["head"]["sha"]),
+                                                 (now() - pushed).total_seconds() / 3600, maint)
+            if ready and "maintainer-merge" not in lab:
+                add_label(p["number"], "maintainer-merge")
+                comment(p["number"], f"Ready for a maintainer to merge by hand: {why}. "
+                                     + " ".join("@" + m for m in sorted(maint)))
+            continue
+        ok, why = rules.merge_decision({"author": p["user"]["login"], "labels": lab, "head": p["head"]["sha"],
+                                        "protected": protected},
                                        reviews, checks_green(p["head"]["sha"]), counts,
                                        (now() - pushed).total_seconds() / 3600, maint,
                                        assigned_reviewers(p["number"], p["head"]["sha"]))

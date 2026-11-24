@@ -1,0 +1,14 @@
+name: Finding (Scout)
+description: Something that needs doing or is missing, which you will not do yourself.
+body:
+  - type: textarea
+    id: finding
+    attributes:
+      label: What, where, and why it matters
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: Sources
+      description: Public documentation, other projects (name their licence), measurements. No leaks.

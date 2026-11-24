@@ -169,7 +169,11 @@ def task_ready(task_body, closed_issue_numbers):
     return all(d in closed_issue_numbers for d in deps), deps
 
 
-def can_claim(task, user, open_claims_by_user, max_claims=2):
+MAX_CLAIMS = 2
+MAX_CLAIMS_MAINTAINER = 6
+
+
+def can_claim(task, user, open_claims_by_user, max_claims=MAX_CLAIMS):
     if "task" not in task["labels"]:
         return "this issue is not a task"
     if "ready" not in task["labels"]:
@@ -246,6 +250,47 @@ def parse_review(body):
     return (verdict if not problems else None), problems, (r.group(1) if r else None)
 
 
+# Files that define the rules or run with write access. A pull request touching any of them is welcome, but
+# it is never merged automatically: it gets more reviewers, a longer quiet period, and a maintainer merges it.
+PROTECTED = ("bot/", ".github/", "MAINTAINERS", "GOVERNANCE.md", "CONTRIBUTING.md", "AGENTS.md", "LICENSE",
+             "CLAUDE.md", "GEMINI.md", ".cursorrules", "tools/fails_on_base.py", "SECURITY.md", "CODE_OF_CONDUCT.md")
+GOVERNANCE_REVIEWERS = 5
+GOVERNANCE_QUIET_HOURS = 72
+
+
+def protected_paths(paths):
+    return sorted(p for p in paths if p.startswith(PROTECTED) or p in PROTECTED)
+
+
+def governance_status(pr, reviews, ci_ok, hours_since_push, maintainers):
+    """For a governance pull request: is it ready for a maintainer to merge by hand? Returns (ready, reason).
+
+    Needs green CI, GOVERNANCE_QUIET_HOURS without a push, no valid reject from anyone, and valid approvals from
+    two maintainers other than the author (one while there is only one other maintainer).
+    """
+    if not ci_ok:
+        return False, "CI not green"
+    latest = {}
+    for r in reviews:
+        if r["user"] == pr["author"] or r["commit"] != pr["head"]:
+            continue
+        verdict, _, _ = parse_review(r["body"])
+        if verdict:
+            latest[r["user"]] = verdict
+    if any(v == "reject" for v in latest.values()):
+        return False, "a reviewer rejected it"
+    others = set(maintainers) - {pr["author"]}
+    need = min(2, len(others))
+    got = sorted(u for u, v in latest.items() if v == "approve" and u in others)
+    if need == 0:
+        return False, "no maintainer other than the author can approve it"
+    if len(got) < need:
+        return False, f"{len(got)}/{need} maintainer approvals"
+    if hours_since_push < GOVERNANCE_QUIET_HOURS:
+        return False, f"waiting for {GOVERNANCE_QUIET_HOURS} h without a push"
+    return True, "approved by " + ", ".join("@" + u for u in got)
+
+
 def merge_decision(pr, reviews, ci_ok, merged_count, hours_since_push, maintainers, assigned):
     """Return (merge, reason).
 
@@ -257,6 +302,8 @@ def merge_decision(pr, reviews, ci_ok, merged_count, hours_since_push, maintaine
     """
     if "hold" in pr["labels"]:
         return False, "on hold"
+    if "governance" in pr["labels"] or pr.get("protected"):
+        return False, "changes protected files: a maintainer merges it by hand"
     if not ci_ok:
         return False, "CI not green"
     latest = {}
@@ -324,3 +371,15 @@ def collusion_pairs(merges, min_mutual=3, min_share=0.8):
         if a < b and n >= min_mutual and m >= min_mutual and n / given[a] >= min_share and m / given[b] >= min_share:
             flagged.append((a, b))
     return sorted(flagged)
+
+
+PROPOSE_MERGED_PRS = 10
+PROPOSE_ACTIVE_DAYS = 30
+
+
+def maintainer_candidates(merged_count, first_seen_days, maintainers, already_proposed):
+    """People to propose as maintainers: PROPOSE_MERGED_PRS merged pull requests and PROPOSE_ACTIVE_DAYS since
+    their first one, not maintainers yet and not proposed before. Maintainers then decide in a `decision` issue."""
+    return sorted(u for u, n in merged_count.items()
+                  if n >= PROPOSE_MERGED_PRS and first_seen_days.get(u, 0) >= PROPOSE_ACTIVE_DAYS
+                  and u not in maintainers and u not in already_proposed and not u.endswith("[bot]"))

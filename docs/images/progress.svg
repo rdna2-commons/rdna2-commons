@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="330" viewBox="0 0 640 330" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13">
+<rect width="640" height="330" fill="#ffffff"/>
+<text x="10" y="24" font-size="15" font-weight="600" fill="#1f2328">Tasks by area</text>
+<text x="10" y="55" fill="#1f2328">shaders</text>
+<rect x="110.0" y="43" width="52.2" height="16" fill="#bf8700"/>
+<rect x="162.2" y="43" width="417.8" height="16" fill="#d0d7de"/>
+<text x="588" y="55" fill="#57606a">0/9</text>
+<text x="10" y="81" fill="#1f2328">results</text>
+<rect x="110.0" y="69" width="470.0" height="16" fill="#d0d7de"/>
+<text x="588" y="81" fill="#57606a">0/2</text>
+<text x="10" y="107" fill="#1f2328">system</text>
+<rect x="110.0" y="95" width="470.0" height="16" fill="#0969da"/>
+<text x="588" y="107" fill="#57606a">0/2</text>
+<text x="10" y="133" fill="#1f2328">graphics</text>
+<rect x="110.0" y="121" width="470.0" height="16" fill="#0969da"/>
+<text x="588" y="133" fill="#57606a">0/1</text>
+<text x="10" y="159" fill="#1f2328">audio</text>
+<rect x="110.0" y="147" width="470.0" height="16" fill="#0969da"/>
+<text x="588" y="159" fill="#57606a">0/1</text>
+<text x="10" y="185" fill="#1f2328">storage</text>
+<rect x="110.0" y="173" width="470.0" height="16" fill="#0969da"/>
+<text x="588" y="185" fill="#57606a">0/1</text>
+<text x="10" y="211" fill="#1f2328">input</text>
+<rect x="110.0" y="199" width="470.0" height="16" fill="#0969da"/>
+<text x="588" y="211" fill="#57606a">0/1</text>
+<text x="10" y="237" fill="#1f2328">platforms</text>
+<rect x="110.0" y="225" width="470.0" height="16" fill="#d0d7de"/>
+<text x="588" y="237" fill="#57606a">0/1</text>
+<text x="10" y="263" fill="#1f2328">infra</text>
+<rect x="110.0" y="251" width="156.7" height="16" fill="#2da44e"/>
+<rect x="266.7" y="251" width="78.3" height="16" fill="#bf8700"/>
+<rect x="345.0" y="251" width="156.7" height="16" fill="#0969da"/>
+<rect x="501.7" y="251" width="78.3" height="16" fill="#d0d7de"/>
+<text x="588" y="263" fill="#57606a">2/6</text>
+<text x="10" y="289" fill="#1f2328">docs</text>
+<rect x="110.0" y="277" width="470.0" height="16" fill="#2da44e"/>
+<text x="588" y="289" fill="#57606a">1/1</text>
+<rect x="10" y="304" width="12" height="12" fill="#2da44e"/>
+<text x="27" y="314" fill="#57606a">done</text>
+<rect x="72" y="304" width="12" height="12" fill="#bf8700"/>
+<text x="89" y="314" fill="#57606a">in progress</text>
+<rect x="190" y="304" width="12" height="12" fill="#0969da"/>
+<text x="207" y="314" fill="#57606a">ready to take</text>
+<rect x="324" y="304" width="12" height="12" fill="#d0d7de"/>
+<text x="341" y="314" fill="#57606a">waiting on other tasks</text>
+</svg>

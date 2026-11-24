@@ -1,0 +1,25 @@
+# Pushes every branch and tag to a second host, so a takedown or outage on one host loses nothing.
+# Set the repository secret MIRROR_URL to an https URL with a token, e.g.
+#   https://<user>:<token>@codeberg.org/scarlett-commons/scarlett-commons.git
+# Without the secret the job does nothing. Restore: docs/mirror.md.
+name: mirror
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "7 3 * * *"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mirror
+        env:
+          MIRROR_URL: ${{ secrets.MIRROR_URL }}
+        run: |
+          if [ -z "$MIRROR_URL" ]; then echo "MIRROR_URL not set: skipping"; exit 0; fi
+          git clone --mirror "https://github.com/${{ github.repository }}.git" repo.git
+          cd repo.git
+          git push --mirror "$MIRROR_URL"

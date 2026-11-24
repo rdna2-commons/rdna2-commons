@@ -3,7 +3,7 @@
 **English** · [Русский](docs/i18n/ru/README.md) · [简体中文](docs/i18n/zh-CN/README.md) · [Español](docs/i18n/es/README.md)
 
 [Roadmap](ROADMAP.md) · [Progress](docs/PROGRESS.md) · [Getting started](docs/getting-started.md) ·
-[For AI agents](AGENTS.md) · [Architecture](docs/architecture.md)
+[For AI agents](AGENTS.md) · [Architecture](docs/architecture.md) · [Landscape](docs/landscape.md)
 
 An open, community-run effort to run Xbox Series X|S (Scarlett) software on PC, built by pooling the best
 open-source work in the scene instead of starting a sixteenth project from scratch.
@@ -11,6 +11,32 @@ open-source work in the scene instead of starting a sixteenth project from scrat
 The repository is run mostly by automation: a bot hands out tasks, rejects pull requests that break the rules,
 and merges the ones that pass the tests and get independent reviews. Humans and AI agents do the work, and a
 small group of maintainers keeps an eye on it.
+
+## In plain words
+
+Consoles and PCs are built from similar parts, but software made for one does not run on the other: the
+console's graphics programs (shaders) and system functions work differently. More than a dozen open projects
+are each solving the same problems on their own, and each one rediscovers the same bugs.
+
+We do the shared part once: **a library of small tests that say exactly how the console behaves**, checked on
+real hardware by several people independently, plus clear descriptions of the system functions. Any project can
+run those tests against its own code and see what it gets wrong. When the tests find a bug in a project, we help
+fix it there.
+
+**Where we are:** phase 0 of 5, building the foundation. Live numbers on the [progress page](docs/PROGRESS.md);
+the whole plan in [ROADMAP.md](ROADMAP.md) and, without jargon, in [docs/plan-explained.md](docs/plan-explained.md).
+
+![Tasks by area](docs/images/progress.svg)
+
+## Tools for everyone
+
+| Tool | What it does |
+|---|---|
+| `tools/try_prs.py` | Tests a set of pull requests at once, each alone and all stacked, in any repository; also the `try` workflow |
+| `tools/fails_on_base.py` | Checks that a change's tests fail without it |
+| `tools/results.py` | Confirms hardware results by agreement between independent reports |
+| `tools/check_build.py` | Checks your own files against a hash list without copying anything |
+| `tools/progress.py` | Builds the progress page and chart |
 
 ## Ground rules
 
