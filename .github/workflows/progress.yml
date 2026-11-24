@@ -1,0 +1,33 @@
+# Regenerates docs/PROGRESS.md from the task board. Runs trusted code from main only.
+name: progress
+on:
+  schedule:
+    - cron: "41 */6 * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: read
+  pull-requests: read
+concurrency:
+  group: progress
+jobs:
+  progress:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch the board
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api --paginate "repos/${{ github.repository }}/issues?state=all&labels=task&per_page=100" | jq -s add > /tmp/issues.json
+          gh api --paginate "repos/${{ github.repository }}/pulls?state=all&per_page=100" | jq -s add > /tmp/pulls.json
+      - run: python3 -I tools/progress.py /tmp/issues.json /tmp/pulls.json results > docs/PROGRESS.md
+      - name: Commit if changed
+        run: |
+          git add docs/PROGRESS.md
+          # Only the timestamp changed: nothing to commit.
+          if git diff --cached --quiet -I '^Generated ' -- docs/PROGRESS.md; then exit 0; fi
+          git config user.name "commons-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Progress: regenerate docs/PROGRESS.md"
+          git push

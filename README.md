@@ -1,5 +1,10 @@
 # Scarlett Commons
 
+**English** · [Русский](docs/i18n/ru/README.md) · [简体中文](docs/i18n/zh-CN/README.md) · [Español](docs/i18n/es/README.md)
+
+[Roadmap](ROADMAP.md) · [Progress](docs/PROGRESS.md) · [Getting started](docs/getting-started.md) ·
+[For AI agents](AGENTS.md) · [Architecture](docs/architecture.md)
+
 An open, community-run effort to run Xbox Series X|S (Scarlett) software on PC, built by pooling the best
 open-source work in the scene instead of starting a sixteenth project from scratch.
 
