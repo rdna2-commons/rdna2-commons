@@ -22,6 +22,7 @@ PHASES = [
     ("2", "Adapters", "running other projects' translators against those tests"),
     ("3", "Upstream fixes", "fixing what the tests find, in the projects themselves"),
     ("4", "Shared components", "pieces several projects need and nobody has yet"),
+    ("engine", "Engine track", "the hybrid recompiler itself, from loading a title to playing it (docs/engine-plan.md)"),
 ]
 
 
@@ -122,7 +123,7 @@ def badges(issues, pulls, result_rows, case_count):
     ready = sum(1 for i in tasks if state_of(i) == "ready")
     confirmed = sum(1 for s, _ in result_rows.values() if s == "CONFIRMED")
     merged = [p for p in pulls if p.get("merged_at")]
-    phase = next((num for num, _, _ in PHASES
+    phase = next((num for num, _, _ in PHASES[:5]
                   if any(phase_of(i) == num and state_of(i) != "done" for i in tasks)), "4")
     return {
         "tasks": badge("tasks", f"{done}/{len(tasks)} done", "#2da44e"),

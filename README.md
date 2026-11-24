@@ -50,6 +50,7 @@ checked on real hardware by several people independently, which any project can 
 the tests find a bug, here or elsewhere, it gets fixed where it lives.
 
 The whole plan, without jargon: [docs/plan-explained.md](docs/plan-explained.md).
+The recompiler, broken into tasks with the ready-made tools for each: [docs/engine-plan.md](docs/engine-plan.md).
 
 ## Status
 

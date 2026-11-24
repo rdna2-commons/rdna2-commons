@@ -16,7 +16,7 @@ other projects use them.
 The recompiler in `engine/`, imported from the Leonida continuation with its history and kept in step with it
 by a daily sync (docs/engine-sync.md). Work on it follows the same rules as everything else, and its progress on
 real titles is reported by build hash (docs/title-runs.md): loads, imports resolved, device created, first frame,
-menu, in world, playable. The phases below make it correct; the engine track makes it run.
+menu, in world, playable. The phases below make it correct; the engine track makes it run. Its tasks, with the ready-made tools for each: [docs/engine-plan.md](docs/engine-plan.md).
 
 ## Phase 0: Foundation (now)
 
