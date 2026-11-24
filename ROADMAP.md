@@ -11,6 +11,13 @@ other projects use them.
 
 **Never:** game data, keys, decryption, links to leaks, code from incompatible licences (see CONTRIBUTING.md).
 
+## The engine track (alongside every phase)
+
+The recompiler in `engine/`, imported from the Leonida continuation with its history and kept in step with it
+by a daily sync (docs/engine-sync.md). Work on it follows the same rules as everything else, and its progress on
+real titles is reported by build hash (docs/title-runs.md): loads, imports resolved, device created, first frame,
+menu, in world, playable. The phases below make it correct; the engine track makes it run.
+
 ## Phase 0: Foundation (now)
 
 The machinery that lets people and agents join without anyone onboarding them.

@@ -124,7 +124,17 @@ def provenance_problems(body):
     return problems
 
 
-def gate(pr, files, task, other_open_prs, commits):
+SYNC_PREFIX = "engine/"
+
+
+def is_upstream_sync(pr, paths, sync_accounts):
+    """A pull request from the engine sync workflow: labelled, from a listed account, touching only engine/."""
+    paths = list(paths)
+    return ("upstream-sync" in pr["labels"] and pr["author"] in sync_accounts and bool(paths)
+            and all(p.startswith(SYNC_PREFIX) for p in paths))
+
+
+def gate(pr, files, task, other_open_prs, commits, sync=False):
     """Check a pull request.
 
     pr: {"number", "author", "body", "labels", "additions", "deletions"}
@@ -139,8 +149,8 @@ def gate(pr, files, task, other_open_prs, commits):
         reason = check_file(path, data)
         if reason:
             hard.append(reason)
-        if path.startswith("results/") and path.rsplit("/", 1)[-1] != f"{pr['author']}.json":
-            hard.append(f"{path}: a result report must be named after its author ({pr['author']}.json)")
+        if path.startswith(("results/", "title-runs/")) and path.rsplit("/", 1)[-1] != f"{pr['author']}.json":
+            hard.append(f"{path}: a report must be named after its author ({pr['author']}.json)")
     num = task_number(pr["body"])
     if num is None:
         hard.append("no `Closes #<task>` line: claim a task with `/claim` and reference it")
@@ -153,12 +163,13 @@ def gate(pr, files, task, other_open_prs, commits):
             if task_number(other["body"]) == num and other["number"] < pr["number"]:
                 hard.append(f"#{other['number']} already closes task #{num}")
     hard.extend(provenance_problems(pr["body"]))
-    if any(not re.search(r"(?m)^Signed-off-by: .+ <.+>", c) for c in commits):
+    # Upstream commits keep their authors' own messages; the sync PR's Provenance names their source instead.
+    if not sync and any(not re.search(r"(?m)^Signed-off-by: .+ <.+>", c) for c in commits):
         soft.append("every commit needs a `Signed-off-by:` line (`git commit -s`)")
     changed = {p for p, _ in files}
     if any(p.startswith(CODE_DIRS) for p in changed) and not any(p.startswith("tests/") for p in changed):
         soft.append("changes to code (" + ", ".join(CODE_DIRS) + ") need a test under tests/")
-    if pr["additions"] + pr["deletions"] > MAX_CHANGED_LINES and "large" not in pr["labels"]:
+    if not sync and pr["additions"] + pr["deletions"] > MAX_CHANGED_LINES and "large" not in pr["labels"]:
         soft.append(f"more than {MAX_CHANGED_LINES} changed lines: split it, or ask a maintainer for `large`")
     return hard, soft
 
@@ -253,7 +264,8 @@ def parse_review(body):
 # Files that define the rules or run with write access. A pull request touching any of them is welcome, but
 # it is never merged automatically: it gets more reviewers, a longer quiet period, and a maintainer merges it.
 PROTECTED = ("bot/", ".github/", "MAINTAINERS", "GOVERNANCE.md", "CONTRIBUTING.md", "AGENTS.md", "LICENSE",
-             "CLAUDE.md", "GEMINI.md", ".cursorrules", "tools/fails_on_base.py", "SECURITY.md", "CODE_OF_CONDUCT.md")
+             "CLAUDE.md", "GEMINI.md", ".cursorrules", "tools/fails_on_base.py", "SECURITY.md",
+             "CODE_OF_CONDUCT.md", "builds/", "SYNC_ACCOUNTS", "tools/scan_history.py")
 GOVERNANCE_REVIEWERS = 5
 GOVERNANCE_QUIET_HOURS = 72
 
@@ -306,6 +318,15 @@ def merge_decision(pr, reviews, ci_ok, merged_count, hours_since_push, maintaine
         return False, "changes protected files: a maintainer merges it by hand"
     if not ci_ok:
         return False, "CI not green"
+    if pr.get("sync"):
+        # Upstream engine commits were reviewed in their own project and scanned here; they merge on green CI
+        # after the quiet period unless anyone rejects or a maintainer holds them.
+        for r in reviews:
+            if r["commit"] == pr["head"] and parse_review(r["body"])[0] == "reject":
+                return False, "a reviewer rejected it"
+        if hours_since_push < QUIET_HOURS:
+            return False, f"waiting for {QUIET_HOURS} h without a push"
+        return True, "upstream engine sync, green CI, no objection"
     latest = {}
     for r in reviews:
         if r["user"] == pr["author"] or r["user"] not in assigned or r["commit"] != pr["head"]:

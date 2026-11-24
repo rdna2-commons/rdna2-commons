@@ -142,7 +142,7 @@ def task_line(i):
     return f"| {STATE_ICON[st]} | [#{i['number']}]({url}) {title} | {area_of(i)} | {who or '—'} |"
 
 
-def render(issues, pulls, result_rows, generated, cases_by_group=None):
+def render(issues, pulls, result_rows, generated, cases_by_group=None, title_rows=None):
     tasks = [i for i in issues if "pull_request" not in i]
     table = count(tasks, area_of)
     phases = count(tasks, lambda i: phase_of(i) or "?")
@@ -211,6 +211,14 @@ def render(issues, pulls, result_rows, generated, cases_by_group=None):
             out.append(f"| {status} | {test} | `{commit[:9]}` | {hw} | {sum(len(u) for u in by.values())} |")
     else:
         out.append("No reports yet. See docs/results.md.")
+    out += ["", "## Title runs", ""]
+    if title_rows:
+        out += ["| Build | Engine commit | Confirmed stage | Furthest reported |", "|---|---|---|---|"]
+        for (b, c), (conf, best) in sorted(title_rows.items()):
+            out.append(f"| {b} | `{c[:9]}` | {conf or '—'} | {best} |")
+        out += ["", "Builds are identified by hash only (docs/title-runs.md)."]
+    else:
+        out.append("No reports yet. See docs/title-runs.md.")
     out += ["", "## Recently merged", ""]
     if merged:
         out += ["| Date | Pull request | Author |", "|---|---|---|"]
@@ -252,6 +260,11 @@ def main():
         for c in found:
             g = str(c.get("id", "?")).split("/")[0]
             groups[g] = groups.get(g, 0) + 1
+    titles = {}
+    if arg("--title-runs"):
+        import title_runs
+        _, runs, _ = title_runs.load(arg("--builds") or "builds", arg("--title-runs"))
+        titles = title_runs.confirmed(runs)
     now = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     if arg("--svg"):
         with open(arg("--svg"), "w", encoding="utf-8", newline="\n") as f:
@@ -261,7 +274,7 @@ def main():
         for name, text in badges(issues, pulls, rows, sum(groups.values())).items():
             with open(os.path.join(arg("--badges"), f"{name}.svg"), "w", encoding="utf-8", newline="\n") as f:
                 f.write(text)
-    sys.stdout.buffer.write(render(issues, pulls, rows, now, groups).encode("utf-8"))
+    sys.stdout.buffer.write(render(issues, pulls, rows, now, groups, titles).encode("utf-8"))
 
 
 if __name__ == "__main__":

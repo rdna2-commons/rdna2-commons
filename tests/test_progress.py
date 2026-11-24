@@ -60,6 +60,11 @@ class Progress(unittest.TestCase):
         self.assertIn("phase", b["phase"])
         self.assertIn(">0 of 4<", b["phase"])
 
+    def test_title_runs_section(self):
+        page = progress.render([], [], {}, "now", {}, {("build-a", "c" * 40): ("menu", "in-world")})
+        self.assertIn("| build-a | `ccccccccc` | menu | in-world |", page)
+        self.assertIn("No reports yet. See docs/title-runs.md.", progress.render([], [], {}, "now"))
+
 
 if __name__ == "__main__":
     unittest.main()

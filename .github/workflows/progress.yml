@@ -26,7 +26,7 @@ jobs:
       - name: Build
         run: |
           mkdir -p /tmp/status/images /tmp/status/badges
-          python3 -I tools/progress.py /tmp/issues.json /tmp/pulls.json results --cases cases --badges /tmp/status/badges --svg /tmp/status/images/progress.svg > /tmp/status/PROGRESS.md
+          python3 -I tools/progress.py /tmp/issues.json /tmp/pulls.json results --cases cases --builds builds --title-runs title-runs --badges /tmp/status/badges --svg /tmp/status/images/progress.svg > /tmp/status/PROGRESS.md
       - name: Publish to the status branch
         run: |
           git config user.name "commons-bot"

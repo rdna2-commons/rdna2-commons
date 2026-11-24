@@ -1,0 +1,73 @@
+# Brings new commits of the upstream engine (ubiquitarianism/leonida, GPL-3.0-or-later) into engine/, with their
+# history and authors, as a pull request labelled upstream-sync. The bot merges it on green CI after the quiet
+# period unless someone rejects it or a maintainer holds it (docs/engine-sync.md).
+#
+# Needs the repository secret SYNC_TOKEN: a token of an account listed in SYNC_ACCOUNTS, with contents and pull
+# request write access to this repository. (Pull requests opened with the default token do not start CI.)
+# Without it the job does nothing.
+name: sync-engine
+on:
+  schedule:
+    - cron: "23 5 * * *"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: sync-engine
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      UPSTREAM: https://github.com/ubiquitarianism/leonida.git
+      GH_TOKEN: ${{ secrets.SYNC_TOKEN }}
+    steps:
+      - name: Check the token
+        id: token
+        run: |
+          if [ -z "$GH_TOKEN" ]; then echo "SYNC_TOKEN not set: skipping"; echo "skip=1" >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/checkout@v4
+        if: steps.token.outputs.skip != '1'
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.SYNC_TOKEN }}
+      - name: Filter upstream to engine/
+        if: steps.token.outputs.skip != '1'
+        run: |
+          python3 -m pip install --quiet git-filter-repo==2.47.0
+          git clone --quiet --single-branch "$UPSTREAM" /tmp/upstream
+          cd /tmp/upstream
+          git filter-repo --force --path tools/ --path runtime/ --path tests/ --path scripts/ \
+            --path third_party/bcpack-rs/ --path third_party/xma/ --path third_party/xtaskqueue/ --path LICENSE \
+            --to-subdirectory-filter engine
+      - name: Merge, scan, open the pull request
+        if: steps.token.outputs.skip != '1'
+        run: |
+          set -e
+          git config user.name "scarlett-commons sync"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch --quiet /tmp/upstream HEAD:refs/heads/engine-upstream
+          if git merge-base --is-ancestor engine-upstream HEAD; then echo "up to date"; exit 0; fi
+          if gh pr list --label upstream-sync --state open --json number --jq 'length' | grep -qv '^0$'; then
+            echo "a sync pull request is already open"; exit 0; fi
+          python3 -I tools/scan_history.py engine-upstream --not HEAD
+          head=$(git rev-parse --short engine-upstream)
+          branch="sync/engine-$head"
+          git switch -c "$branch"
+          git merge --no-ff --no-edit -m "Sync engine/ with ubiquitarianism/leonida at $head" engine-upstream
+          git push --quiet origin "$branch"
+          task=$(gh issue create --label task --label ready --label area:infra \
+            --title "Sync engine/ with upstream at $head" \
+            --body "Bring the new upstream engine commits into engine/ (docs/engine-sync.md)." | grep -o '[0-9]*$')
+          gh issue comment "$task" --body "/claim"
+          sleep 30
+          gh pr create --base main --head "$branch" --label upstream-sync \
+            --title "Sync engine/ with ubiquitarianism/leonida at $head" \
+            --body "Closes #$task
+
+          New commits from ubiquitarianism/leonida, filtered to engine/ with their authors. Every new file version
+          passed tools/scan_history.py. Merged with a merge commit on green CI after the quiet period, unless a
+          reviewer rejects it or a maintainer adds hold.
+
+          Provenance:
+          - https://github.com/ubiquitarianism/leonida (GPL-3.0-or-later): engine/, upstream commits up to $head"

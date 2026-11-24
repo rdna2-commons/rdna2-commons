@@ -104,6 +104,9 @@ class Gate(unittest.TestCase):
         hard, _ = self.run_gate(files=[("results/t/c/bob.json", b"{}")])
         self.assertTrue(any("named after" in h for h in hard))
         self.assertEqual(self.run_gate(files=[("results/t/c/alice.json", b"{}")])[0], [])
+        hard, _ = self.run_gate(files=[("title-runs/b/c/bob.json", b"{}")])
+        self.assertTrue(any("named after" in h for h in hard))
+        self.assertEqual(self.run_gate(files=[("title-runs/b/c/alice.json", b"{}")])[0], [])
 
 
 class Tasks(unittest.TestCase):

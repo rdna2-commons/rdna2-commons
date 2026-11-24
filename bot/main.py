@@ -87,6 +87,14 @@ def remove_label(number, name):
     call("DELETE", f"/repos/{REPO}/issues/{number}/labels/{urllib.parse.quote(name)}")
 
 
+def sync_accounts():
+    try:
+        with open(os.path.join(os.path.dirname(__file__), "..", "SYNC_ACCOUNTS"), encoding="utf-8") as f:
+            return {l.strip() for l in f if l.strip() and not l.startswith("#")}
+    except OSError:
+        return set()
+
+
 def maintainers():
     try:
         with open(os.path.join(os.path.dirname(__file__), "..", "MAINTAINERS"), encoding="utf-8") as f:
@@ -197,7 +205,9 @@ def gate(number):
     others = [{"number": p["number"], "body": p["body"] or ""} for p in pages(f"/repos/{REPO}/pulls?state=open")
               if p["number"] != number]
     commits = [c["commit"]["message"] for c in pages(f"/repos/{REPO}/pulls/{number}/commits")]
-    hard, soft = rules.gate(info, pr_files(pr), task_of(info["body"]), others, commits)
+    names = [f["filename"] for f in pages(f"/repos/{REPO}/pulls/{number}/files")]
+    sync = rules.is_upstream_sync(info, names, sync_accounts())
+    hard, soft = rules.gate(info, pr_files(pr), task_of(info["body"]), others, commits, sync)
     if hard:
         comment(number, "Closing: this pull request breaks the rules in CONTRIBUTING.md.\n\n"
                 + "\n".join(f"- {r}" for r in hard + soft)
@@ -364,7 +374,9 @@ def sweep():
         commit = call("GET", f"/repos/{REPO}/commits/{p['head']['sha']}")
         pushed = ts(commit["commit"]["committer"]["date"])
         # Checked from the files again, so removing the label does not make a governance change mergeable.
-        protected = bool(rules.protected_paths(f["filename"] for f in pages(f"/repos/{REPO}/pulls/{p['number']}/files")))
+        names = [f["filename"] for f in pages(f"/repos/{REPO}/pulls/{p['number']}/files")]
+        protected = bool(rules.protected_paths(names))
+        sync = rules.is_upstream_sync({"labels": lab, "author": p["user"]["login"]}, names, sync_accounts())
         if protected:
             ready, why = rules.governance_status({"author": p["user"]["login"], "head": p["head"]["sha"]}, reviews,
                                                  checks_green(p["head"]["sha"]),
@@ -375,13 +387,14 @@ def sweep():
                                      + " ".join("@" + m for m in sorted(maint)))
             continue
         ok, why = rules.merge_decision({"author": p["user"]["login"], "labels": lab, "head": p["head"]["sha"],
-                                        "protected": protected},
+                                        "protected": protected, "sync": sync},
                                        reviews, checks_green(p["head"]["sha"]), counts,
                                        (now() - pushed).total_seconds() / 3600, maint,
                                        assigned_reviewers(p["number"], p["head"]["sha"]))
         if ok:
             call("PUT", f"/repos/{REPO}/pulls/{p['number']}/merge",
-                 {"merge_method": "squash", "sha": p["head"]["sha"]})
+                 # An engine sync keeps the upstream history, so it is merged, never squashed.
+                 {"merge_method": "merge" if sync else "squash", "sha": p["head"]["sha"]})
             comment(p["number"], f"Merged automatically: {why}.")
 
 

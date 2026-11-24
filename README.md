@@ -30,9 +30,9 @@
 </p>
 
 > [!IMPORTANT]
-> **This is not an emulator and runs no games.** It is the shared, verified groundwork that Xbox Series
-> compatibility projects can all build on. **No game data, keys, decryption or links to leaks, ever**: the bot
-> closes any pull request that tries.
+> **This repository contains no game.** The recompiler works only on your own copy, on your own disk, and
+> nothing it makes is ever shared. **No game data, keys, decryption or links to leaks, ever**: the bot closes any
+> pull request that tries, and every imported commit was scanned for it.
 
 ## In plain words
 
@@ -40,10 +40,14 @@ Consoles and PCs are built from similar parts, but software made for one does no
 console's graphics programs (shaders) and system functions work differently. More than a dozen open projects
 are each solving the same problems on their own, and each one rediscovers the same bugs.
 
-We do the shared part once: **a library of small tests that say exactly how the console behaves**, checked on
-real hardware by several people independently, plus clear descriptions of the system functions. Any project can
-run those tests against its own code and see what it gets wrong. When the tests find a bug in a project, we help
-fix it there.
+We build **an open static recompiler for Xbox Series X|S** ([engine/](engine/README.md)): it translates the
+console's graphics programs to the PC's (RDNA2 → SPIR-V), loads the title's own code, and stands in for the
+console's system functions (D3D12 → Vulkan and the rest). It starts from the Leonida project's engine, with its
+full history and authors, and follows it automatically.
+
+Around it sits what makes it trustworthy: **a library of small tests that say exactly how the console behaves**,
+checked on real hardware by several people independently, which any project can run against its own code. When
+the tests find a bug, here or elsewhere, it gets fixed where it lives.
 
 The whole plan, without jargon: [docs/plan-explained.md](docs/plan-explained.md).
 
@@ -59,6 +63,8 @@ Live numbers, every task and who is on it: **[progress page](https://github.com/
 
 | Area | State | What exists | Next |
 |---|---|---|---|
+| **Recompiler engine** | 🔨 imported | RDNA2 → SPIR-V translator, PE loader, console API shims, D3D12 → Vulkan, their tests, 10,560 commits of history; developed against GTA VI (build 1.0.2.1), whose build profile lives in Leonida | Engine CI here; daily upstream sync once its token is set |
+| **Title runs** | ⏳ waiting | [Reports by build hash](docs/title-runs.md), confirmed when two people agree | First registered build and reports |
 | **Rules and bot** | ✅ working | Rule gate, claims, blind drawn reviewers, tests-must-fail-on-base, fix tasks, `/split`, automerge, protected governance files | Mirror token; first outside reviewers |
 | **Shader cases** | 🔨 started | [Format](docs/test-format.md), validator, 3 cases (f32 add; binary64 FMA as literals and run-time inputs) | f32 rounding and denormals, f16/packed, LDS, wave64 cross-lane, images, buffers |
 | **Hardware results** | 🔨 started | [Consensus rules](docs/results.md); the FMA probe was measured on RTX 4090, 3070, Quadro RTX 4000 and RTX 5060 Laptop | An AMD RDNA2 run as the reference; second independent reports |
@@ -123,8 +129,8 @@ Details: [docs/architecture.md](docs/architecture.md).
 
 <details><summary><b>Can I play anything with this?</b></summary>
 
-No. This repository contains no emulator and no game. It makes the projects that do run software more correct,
-by giving them tests to check against. See [docs/landscape.md](docs/landscape.md) for those projects.
+Not yet, and never from this repository alone: it contains no game. The recompiler turns your own copy into a
+PC build; how far that gets today is on the progress page under "Title runs", and nothing is playable yet.
 </details>
 
 <details><summary><b>Is this legal?</b></summary>

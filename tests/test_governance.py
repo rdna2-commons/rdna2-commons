@@ -18,8 +18,10 @@ def review(user, verdict="approve"):
 class Protected(unittest.TestCase):
     def test_paths(self):
         self.assertEqual(rules.protected_paths(["bot/rules.py", "docs/a.md", ".github/workflows/x.yml",
-                                                "MAINTAINERS", "tools/results.py", "tools/fails_on_base.py"]),
-                         [".github/workflows/x.yml", "MAINTAINERS", "bot/rules.py", "tools/fails_on_base.py"])
+                                                "MAINTAINERS", "tools/results.py", "tools/fails_on_base.py",
+                                                "builds/b.json", "title-runs/b/c/a.json"]),
+                         [".github/workflows/x.yml", "MAINTAINERS", "bot/rules.py", "builds/b.json",
+                          "tools/fails_on_base.py"])
 
     def test_never_automerged(self):
         pr = {"author": "a", "labels": [], "head": HEAD, "protected": True}
@@ -62,6 +64,33 @@ class Candidates(unittest.TestCase):
         counts = {"a": 12, "b": 12, "c": 5, "d": 15, "e": 20, "x[bot]": 50}
         days = {"a": 40, "b": 10, "c": 90, "d": 60, "e": 60, "x[bot]": 90}
         self.assertEqual(rules.maintainer_candidates(counts, days, {"d"}, {"e"}), ["a"])
+
+
+class UpstreamSync(unittest.TestCase):
+    def test_detection(self):
+        pr = {"labels": ["upstream-sync"], "author": "sync-bot"}
+        self.assertTrue(rules.is_upstream_sync(pr, ["engine/a.py"], {"sync-bot"}))
+        self.assertFalse(rules.is_upstream_sync(pr, ["engine/a.py", "bot/rules.py"], {"sync-bot"}))
+        self.assertFalse(rules.is_upstream_sync(pr, ["engine/a.py"], {"other"}))
+        self.assertFalse(rules.is_upstream_sync({"labels": [], "author": "sync-bot"}, ["engine/a.py"], {"sync-bot"}))
+        self.assertFalse(rules.is_upstream_sync(pr, [], {"sync-bot"}))
+
+    def test_merges_on_green_without_reviews(self):
+        pr = {"author": "sync-bot", "labels": ["upstream-sync"], "head": HEAD, "sync": True}
+        self.assertTrue(rules.merge_decision(pr, [], True, {}, 30, set(), set())[0])
+        self.assertFalse(rules.merge_decision(pr, [], False, {}, 30, set(), set())[0])
+        self.assertFalse(rules.merge_decision(pr, [], True, {}, 2, set(), set())[0])
+        self.assertFalse(rules.merge_decision(pr, [review("x", "reject")], True, {}, 30, set(), set())[0])
+        self.assertFalse(rules.merge_decision(dict(pr, labels=["hold"]), [], True, {}, 30, set(), set())[0])
+
+    def test_sync_skips_signoff_and_size_only(self):
+        pr = {"number": 9, "author": "sync-bot", "body": "Closes #7\nProvenance:\n- https://x/y (GPL-3.0): engine\n",
+              "labels": ["upstream-sync"], "additions": 90000, "deletions": 0}
+        task = {"number": 7, "assignees": ["sync-bot"], "labels": ["task", "ready"], "state": "open"}
+        hard, soft = rules.gate(pr, [("engine/a.py", b"x = 1\n")], task, [], ["no sign-off"], sync=True)
+        self.assertEqual((hard, soft), ([], []))
+        hard, _ = rules.gate(pr, [("engine/x.rpf", b"x")], task, [], [], sync=True)
+        self.assertTrue(hard)
 
 
 if __name__ == "__main__":
