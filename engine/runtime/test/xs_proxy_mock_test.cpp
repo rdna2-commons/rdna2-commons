@@ -948,6 +948,37 @@ int check_xbox_slots() {
     EXPECT(sd.Filter == 0x85 && sd.ComparisonFunc == D3D12_COMPARISON_FUNC_LESS_EQUAL);
     sampler[16] = D3D12_COMPARISON_FUNC_NEVER;  // never is a plain sampler
     EXPECT(xs::sampler_desc_from_console(sampler).Filter == 0x5);
+
+    // 74 RegisterPagePool(address, pages, &handle) and 75 UnregisterPagePool(handle): forwarded by number, 74 was
+    // the PC ShaderCacheControl and failed the title's device setup. A pool needs a 64 KiB aligned address, pages
+    // and an output; 75 with a handle 74 gave unregisters it, once.
+    std::uint64_t pool = 0;
+    EXPECT(hr_of(raw(device, 74, 0x10000000, 1024, word(&pool))) == S_OK && pool != 0);
+    EXPECT(mock->calls[74] == 0 && xs::device_slot_overridden(74));
+    std::uint64_t bad = 0;
+    EXPECT(hr_of(raw(device, 74, 0x10001000, 1, word(&bad))) == E_INVALIDARG && bad == 0);
+    EXPECT(hr_of(raw(device, 74, 0x10000000, 0, word(&bad))) == E_INVALIDARG);
+    EXPECT(hr_of(raw(device, 74, 0x10000000, 1, 0)) == E_INVALIDARG);
+    EXPECT(hr_of(raw(device, 75, pool)) == S_OK && mock->calls[75] == 0);
+    EXPECT(hr_of(raw(device, 75, pool)) != S_OK || mock->calls[75] == 1);  // a second time is not a pool handle
+
+    // 86, a pipeline from a stream (desc, riid, out): the PC ID3D12Device2::CreatePipelineState (slot 47).
+    const D3D12_PIPELINE_STATE_STREAM_DESC stream{};
+    const IID pso_iid = __uuidof(ID3D12PipelineState);
+    void* pso = reinterpret_cast<void*>(1);
+    EXPECT(hr_of(raw(device, 86, word(&stream), word(&pso_iid), word(&pso))) == S_OK);
+    EXPECT(mock->calls[86] == 0 && mock->calls[47] == 1);
+    // The console stream's numbering: a VS (1), a console mesh shader (24 -> PC 25), then a console-only type (30):
+    // the copy renumbers the mesh shader and stops at the console type.
+    alignas(8) std::uint8_t console_stream[24 * 3] = {};
+    const std::uint32_t types[3] = {1, 24, 30};
+    for (int i = 0; i < 3; ++i) std::memcpy(console_stream + 24 * i, &types[i], 4);
+    int stopped = -1;
+    const auto pc_stream = xs::console_pipeline_stream_to_pc(console_stream, sizeof(console_stream), &stopped);
+    std::uint32_t second = 0;
+    if (pc_stream.size() >= 48) std::memcpy(&second, pc_stream.data() + 24, 4);
+    EXPECT(pc_stream.size() == 48 && second == 25 && stopped == 30);
+    EXPECT(hr_of(raw(device, 86, 0, word(&pso_iid), word(&pso))) == E_INVALIDARG && pso == nullptr);
     sampler[3] = 0;  // no mip filter: the first level only
     EXPECT(xs::sampler_desc_from_console(sampler).MaxLOD == 0.0f);
     sampler[1] = 3;

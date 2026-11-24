@@ -66,6 +66,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <vector>
 
 namespace rt::d3d12_xs {
 
@@ -146,6 +147,13 @@ bool device_slot_overridden(unsigned slot);
 // or the colour). This is the PC description the slot creates the sampler from. The field layout follows VIctory
 // (GPL-3.0), crates/victory-gpu/src/sampler.rs.
 D3D12_SAMPLER_DESC sampler_desc_from_console(const std::uint32_t* words);
+
+// Device slot 86 takes a pipeline stream in the console's numbering: amplification and mesh shaders are subobject
+// types 23 and 24 (PC 24 and 25), and the console's own types start at 25. The shared types have the PC layout (a type
+// word, padding, the payload, 8-byte aligned). This copies the stream with those two renumbered and stops at the first
+// type it does not know (a console-only one), which it reports in `stopped_at` (or -1); the PC parser refused the whole
+// stream for it. From VIctory (GPL-3.0, crates/victory-gpu/src/pipeline.rs).
+std::vector<std::uint8_t> console_pipeline_stream_to_pc(const std::uint8_t* stream, std::size_t size, int* stopped_at);
 
 // Queue and fence proxies created by device slots 8/75 and 36. The real_* accessors return the wrapped object
 // (no reference added), or null when the pointer is not such a proxy.

@@ -238,6 +238,11 @@ struct Watch {
     uint64_t target = 0;
     std::atomic<unsigned> hits{0};
 };
+// LEONIDA_WATCH_RW=1: the watch also reports reads (DR7 RW=11), so it names the code that uses a field.
+inline unsigned long long watch_rw() {
+    static const bool rw = GetEnvironmentVariableW(L"LEONIDA_WATCH_RW", nullptr, 0) != 0;
+    return rw ? 3ull : 1ull;
+}
 inline Watch& watch() {
     static Watch w;
     return w;
@@ -298,7 +303,7 @@ inline bool handle_watch(EXCEPTION_POINTERS* info) {
         w.target = (w.reg == 16 ? 0 : watch_reg(c, w.reg)) + w.offset;
         c.Rip = w.at;  // run the restored instruction
         c.Dr0 = w.target;
-        c.Dr7 = (c.Dr7 & ~0xF0003ull) | 0x1ull | (1ull << 16) | (3ull << 18);  // L0, write, 8 bytes
+        c.Dr7 = (c.Dr7 & ~0xF0003ull) | 0x1ull | (watch_rw() << 16) | (3ull << 18);  // L0, write, 8 bytes
         // The same watch on every other thread that exists now: a field may be filled from another thread.
         if (HANDLE snap = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0); snap != INVALID_HANDLE_VALUE) {
             THREADENTRY32 te{};
@@ -314,7 +319,7 @@ inline bool handle_watch(EXCEPTION_POINTERS* info) {
                     tc.ContextFlags = CONTEXT_DEBUG_REGISTERS;
                     if (GetThreadContext(t, &tc)) {
                         tc.Dr0 = w.target;
-                        tc.Dr7 = (tc.Dr7 & ~0xF0003ull) | 0x1ull | (1ull << 16) | (3ull << 18);
+                        tc.Dr7 = (tc.Dr7 & ~0xF0003ull) | 0x1ull | (watch_rw() << 16) | (3ull << 18);
                         SetThreadContext(t, &tc);
                     }
                     ResumeThread(t);

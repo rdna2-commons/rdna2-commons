@@ -45,6 +45,7 @@
 #include <mutex>
 #include <unordered_map>
 #include <utility>
+#include <vector>
 
 namespace rt::d3d12_xs {
 namespace {
@@ -157,7 +158,9 @@ const char* slot_name(unsigned slot) {
         case 67: return "Xbox DeserializeComputePipelineStateX";
         case 70: return "Xbox shader-resource view from raw words";
         case 73: return "Xbox CreateCommandListX -> PC CreateCommandList";
-        case 75: return "CreateCommandQueue1 -> queue proxy";
+        case 74: return "Xbox RegisterPagePool";
+        case 86: return "Xbox CreatePipelineState (stream) -> PC Device2 slot 47";
+        case 75: return "CreateCommandQueue1 -> queue proxy, or Xbox UnregisterPagePool";
         case 76: return "Xbox resource creation";
         case 127: return "Xbox CreateCommittedResource3";
         case 78: return "Xbox SetFrameIntervalX";
@@ -1500,6 +1503,41 @@ bool allocator_type(const void* allocator, D3D12_COMMAND_LIST_TYPE* type) {
     return true;
 }
 
+// Page pools of device slots 74/75 (RegisterPagePool/UnregisterPagePool): first address and page count; a handle is
+// the index plus one, and an unregistered pool leaves an empty entry so later handles keep their meaning.
+struct PagePool {
+    std::uint64_t address = 0;
+    std::uint32_t pages = 0;
+    bool live = false;
+};
+std::mutex g_page_pools_mutex;
+std::vector<PagePool> g_page_pools;
+constexpr std::uint64_t kPagePoolPage = 64 * 1024;
+
+HRESULT register_page_pool(std::uint64_t address, std::uint32_t pages, std::uint64_t* out) {
+    if (!out || pages == 0 || address % kPagePoolPage != 0) return E_INVALIDARG;
+    std::lock_guard<std::mutex> lock(g_page_pools_mutex);
+    g_page_pools.push_back(PagePool{address, pages, true});
+    *out = g_page_pools.size();
+    static std::atomic<bool> logged{false};
+    if (first_call(logged))
+        std::fprintf(stderr, "[rt] d3d12_xs: slot 74 RegisterPagePool: 0x%llx, %u pages of 64 KiB -> handle %llu\n",
+                     static_cast<unsigned long long>(address), pages, static_cast<unsigned long long>(*out));
+    return S_OK;
+}
+
+bool is_page_pool_handle(std::uint64_t handle) {
+    std::lock_guard<std::mutex> lock(g_page_pools_mutex);
+    return handle >= 1 && handle <= g_page_pools.size() && g_page_pools[handle - 1].live;
+}
+
+HRESULT unregister_page_pool(std::uint64_t handle) {
+    std::lock_guard<std::mutex> lock(g_page_pools_mutex);
+    if (handle < 1 || handle > g_page_pools.size() || !g_page_pools[handle - 1].live) return E_INVALIDARG;
+    g_page_pools[handle - 1].live = false;
+    return S_OK;
+}
+
 // Xbox device slot 73 (public HLE): CreateCommandListX(desc, allocator, initial_state, riid, out). The console call is
 // not the PC six-argument form: the type is the first word of D3D12XBOX_COMMAND_LIST_DESC and there is no node mask
 // (the HLE passes 0). The second desc word is logged, not interpreted: its public layout is not established.
@@ -2101,7 +2139,103 @@ std::uint64_t WINAPI proxy_slot(DeviceProxy* self, std::uint64_t a1, std::uint64
                                                   reinterpret_cast<void**>(a3)));
     } else if constexpr (Slot == 31 || Slot == 34 || Slot == 35 || Slot == 45 || Slot == 46 || Slot == 50) {
         return hr_to_u64(proxy_unwrapping_call<Slot>(self, a1, a2, a3, a4, a5));
+    } else if constexpr (Slot == 86) {
+        // The console's pipeline from a stream, (stream desc, riid, out): the PC ID3D12Device2::CreatePipelineState
+        // (PC slot 47). Forwarded by number it was past the PC vtable (E_NOTIMPL). Slot from VIctory's device table
+        // (GPL-3.0, crates/victory-gpu/src/device.rs); pipeline states are not wrapped, so the real one is handed out.
+        note_slot(86);
+        auto* const out = reinterpret_cast<void**>(a3);
+        if (out) *out = nullptr;
+        if (!a1 || !a2 || !out) return hr_to_u64(E_INVALIDARG);
+        ID3D12Device2* device2 = nullptr;
+        if (FAILED(self->real->QueryInterface(IID_PPV_ARGS(&device2))) || !device2) return hr_to_u64(E_NOTIMPL);
+        const auto* const console = reinterpret_cast<const D3D12_PIPELINE_STATE_STREAM_DESC*>(a1);
+        int stopped = -1;
+        std::vector<std::uint8_t> translated = console_pipeline_stream_to_pc(
+            static_cast<const std::uint8_t*>(console->pPipelineStateSubobjectStream), console->SizeInBytes, &stopped);
+        if (stopped >= 0) {
+            static std::atomic<bool> logged_stop{false};
+            if (first_call(logged_stop))
+                std::fprintf(stderr, "[rt] d3d12_xs: slot 86: pipeline stream subobject type %d is not known on the PC; "
+                                     "the stream is used up to it\n", stopped);
+        }
+        D3D12_PIPELINE_STATE_STREAM_DESC pc{translated.size(), translated.data()};
+        const HRESULT hr = device2->CreatePipelineState(&pc, *reinterpret_cast<const IID*>(a2), out);
+        device2->Release();
+        static std::atomic<bool> failed{false};
+        if (FAILED(hr) && first_call(failed)) {
+            // The subobject types of the first refused stream (PC numbering, as the parser saw them).
+            char types[256] = {};
+            std::size_t used = 0;
+            for (std::size_t at = 0; at + 4 <= translated.size() && used + 8 < sizeof(types);) {
+                std::uint32_t t = 0;
+                std::memcpy(&t, translated.data() + at, 4);
+                used += static_cast<std::size_t>(std::snprintf(types + used, sizeof(types) - used, "%u ", t));
+                if (t == D3D12_PIPELINE_STATE_SUBOBJECT_TYPE_RENDER_TARGET_FORMATS && at + 8 + 36 <= translated.size()) {
+                    D3D12_RT_FORMAT_ARRAY f{};
+                    std::memcpy(&f, translated.data() + at + 4, sizeof(f));
+                    std::fprintf(stderr, "[rt] d3d12_xs: slot 86 stream: %u render targets, formats %u %u %u %u %u %u %u %u\n",
+                                 f.NumRenderTargets, f.RTFormats[0], f.RTFormats[1], f.RTFormats[2], f.RTFormats[3],
+                                 f.RTFormats[4], f.RTFormats[5], f.RTFormats[6], f.RTFormats[7]);
+                }
+                if (t >= 1 && t <= 5 && at + 24 <= translated.size()) {
+                    D3D12_SHADER_BYTECODE b{};
+                    std::memcpy(&b, translated.data() + at + 8, sizeof(b));
+                    std::fprintf(stderr, "[rt] d3d12_xs: slot 86 stream: shader type %u, %zu bytes\n", t,
+                                 static_cast<std::size_t>(b.BytecodeLength));
+                }
+                if (t == D3D12_PIPELINE_STATE_SUBOBJECT_TYPE_BLEND && at + 336 <= translated.size()) {
+                    D3D12_BLEND_DESC bd{};
+                    std::memcpy(&bd, translated.data() + at + 4, sizeof(bd));
+                    std::fprintf(stderr,
+                                 "[rt] d3d12_xs: slot 86 stream: blend a2c %d independent %d rt0 blend %d logic %d op %d\n",
+                                 bd.AlphaToCoverageEnable, bd.IndependentBlendEnable, bd.RenderTarget[0].BlendEnable,
+                                 bd.RenderTarget[0].LogicOpEnable, static_cast<int>(bd.RenderTarget[0].LogicOp));
+                }
+                if (t == D3D12_PIPELINE_STATE_SUBOBJECT_TYPE_PRIMITIVE_TOPOLOGY && at + 8 <= translated.size()) {
+                    std::uint32_t topo = 0;
+                    std::memcpy(&topo, translated.data() + at + 4, 4);
+                    std::fprintf(stderr, "[rt] d3d12_xs: slot 86 stream: topology type %u\n", topo);
+                }
+                if (t == D3D12_PIPELINE_STATE_SUBOBJECT_TYPE_INPUT_LAYOUT && at + 24 <= translated.size()) {
+                    D3D12_INPUT_LAYOUT_DESC l{};
+                    std::memcpy(&l, translated.data() + at + 8, sizeof(l));
+                    const bool named = !l.NumElements || (l.pInputElementDescs && l.pInputElementDescs[0].SemanticName);
+                    std::fprintf(stderr, "[rt] d3d12_xs: slot 86 stream: %u input elements, first %s\n", l.NumElements,
+                                 named ? "named" : "without a semantic name");
+                }
+                std::size_t step = 0;
+                switch (t) {
+                    case 0: case 17: step = 16; break;
+                    case 7: case 15: step = 40; break;
+                    case 8: step = 336; break;
+                    case 9: case 13: case 14: case 16: case 18: case 20: step = 8; break;
+                    case 10: step = 48; break;
+                    case 11: step = 56; break;
+                    case 21: step = 64; break;
+                    case 22: step = 32; break;
+                    default: step = 24; break;
+                }
+                at += step;
+            }
+            std::fprintf(stderr, "[rt] d3d12_xs: slot 86 CreatePipelineState (stream) failed with 0x%08lx; types: %s\n",
+                         static_cast<unsigned long>(hr), types);
+        }
+        return hr_to_u64(hr);
+    } else if constexpr (Slot == 74) {
+        // The console's RegisterPagePool(address, page count, handle out): a range of 64 KiB pages the title maps
+        // into tiled resources by page index. Forwarded by number it reached the PC ShaderCacheControl, which
+        // failed, and the title's device setup returned E_INVALIDARG. Slot assignment and shape from VIctory
+        // (GPL-3.0, crates/victory-gpu/src/resource.rs). The pool is recorded; a handle is its index plus one.
+        note_slot(74);
+        return hr_to_u64(register_page_pool(a1, static_cast<std::uint32_t>(a2), reinterpret_cast<std::uint64_t*>(a3)));
     } else if constexpr (Slot == 75) {
+        // The console's UnregisterPagePool(handle) when given a handle slot 74 returned; otherwise the PC form,
+        // CreateCommandQueue1(desc, creator id, riid, out), whose first argument is a pointer.
+        if (is_page_pool_handle(a1)) {
+            note_slot(75);
+            return hr_to_u64(unregister_page_pool(a1));
+        }
         return hr_to_u64(proxy_create_command_queue1(self, a1, a2, reinterpret_cast<const IID*>(a3),
                                                      reinterpret_cast<void**>(a4)));
     } else if constexpr (Slot == 14) {
@@ -2451,12 +2585,54 @@ ID3D12Device* device_proxy_real_device(const void* device) {
 
 bool device_slot_overridden(unsigned slot) {
     if (slot <= 2 || slot == 8 || slot == 9 || slot == 14 || slot == 25 || slot == 26 || slot == 31 || slot == 32 || slot == 34 || slot == 35 ||
-        slot == 36 || slot == 45 || slot == 46 || slot == 50 || slot == 61 || slot == 62 || slot == 67 ||
+        slot == 36 || slot == 45 || slot == 46 || slot == 50 || slot == 61 || slot == 62 || slot == 67 || slot == 74 || slot == 86 ||
         slot == 70 || slot == 75 || slot == 76 || slot == 108 || slot == 133 || slot == kCreateCommittedResource3X)
         return true;
     const XboxDeviceSlotRoutes& routes = xbox_device_slot_routes();
     return slot == routes.frame_interval || slot == routes.schedule_event || slot == routes.wait_event ||
            slot == routes.queue_x || slot == routes.list_x;
+}
+
+std::vector<std::uint8_t> console_pipeline_stream_to_pc(const std::uint8_t* stream, std::size_t size, int* stopped_at) {
+    if (stopped_at) *stopped_at = -1;
+    std::vector<std::uint8_t> pc;
+    if (!stream) return pc;
+    // Bytes each subobject takes on x64 (type word included, 8-byte aligned), by its PC type number: the 64-bit layout
+    // of the d3d12.h payload structures.
+    const auto bytes = [](std::uint32_t pc_type) -> std::size_t {
+        switch (pc_type) {
+            case 0: return 16;                                             // root signature pointer
+            case 1: case 2: case 3: case 4: case 5: case 6: return 24;     // shader bytecode (VS PS DS HS GS CS)
+            case 24: case 25: return 24;                                   // AS, MS
+            case 7: return 40;                                             // stream output
+            case 8: return 336;                                            // blend
+            case 9: case 13: case 14: case 16: case 18: case 20: return 8; // mask, strip cut, topology, DSV fmt, node, flags
+            case 10: return 48;                                            // rasterizer
+            case 11: return 56;                                            // depth stencil
+            case 12: case 19: return 24;                                   // input layout, cached PSO
+            case 15: return 40;                                            // render target formats
+            case 17: return 16;                                            // sample desc
+            case 21: return 64;                                            // depth stencil 1
+            case 22: return 32;                                            // view instancing
+            default: return 0;
+        }
+    };
+    std::size_t at = 0;
+    while (at + 8 <= size) {
+        std::uint32_t type = 0;
+        std::memcpy(&type, stream + at, sizeof(type));
+        const std::uint32_t pc_type = type == 23 ? 24 : type == 24 ? 25 : type;
+        const std::size_t n = type <= 24 ? bytes(pc_type) : 0;
+        if (!n || at + n > size) {
+            if (stopped_at) *stopped_at = static_cast<int>(type);
+            break;
+        }
+        const std::size_t out_at = pc.size();
+        pc.insert(pc.end(), stream + at, stream + at + n);
+        std::memcpy(pc.data() + out_at, &pc_type, sizeof(pc_type));
+        at += n;
+    }
+    return pc;
 }
 
 D3D12_SAMPLER_DESC sampler_desc_from_console(const std::uint32_t* w) {
