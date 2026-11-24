@@ -38,6 +38,7 @@
 #include "../shims/file_system.h"
 #include "../shims/process_shim.h"
 #include "../shims/shims.h"
+#include "../shims/crash_report.h"
 #include "../shims/startup_trace.h"
 #include "../shims/xmem.h"
 
@@ -182,6 +183,9 @@ int wmain(int argc, wchar_t** argv) {
     if (!rt::cpu_emulation::install())
         std::fprintf(stderr, "[rt] cpu: AddVectoredExceptionHandler failed (error %lu); instructions this CPU lacks "
                              "will stop the game\n", GetLastError());
+    // A crash nothing handles ends with one line naming the code and the module+offset place, and a JSON line in
+    // LEONIDA_CRASH_FILE when it is set (shims/crash_report.h); LEONIDA_NO_CRASH_REPORT=1 turns it off.
+    rt::crash_report::install();
 
     try {
         rt::Loader loader(game_dir);

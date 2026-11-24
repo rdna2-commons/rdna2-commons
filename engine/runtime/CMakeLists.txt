@@ -1004,6 +1004,20 @@ if(BUILD_TESTING)
     target_link_options(startup_trace_test PRIVATE /OPT:NOREF)
     add_dependencies(startup_trace_test gta6rt_tls_host)
     add_test(NAME startup_trace COMMAND startup_trace_test)
+
+    # The fatal crash report (shims/crash_report.h): describe() on a synthetic record, and a child of the test that
+    # reads address 0 and must leave the crash line on stderr and a JSON line in LEONIDA_CRASH_FILE. No game files.
+    add_executable(crash_report_test
+      test/crash_report_test.cpp
+      src/pe_loader.cpp
+      shims/registry.cpp
+    )
+    target_include_directories(crash_report_test PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+    target_compile_definitions(crash_report_test PRIVATE WIN32_LEAN_AND_MEAN NOMINMAX UNICODE _UNICODE _CRT_SECURE_NO_WARNINGS)
+    target_compile_options(crash_report_test PRIVATE /W4 /permissive- /utf-8 /EHsc)
+    target_link_options(crash_report_test PRIVATE /OPT:NOREF)
+    add_dependencies(crash_report_test gta6rt_tls_host)
+    add_test(NAME crash_report COMMAND crash_report_test)
   endif()
 
   if(TARGET device_proxy_test)

@@ -1,0 +1,6 @@
+# Build output and local caches of the engine; never committed.
+runtime/build/
+runtime/build-*/
+.vulkan-headers/
+__pycache__/
+*.pyc
