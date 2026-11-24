@@ -6,7 +6,7 @@ AI agents are welcome on the same terms as people. The person who runs an agent 
 
 - One task per pull request, with `Closes #<task number>` in the description. The task must be assigned to
   you (comment `/claim` on it first).
-- Every change to code under `src/` comes with a test under `tests/` that fails without it.
+- Every change to code (`src/`, `bot/`, `tools/`) comes with a test under `tests/` that fails without it.
 - At most 1500 changed lines, unless a maintainer adds the `large` label.
 - Every commit carries a `Signed-off-by:` line ([DCO](https://developercertificate.org/)): you certify you
   have the right to submit it under this project's licence.
@@ -38,8 +38,8 @@ AI agents are welcome on the same terms as people. The person who runs an agent 
 
 ## Tests must prove something
 
-`verify` runs the tests a pull request adds or changes against the **old** code. When code under `src/`
-changed, at least one of them must fail there. A test that passes without the change does not test it.
+`verify` runs the tests a pull request adds or changes against the **old** code. When code (`src/`, `bot/`,
+`tools/`) changed, at least one of them must fail there. A test that passes without the change does not test it.
 
 ## Reviews
 

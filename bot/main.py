@@ -20,9 +20,21 @@ import rules  # noqa: E402
 API = "https://api.github.com"
 REPO = os.environ.get("GITHUB_REPOSITORY", "")
 MARK = "<!-- commons-bot -->"
+# COMMONS_DRY_RUN=1: post comments saying what would happen, change nothing else (no labels, closes, merges,
+# assignments or new issues). For trying the bot on a project before it is allowed to act.
+DRY_RUN = os.environ.get("COMMONS_DRY_RUN") == "1"
+DRY_LOG = []
+
+
+def is_comment_post(method, path):
+    return method == "POST" and path.endswith("/comments")
 
 
 def call(method, path, data=None):
+    if DRY_RUN and method != "GET" and not is_comment_post(method, path):
+        DRY_LOG.append((method, path, data))
+        print(f"dry run: would {method} {path} {json.dumps(data) if data else ''}")
+        return {"number": 0}
     url = path if path.startswith("http") else f"{API}{path}"
     req = urllib.request.Request(url, method=method, data=None if data is None else json.dumps(data).encode())
     req.add_header("Authorization", "Bearer " + os.environ["GITHUB_TOKEN"])
@@ -58,6 +70,8 @@ def ts(s):
 
 
 def comment(number, text):
+    if DRY_RUN:
+        text = "**Dry run: nothing was changed.** This is what the bot would do.\n\n" + text
     call("POST", f"/repos/{REPO}/issues/{number}/comments", {"body": f"{MARK}\n{text}"})
 
 

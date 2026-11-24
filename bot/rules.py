@@ -27,6 +27,7 @@ BLOCKED_MAGIC = [
 ]
 
 IMAGE_DIR = "docs/images/"
+CODE_DIRS = ("src/", "bot/", "tools/")
 IMAGE_EXTENSIONS = {".png", ".svg", ".jpg", ".jpeg", ".gif", ".webp"}
 MAX_IMAGE_BYTES = 512 * 1024
 MAX_TEXT_FILE_BYTES = 2 * 1024 * 1024
@@ -155,8 +156,8 @@ def gate(pr, files, task, other_open_prs, commits):
     if any(not re.search(r"(?m)^Signed-off-by: .+ <.+>", c) for c in commits):
         soft.append("every commit needs a `Signed-off-by:` line (`git commit -s`)")
     changed = {p for p, _ in files}
-    if any(p.startswith("src/") for p in changed) and not any(p.startswith("tests/") for p in changed):
-        soft.append("changes under src/ need a test under tests/")
+    if any(p.startswith(CODE_DIRS) for p in changed) and not any(p.startswith("tests/") for p in changed):
+        soft.append("changes to code (" + ", ".join(CODE_DIRS) + ") need a test under tests/")
     if pr["additions"] + pr["deletions"] > MAX_CHANGED_LINES and "large" not in pr["labels"]:
         soft.append(f"more than {MAX_CHANGED_LINES} changed lines: split it, or ask a maintainer for `large`")
     return hard, soft
