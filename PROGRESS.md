@@ -1,8 +1,8 @@
 # Progress
 
-Generated 2026-11-24 22:45 UTC from the task board by `tools/progress.py`. Do not edit by hand.
+Generated 2026-11-25 09:08 UTC from the task board by `tools/progress.py`. Do not edit by hand.
 
-**23 of 148 tasks done** `███·················` · 7 in progress · 56 ready to take · 62 waiting on others · 19 pull requests merged by 1 contributors
+**33 of 153 tasks done** `████················` · 7 in progress · 53 ready to take · 60 waiting on others · 31 pull requests merged by 1 contributors
 
 ![Tasks by area](images/progress.svg)
 
@@ -17,7 +17,7 @@ Legend: ✅ done · 🔨 in progress · 🟦 ready to take · ⏳ waiting on oth
 | 2. Adapters | running other projects' translators against those tests | `··········` | 0/6 |
 | 3. Upstream fixes | fixing what the tests find, in the projects themselves | `··········` | 0/0 |
 | 4. Shared components | pieces several projects need and nobody has yet | `██████████` | 1/1 |
-| engine. Engine track | the hybrid recompiler itself, from loading a title to playing it (docs/engine-plan.md) | `█·········` | 9/105 |
+| engine. Engine track | the hybrid recompiler itself, from loading a title to playing it (docs/engine-plan.md) | `██········` | 17/108 |
 
 ## Areas
 
@@ -32,17 +32,17 @@ Legend: ✅ done · 🔨 in progress · 🟦 ready to take · ⏳ waiting on oth
 | input | `··········` | 0 | 0 | 3 | 1 |
 | platforms | `··········` | 0 | 0 | 0 | 2 |
 | infra | `█████·····` | 9 | 2 | 3 | 4 |
-| docs | `████████··` | 5 | 0 | 1 | 0 |
+| docs | `█████████·` | 6 | 0 | 1 | 0 |
 | i18n | `··········` | 0 | 1 | 0 | 0 |
 | cpu | `··········` | 0 | 0 | 4 | 2 |
 | diagnostics | `██········` | 1 | 0 | 3 | 0 |
-| difftest | `··········` | 0 | 0 | 0 | 5 |
+| difftest | `███·······` | 2 | 0 | 0 | 4 |
 | engine | `··········` | 0 | 0 | 1 | 0 |
 | gpu | `··········` | 0 | 1 | 2 | 10 |
 | hooking | `··········` | 0 | 0 | 1 | 3 |
 | memory | `··········` | 0 | 0 | 2 | 1 |
-| recomp | `██········` | 4 | 1 | 6 | 12 |
-| unsorted | `██········` | 1 | 2 | 0 | 2 |
+| recomp | `████······` | 10 | 1 | 3 | 11 |
+| unsorted | `███·······` | 2 | 2 | 0 | 2 |
 
 ## Phase 0: Foundation
 
@@ -117,7 +117,7 @@ Legend: ✅ done · 🔨 in progress · 🟦 ready to take · ⏳ waiting on oth
 | 🔨 | [#140](https://github.com/scarlett-commons/scarlett-commons/issues/140) Map what a title needs from the engine, from the reporter's own copy | infra | @DeSunShine |
 | 🔨 | [#142](https://github.com/scarlett-commons/scarlett-commons/issues/142) Live board and badges; banner layout; full current translations | i18n | @DeSunShine |
 | 🔨 | [#144](https://github.com/scarlett-commons/scarlett-commons/issues/144) local_run claims stage loads when the title never started | infra | @DeSunShine |
-| 🔨 | [#158](https://github.com/scarlett-commons/scarlett-commons/issues/158) recomp: thunk from the native calling convention into a translated function | recomp | @DeSunShine |
+| 🔨 | [#196](https://github.com/scarlett-commons/scarlett-commons/issues/196) emit, difftest: TLS array reads and tail calls | recomp | @DeSunShine |
 | 🟦 | [#48](https://github.com/scarlett-commons/scarlett-commons/issues/48) Loader: read the load-config directory | cpu | — |
 | 🟦 | [#50](https://github.com/scarlett-commons/scarlett-commons/issues/50) Local minidumps on crash, never uploaded | diagnostics | — |
 | 🟦 | [#51](https://github.com/scarlett-commons/scarlett-commons/issues/51) Function map file (RVA, size, name, source) | diagnostics | — |
@@ -149,10 +149,7 @@ Legend: ✅ done · 🔨 in progress · 🟦 ready to take · ⏳ waiting on oth
 | 🟦 | [#132](https://github.com/scarlett-commons/scarlett-commons/issues/132) crt_timed_wait is flaky on hosted Windows runners | infra | — |
 | 🟦 | [#136](https://github.com/scarlett-commons/scarlett-commons/issues/136) Sampling profiler in the runtime (hot functions by module+offset) | diagnostics | — |
 | 🟦 | [#137](https://github.com/scarlett-commons/scarlett-commons/issues/137) Compare the engine with VIctory per subsystem; port where VIctory is ahead | engine | — |
-| 🟦 | [#174](https://github.com/scarlett-commons/scarlett-commons/issues/174) emit: vector shuffles and blends (vshufps, vblendps, vblendvps, vpermilps, unpck, insert/extract 128) | recomp | — |
-| 🟦 | [#175](https://github.com/scarlett-commons/scarlett-commons/issues/175) emit: horizontal and dot operations (vhaddps, vhsubps, vdpps) | recomp | — |
-| 🟦 | [#176](https://github.com/scarlett-commons/scarlett-commons/issues/176) emit: floating-point compares, min and max (vucomiss, vcomiss, vcmpps/ss, vminps, vmaxps) and the parity flag | recomp | — |
-| 🟦 | [#177](https://github.com/scarlett-commons/scarlett-commons/issues/177) emit: FMA (vfmadd, vfmsub, vfnmadd, vfnmsub in 132/213/231, ps/ss/pd/sd) | recomp | — |
+| 🟦 | [#160](https://github.com/scarlett-commons/scarlett-commons/issues/160) recomp: load a locally built track B library and manifest | recomp | — |
 | 🟦 | [#178](https://github.com/scarlett-commons/scarlett-commons/issues/178) emit: atomics (lock-prefixed instructions, cmpxchg, xadd, xchg with memory) | recomp | — |
 | 🟦 | [#179](https://github.com/scarlett-commons/scarlett-commons/issues/179) emit: conversions and the remaining integer instructions (cvt*, adc, sbb, mul, div, bt*, rol/ror, movs/stos, the other mov forms) | recomp | — |
 | ⏳ | [#56](https://github.com/scarlett-commons/scarlett-commons/issues/56) Inline prologue hooks with trampolines | hooking | — |
@@ -206,8 +203,6 @@ Legend: ✅ done · 🔨 in progress · 🟦 ready to take · ⏳ waiting on oth
 | ⏳ | [#127](https://github.com/scarlett-commons/scarlett-commons/issues/127) Native, parallel BCPack decoding | storage | — |
 | ⏳ | [#134](https://github.com/scarlett-commons/scarlett-commons/issues/134) Layer 3: decompile one function to C, fix it up, verify it, swap it in | recomp | — |
 | ⏳ | [#135](https://github.com/scarlett-commons/scarlett-commons/issues/135) Which functions to recompile first: crash sites, hot functions, mod points | recomp | — |
-| ⏳ | [#159](https://github.com/scarlett-commons/scarlett-commons/issues/159) difftest: original vs translation on generated inputs, in process | difftest | — |
-| ⏳ | [#160](https://github.com/scarlett-commons/scarlett-commons/issues/160) recomp: load a locally built track B library and manifest | recomp | — |
 | ⏳ | [#161](https://github.com/scarlett-commons/scarlett-commons/issues/161) commons recomp <exe> --work DIR: census, translate, build, test, manifest | recomp | — |
 | ✅ | [#49](https://github.com/scarlett-commons/scarlett-commons/issues/49) Crash handler that prints module+offset and a stack | diagnostics | @DeSunShine |
 | ✅ | [#118](https://github.com/scarlett-commons/scarlett-commons/issues/118) AcpHal XMA contexts and WASAPI output | audio | — |
@@ -216,8 +211,16 @@ Legend: ✅ done · 🔨 in progress · 🟦 ready to take · ⏳ waiting on oth
 | ✅ | [#138](https://github.com/scarlett-commons/scarlett-commons/issues/138) Bring every document up to date; engine contributor guide; priority on a playable build | docs | @DeSunShine |
 | ✅ | [#156](https://github.com/scarlett-commons/scarlett-commons/issues/156) recomp: Rust census of a build's functions with iced-x86 | recomp | @DeSunShine |
 | ✅ | [#157](https://github.com/scarlett-commons/scarlett-commons/issues/157) recomp: translate covered functions to Rust source in the work folder | recomp | @DeSunShine |
+| ✅ | [#158](https://github.com/scarlett-commons/scarlett-commons/issues/158) recomp: thunk from the native calling convention into a translated function | recomp | @DeSunShine |
+| ✅ | [#159](https://github.com/scarlett-commons/scarlett-commons/issues/159) difftest: original vs translation on generated inputs, in process | difftest | @DeSunShine |
 | ✅ | [#169](https://github.com/scarlett-commons/scarlett-commons/issues/169) emit: calls from translated code, direct and indirect | recomp | @DeSunShine |
 | ✅ | [#171](https://github.com/scarlett-commons/scarlett-commons/issues/171) emit: imul and the AVX instructions the title uses most | recomp | @DeSunShine |
+| ✅ | [#174](https://github.com/scarlett-commons/scarlett-commons/issues/174) emit: vector shuffles and blends (vshufps, vblendps, vblendvps, vpermilps, unpck, insert/extract 128) | recomp | @DeSunShine |
+| ✅ | [#175](https://github.com/scarlett-commons/scarlett-commons/issues/175) emit: horizontal and dot operations (vhaddps, vhsubps, vdpps) | recomp | @DeSunShine |
+| ✅ | [#176](https://github.com/scarlett-commons/scarlett-commons/issues/176) emit: floating-point compares, min and max (vucomiss, vcomiss, vcmpps/ss, vminps, vmaxps) and the parity flag | recomp | @DeSunShine |
+| ✅ | [#177](https://github.com/scarlett-commons/scarlett-commons/issues/177) emit: FMA (vfmadd, vfmsub, vfnmadd, vfnmsub in 132/213/231, ps/ss/pd/sd) | recomp | @DeSunShine |
+| ✅ | [#188](https://github.com/scarlett-commons/scarlett-commons/issues/188) difftest: functions that call, to callees that are safe to run natively | difftest | @DeSunShine |
+| ✅ | [#195](https://github.com/scarlett-commons/scarlett-commons/issues/195) emit: BMI, vmovd/vmovq and the vector integer ops (packs, compares, vpmovmskb, vrsqrtps, vshufpd, vinsertps, vcvtsi2ss/sd) | recomp | @DeSunShine |
 
 ## Tasks without a phase
 
@@ -231,6 +234,8 @@ Legend: ✅ done · 🔨 in progress · 🟦 ready to take · ⏳ waiting on oth
 | ⏳ | [#155](https://github.com/scarlett-commons/scarlett-commons/issues/155) Retry pipeline creation with completed shader entries and verify cold and warm runtime execution | unsorted | — |
 | ✅ | [#151](https://github.com/scarlett-commons/scarlett-commons/issues/151) Track A on the VIctory runtime, with the track B entry point | unsorted | @DeSunShine |
 | ✅ | [#164](https://github.com/scarlett-commons/scarlett-commons/issues/164) docs/track-b.md: track B is generated on the player's machine | docs | @DeSunShine |
+| ✅ | [#180](https://github.com/scarlett-commons/scarlett-commons/issues/180) Sync VIctory: 319 upstream commits, with the open fixes for the device removal | unsorted | @DeSunShine |
+| ✅ | [#186](https://github.com/scarlett-commons/scarlett-commons/issues/186) docs/track-b.md: what runs today, and how to build it on your copy | docs | @DeSunShine |
 
 ## Test cases
 
@@ -253,26 +258,26 @@ No reports yet. See docs/title-runs.md.
 
 | Date | Pull request | Author |
 |---|---|---|
+| 2026-11-25 | [#197](https://github.com/scarlett-commons/scarlett-commons/pull/197) emit: BMI, vmovd/vmovq and the vector integer ops | @DeSunShine |
+| 2026-11-25 | [#193](https://github.com/scarlett-commons/scarlett-commons/pull/193) emit: FMA in all 48 forms, as the instructions | @DeSunShine |
+| 2026-11-25 | [#194](https://github.com/scarlett-commons/scarlett-commons/pull/194) emit: floating-point compares, min and max, and the parity flag | @DeSunShine |
+| 2026-11-25 | [#191](https://github.com/scarlett-commons/scarlett-commons/pull/191) emit: horizontal and dot operations, as the instructions | @DeSunShine |
+| 2026-11-25 | [#190](https://github.com/scarlett-commons/scarlett-commons/pull/190) emit: vector shuffles and blends | @DeSunShine |
+| 2026-11-25 | [#189](https://github.com/scarlett-commons/scarlett-commons/pull/189) recomp: track B takes functions that call, to callees that are safe to run | @DeSunShine |
+| 2026-11-25 | [#187](https://github.com/scarlett-commons/scarlett-commons/pull/187) docs/track-b.md: what runs today, and how to build it on your copy | @DeSunShine |
+| 2026-11-25 | [#184](https://github.com/scarlett-commons/scarlett-commons/pull/184) recomp: functions that write globals, compared and undone through a write watch | @DeSunShine |
+| 2026-11-25 | [#183](https://github.com/scarlett-commons/scarlett-commons/pull/183) recomp: loops under a watchdog; track B grows from 54 to 596 functions | @DeSunShine |
+| 2026-11-25 | [#182](https://github.com/scarlett-commons/scarlett-commons/pull/182) recomp: track B built on the player's machine and running in the title | @DeSunShine |
+| 2026-11-25 | [#181](https://github.com/scarlett-commons/scarlett-commons/pull/181) Sync VIctory: 319 upstream commits, with the open fixes for the device removal | @DeSunShine |
+| 2026-11-25 | [#173](https://github.com/scarlett-commons/scarlett-commons/pull/173) recomp: entry from native code into a translated function | @DeSunShine |
 | 2026-11-24 | [#172](https://github.com/scarlett-commons/scarlett-commons/pull/172) recomp: imul and the AVX instructions the title uses most | @DeSunShine |
 | 2026-11-24 | [#170](https://github.com/scarlett-commons/scarlett-commons/pull/170) recomp: calls from translated code, direct and indirect | @DeSunShine |
 | 2026-11-24 | [#168](https://github.com/scarlett-commons/scarlett-commons/pull/168) recomp: emitter v1, x86-64 functions to Rust source, checked against the CPU | @DeSunShine |
-| 2026-11-24 | [#167](https://github.com/scarlett-commons/scarlett-commons/pull/167) recomp: Rust census of a build's functions (commons-census) | @DeSunShine |
-| 2026-11-24 | [#166](https://github.com/scarlett-commons/scarlett-commons/pull/166) docs/track-b.md: track B is generated on the player's machine | @DeSunShine |
-| 2026-11-24 | [#152](https://github.com/scarlett-commons/scarlett-commons/pull/152) Track A on the VIctory runtime; track B entry point (recomp/) | @DeSunShine |
-| 2026-11-24 | [#139](https://github.com/scarlett-commons/scarlett-commons/pull/139) Bring every document up to date; engine contributor guide; playable build first | @DeSunShine |
-| 2026-11-24 | [#133](https://github.com/scarlett-commons/scarlett-commons/pull/133) Local run with an automatic, scrubbed title-run report | @DeSunShine |
-| 2026-11-24 | [#131](https://github.com/scarlett-commons/scarlett-commons/pull/131) runtime: fatal crash report with module+offset, always on | @DeSunShine |
-| 2026-11-24 | [#129](https://github.com/scarlett-commons/scarlett-commons/pull/129) Engine plan: the hybrid recompiler as 80 tasks, engine track on the progress page | @DeSunShine |
-| 2026-11-24 | [#47](https://github.com/scarlett-commons/scarlett-commons/pull/47) Engine CI: run the engine's tests here | @DeSunShine |
-| 2026-11-24 | [#45](https://github.com/scarlett-commons/scarlett-commons/pull/45) Title runs by build hash, engine upstream sync, recompiler in README and ROADMAP | @DeSunShine |
-| 2026-11-24 | [#43](https://github.com/scarlett-commons/scarlett-commons/pull/43) Import the recompiler engine from the Leonida continuation, with history | @DeSunShine |
-| 2026-11-24 | [#41](https://github.com/scarlett-commons/scarlett-commons/pull/41) Presentation: README redesign, detailed progress page, badges, translations, RE tools | @DeSunShine |
-| 2026-11-24 | [#37](https://github.com/scarlett-commons/scarlett-commons/pull/37) Shared test format, validator and the first three cases | @DeSunShine |
 
 ## Contributors
 
 | Contributor | Merged pull requests |
 |---|---:|
-| @DeSunShine | 19 |
+| @DeSunShine | 31 |
 
 Take a ready task: see docs/getting-started.md.
