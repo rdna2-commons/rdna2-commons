@@ -35,8 +35,12 @@ fn main() -> ExitCode {
         }
     };
     println!("build          {build}");
-    let cands = commons_recomp::pipeline::select(&image, limit, commons_recomp::pipeline::checkable_sandboxed);
-    println!("selected       {} functions (leaves; memory through registers and globals; loops under a watchdog)", cands.len());
+    let callees = commons_recomp::pipeline::CalleeCheck::new(&image);
+    let rule = |code: &[u8], rva: u32| {
+        commons_recomp::pipeline::checkable_with_calls(code, rva, &|t| callees.safe(t, 4))
+    };
+    let cands = commons_recomp::pipeline::select(&image, limit, &rule);
+    println!("selected       {} functions (memory through registers and globals; loops under a watchdog; calls to safe callees)", cands.len());
     let lib_rs = match commons_recomp::pipeline::generate(&cands) {
         Ok(s) => s,
         Err(e) => {
@@ -84,5 +88,14 @@ fn main() -> ExitCode {
     }
     println!("manifest       {}", path.display());
     println!("run            set COMMONS_RECOMP_DIR={} and cargo commons run <exe> --execute", work.display());
+    // The process holds the mapped image, the loaded library and the watchdog thread; tearing those down at exit has
+    // crashed after the work was done. Everything is written: end here.
+    use std::io::Write as _;
+    let _ = std::io::stdout().flush();
+    unsafe extern "system" {
+        fn GetCurrentProcess() -> isize;
+        fn TerminateProcess(process: isize, code: u32) -> i32;
+    }
+    unsafe { TerminateProcess(GetCurrentProcess(), 0) };
     ExitCode::SUCCESS
 }

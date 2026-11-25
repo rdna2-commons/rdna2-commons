@@ -226,6 +226,16 @@ extern "C" fn commons_thread_alloc() -> *mut Thread {
         t
     }
 }
+/// Puts this thread's side stack back at its top: after a call that was stopped from outside (a watchdog), the
+/// frames it left are gone.
+pub unsafe fn reset_thread() {
+    unsafe {
+        let t = TlsGetValue(THREAD_INDEX) as *mut Thread;
+        if !t.is_null() {
+            (*t).side_top = ((*t).side_base + SIDE_STACK as u64) & !0x3f;
+        }
+    }
+}
 extern "C" fn commons_dispatch(c: *mut Ctx) {
     unsafe {
         let f: unsafe fn(&mut Ctx) = core::mem::transmute((*c).target);

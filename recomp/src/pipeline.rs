@@ -39,6 +39,15 @@ pub fn checkable_sandboxed(code: &[u8], rva: u32) -> bool {
 }
 
 fn checkable_with(code: &[u8], rva: u32, sandboxed: bool) -> bool {
+    checkable_calling(code, rva, sandboxed, &|_| false)
+}
+
+/// The sandboxed rule, with direct calls to callees `safe_callee` accepts (they run natively in the test).
+pub fn checkable_with_calls(code: &[u8], rva: u32, safe_callee: &dyn Fn(u64) -> bool) -> bool {
+    checkable_calling(code, rva, true, safe_callee)
+}
+
+fn checkable_calling(code: &[u8], rva: u32, sandboxed: bool, safe_callee: &dyn Fn(u64) -> bool) -> bool {
     if code.len() < 16 {
         return false;
     }
@@ -80,10 +89,16 @@ fn checkable_with(code: &[u8], rva: u32, sandboxed: bool) -> bool {
         if i.is_invalid() || !supported(i) {
             return false;
         }
-        if matches!(i.flow_control(), FlowControl::Call | FlowControl::IndirectCall) {
-            return false;
+        match i.flow_control() {
+            FlowControl::IndirectCall => return false,
+            FlowControl::Call => {
+                if !(i.op0_kind() == OpKind::NearBranch64 && safe_callee(i.near_branch_target())) {
+                    return false;
+                }
+            }
+            _ => {}
         }
-        if matches!(i.op0_kind(), OpKind::NearBranch64) {
+        if matches!(i.op0_kind(), OpKind::NearBranch64) && i.flow_control() != FlowControl::Call {
             let t = i.near_branch_target();
             // The sandboxed test bounds each run with a watchdog, so it can take loops; the other cannot.
             let backward = t <= i.ip() && !sandboxed;
@@ -122,7 +137,7 @@ fn checkable_with(code: &[u8], rva: u32, sandboxed: bool) -> bool {
     true
 }
 
-pub fn select(image: &Image<'_>, limit: usize, rule: fn(&[u8], u32) -> bool) -> Vec<Candidate> {
+pub fn select(image: &Image<'_>, limit: usize, rule: &dyn Fn(&[u8], u32) -> bool) -> Vec<Candidate> {
     let mut out = Vec::new();
     for f in image.functions() {
         let Some(code) = image.bytes(f.begin, f.end - f.begin) else { continue };
@@ -136,6 +151,62 @@ pub fn select(image: &Image<'_>, limit: usize, rule: fn(&[u8], u32) -> bool) -> 
     out
 }
 
+/// Callees a translation may call in the differential test, where they run natively: every function reachable
+/// from them by direct calls and jumps, to `depth`, decodes, stays off FS/GS, makes no indirect call or jump (an
+/// import, an unknown target) and no system call. Their code need not be covered: it is not translated.
+pub struct CalleeCheck<'a> {
+    image: &'a Image<'a>,
+    starts: std::collections::BTreeMap<u32, u32>,
+    memo: std::cell::RefCell<std::collections::HashMap<u32, bool>>,
+}
+
+impl<'a> CalleeCheck<'a> {
+    pub fn new(image: &'a Image<'a>) -> CalleeCheck<'a> {
+        let starts = image.functions().into_iter().map(|f| (f.begin, f.end)).collect();
+        CalleeCheck { image, starts, memo: Default::default() }
+    }
+
+    pub fn safe(&self, target: u64, depth: u32) -> bool {
+        let Ok(rva) = u32::try_from(target) else { return false };
+        if let Some(&known) = self.memo.borrow().get(&rva) {
+            return known;
+        }
+        self.memo.borrow_mut().insert(rva, false); // a cycle counts as unsafe until proven
+        let ok = depth > 0 && self.check(rva, depth);
+        self.memo.borrow_mut().insert(rva, ok);
+        ok
+    }
+
+    fn check(&self, rva: u32, depth: u32) -> bool {
+        use iced_x86::Mnemonic::*;
+        let Some(&end) = self.starts.get(&rva) else { return false };
+        let Some(code) = self.image.bytes(rva, end - rva) else { return false };
+        for i in decode(code, u64::from(rva)) {
+            if i.is_invalid() || matches!(i.memory_segment(), Register::FS | Register::GS) {
+                return false;
+            }
+            if matches!(i.mnemonic(), Syscall | Sysenter | Int | Int1 | Int3 | Into | Hlt | Cli | Sti | In | Out | Rdmsr | Wrmsr) {
+                return false;
+            }
+            match i.flow_control() {
+                FlowControl::IndirectCall | FlowControl::IndirectBranch | FlowControl::Interrupt => return false,
+                FlowControl::Call | FlowControl::UnconditionalBranch | FlowControl::ConditionalBranch => {
+                    if i.op0_kind() != OpKind::NearBranch64 {
+                        return false;
+                    }
+                    let t = i.near_branch_target();
+                    let inside = t >= u64::from(rva) && t < u64::from(end);
+                    if !inside && !self.safe(t, depth - 1) {
+                        return false;
+                    }
+                }
+                _ => {}
+            }
+        }
+        true
+    }
+}
+
 /// The generated crate's lib.rs.
 pub fn generate(cands: &[Candidate]) -> Result<String, String> {
     let mut s = String::from("#![allow(warnings)]\n");
@@ -146,6 +217,7 @@ pub fn generate(cands: &[Candidate]) -> Result<String, String> {
         s += &emit_entry(&name);
     }
     s += "#[unsafe(no_mangle)]\npub unsafe extern \"C\" fn commons_init(base: u64) { unsafe { set_image_base(base); setup(); } }\n";
+    s += "#[unsafe(no_mangle)]\npub unsafe extern \"C\" fn commons_reset_thread() { unsafe { reset_thread(); } }\n";
     s += "#[unsafe(no_mangle)]\npub unsafe extern \"C\" fn commons_function(i: usize, rva: *mut u64, entry: *mut u64) -> bool {\n    let (r, e): (u64, u64) = match i {\n";
     for (k, c) in cands.iter().enumerate() {
         let _ = writeln!(s, "        {k} => ({:#x}, e_f_{:x} as usize as u64),", c.rva, c.rva);
@@ -218,6 +290,7 @@ fn dirty_pages(base: u64, size: usize) -> Option<Vec<u64>> {
 pub struct Library {
     pub init: unsafe extern "C" fn(u64),
     pub function: unsafe extern "C" fn(usize, *mut u64, *mut u64) -> bool,
+    pub reset_thread: Option<unsafe extern "C" fn()>,
 }
 
 pub fn load(path: &Path) -> Result<Library, String> {
@@ -232,7 +305,12 @@ pub fn load(path: &Path) -> Result<Library, String> {
         if init.is_null() || function.is_null() {
             return Err(format!("{} lacks commons_init or commons_function", path.display()));
         }
-        Ok(Library { init: core::mem::transmute(init), function: core::mem::transmute(function) })
+        let reset = GetProcAddress(h, b"commons_reset_thread\0".as_ptr());
+        Ok(Library {
+            init: core::mem::transmute(init),
+            function: core::mem::transmute(function),
+            reset_thread: if reset.is_null() { None } else { Some(core::mem::transmute(reset)) },
+        })
     }
 }
 
@@ -441,6 +519,9 @@ pub fn difftest_sandboxed(cands: &[Candidate], lib: &Library, base: u64, image_s
             stack.copy_from_slice(&initial_stack);
             let mut b = start;
             let translated = unsafe { run_native_timed(entry, &mut b, 100_000) };
+            if let Some(reset) = lib.reset_thread {
+                unsafe { reset() };
+            }
             let translated_pages = dirty_pages(base, image_size);
             // The image must have been written alike: the same pages, the same bytes.
             let image_differs = match &translated_pages {
