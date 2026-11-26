@@ -80,10 +80,11 @@
 <rect x="381.2" y="511" width="198.8" height="16" fill="#d0d7de"/>
 <text x="588" y="523" fill="#57606a">13/26</text>
 <text x="10" y="549" fill="#1f2328">unsorted</text>
-<rect x="110.0" y="537" width="201.4" height="16" fill="#2da44e"/>
-<rect x="311.4" y="537" width="134.3" height="16" fill="#bf8700"/>
-<rect x="445.7" y="537" width="134.3" height="16" fill="#d0d7de"/>
-<text x="588" y="549" fill="#57606a">3/7</text>
+<rect x="110.0" y="537" width="141.0" height="16" fill="#2da44e"/>
+<rect x="251.0" y="537" width="94.0" height="16" fill="#bf8700"/>
+<rect x="345.0" y="537" width="141.0" height="16" fill="#0969da"/>
+<rect x="486.0" y="537" width="94.0" height="16" fill="#d0d7de"/>
+<text x="588" y="549" fill="#57606a">3/10</text>
 <rect x="10" y="564" width="12" height="12" fill="#2da44e"/>
 <text x="27" y="574" fill="#57606a">done</text>
 <rect x="72" y="564" width="12" height="12" fill="#bf8700"/>

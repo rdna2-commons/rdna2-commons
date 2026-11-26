@@ -1,8 +1,8 @@
 # Progress
 
-Generated 2026-11-25 21:58 UTC from the task board by `tools/progress.py`. Do not edit by hand.
+Generated 2026-11-26 08:52 UTC from the task board by `tools/progress.py`. Do not edit by hand.
 
-**37 of 155 tasks done** `█████···············` · 6 in progress · 52 ready to take · 60 waiting on others · 35 pull requests merged by 1 contributors
+**37 of 158 tasks done** `█████···············` · 6 in progress · 55 ready to take · 60 waiting on others · 35 pull requests merged by 1 contributors
 
 ![Tasks by area](images/progress.svg)
 
@@ -42,7 +42,7 @@ Legend: ✅ done · 🔨 in progress · 🟦 ready to take · ⏳ waiting on oth
 | hooking | `··········` | 0 | 0 | 1 | 3 |
 | memory | `··········` | 0 | 0 | 2 | 1 |
 | recomp | `█████·····` | 13 | 0 | 2 | 11 |
-| unsorted | `████······` | 3 | 2 | 0 | 2 |
+| unsorted | `███·······` | 3 | 2 | 3 | 2 |
 
 ## Phase 0: Foundation
 
@@ -232,6 +232,9 @@ Legend: ✅ done · 🔨 in progress · 🟦 ready to take · ⏳ waiting on oth
 | 🔨 | [#153](https://github.com/scarlett-commons/scarlett-commons/issues/153) Translate one compute shader out of process and atomically cache its ShaderLibrary entry \| depends: | unsorted | @avt0m4t48 |
 | 🟦 | [#162](https://github.com/scarlett-commons/scarlett-commons/issues/162) commons CLI in Rust: title run, report, BCPack fetch and build check in one binary | infra | — |
 | 🟦 | [#163](https://github.com/scarlett-commons/scarlett-commons/issues/163) Say which code is ours to rewrite and which is synced from upstream | docs | — |
+| 🟦 | [#204](https://github.com/scarlett-commons/scarlett-commons/issues/204) Finish #147: runtime: console device slots 73, 61 and 108 on the retail title | unsorted | — |
+| 🟦 | [#205](https://github.com/scarlett-commons/scarlett-commons/issues/205) Finish #145: local_run: no report when the title never started | unsorted | — |
+| 🟦 | [#206](https://github.com/scarlett-commons/scarlett-commons/issues/206) Finish #143: Live board and badges; banner layout; full current translations | unsorted | — |
 | ⏳ | [#154](https://github.com/scarlett-commons/scarlett-commons/issues/154) Schedule translation on runtime pipeline cache misses and retain the placeholder while pending | unsorted | — |
 | ⏳ | [#155](https://github.com/scarlett-commons/scarlett-commons/issues/155) Retry pipeline creation with completed shader entries and verify cold and warm runtime execution | unsorted | — |
 | ✅ | [#151](https://github.com/scarlett-commons/scarlett-commons/issues/151) Track A on the VIctory runtime, with the track B entry point | unsorted | @DeSunShine |
