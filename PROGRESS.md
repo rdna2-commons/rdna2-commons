@@ -1,8 +1,8 @@
 # Progress
 
-Generated 2026-11-26 08:52 UTC from the task board by `tools/progress.py`. Do not edit by hand.
+Generated 2026-11-26 21:54 UTC from the task board by `tools/progress.py`. Do not edit by hand.
 
-**37 of 158 tasks done** `█████···············` · 6 in progress · 55 ready to take · 60 waiting on others · 35 pull requests merged by 1 contributors
+**42 of 162 tasks done** `█████···············` · 6 in progress · 55 ready to take · 59 waiting on others · 39 pull requests merged by 1 contributors
 
 ![Tasks by area](images/progress.svg)
 
@@ -14,10 +14,10 @@ Legend: ✅ done · 🔨 in progress · 🟦 ready to take · ⏳ waiting on oth
 |---|---|---|---:|
 | 0. Foundation | the bot, the rules and the docs that let anyone join | `██████████` | 9/9 |
 | 1. Shared knowledge | tests that define correct behaviour, checked on real hardware | `█·········` | 2/19 |
-| 2. Adapters | running other projects' translators against those tests | `··········` | 0/6 |
+| 2. Adapters | running other projects' translators against those tests | `██········` | 1/6 |
 | 3. Upstream fixes | fixing what the tests find, in the projects themselves | `··········` | 0/0 |
 | 4. Shared components | pieces several projects need and nobody has yet | `██████████` | 1/1 |
-| engine. Engine track | the hybrid recompiler itself, from loading a title to playing it (docs/engine-plan.md) | `██········` | 21/110 |
+| engine. Engine track | the hybrid recompiler itself, from loading a title to playing it (docs/engine-plan.md) | `██········` | 25/114 |
 
 ## Areas
 
@@ -31,7 +31,7 @@ Legend: ✅ done · 🔨 in progress · 🟦 ready to take · ⏳ waiting on oth
 | storage | `··········` | 0 | 0 | 3 | 5 |
 | input | `··········` | 0 | 0 | 3 | 1 |
 | platforms | `··········` | 0 | 0 | 0 | 2 |
-| infra | `█████·····` | 9 | 2 | 3 | 4 |
+| infra | `██████····` | 10 | 2 | 3 | 3 |
 | docs | `█████████·` | 6 | 0 | 1 | 0 |
 | i18n | `··········` | 0 | 1 | 0 | 0 |
 | cpu | `··········` | 0 | 0 | 4 | 2 |
@@ -41,8 +41,8 @@ Legend: ✅ done · 🔨 in progress · 🟦 ready to take · ⏳ waiting on oth
 | gpu | `··········` | 0 | 1 | 2 | 10 |
 | hooking | `··········` | 0 | 0 | 1 | 3 |
 | memory | `··········` | 0 | 0 | 2 | 1 |
-| recomp | `█████·····` | 13 | 0 | 2 | 11 |
-| unsorted | `███·······` | 3 | 2 | 3 | 2 |
+| recomp | `█████·····` | 15 | 0 | 2 | 11 |
+| unsorted | `████······` | 5 | 2 | 3 | 2 |
 
 ## Phase 0: Foundation
 
@@ -96,8 +96,8 @@ Legend: ✅ done · 🔨 in progress · 🟦 ready to take · ⏳ waiting on oth
 | ⏳ | [#27](https://github.com/scarlett-commons/scarlett-commons/issues/27) Runner on Linux and macOS (Vulkan, MoltenVK) | platforms | — |
 | ⏳ | [#28](https://github.com/scarlett-commons/scarlett-commons/issues/28) Compatibility table: which translator passes which shared cases | infra | — |
 | ⏳ | [#32](https://github.com/scarlett-commons/scarlett-commons/issues/32) Adapter: Leonida rdna2spirv (SPIR-V) | infra | — |
-| ⏳ | [#33](https://github.com/scarlett-commons/scarlett-commons/issues/33) Adapter: VIctory shader recompiler (DXIL) | infra | — |
 | ⏳ | [#34](https://github.com/scarlett-commons/scarlett-commons/issues/34) Adapter: Xbox2Windows (DXIL) and five-star-recomp (HLSL) | infra | — |
+| ✅ | [#33](https://github.com/scarlett-commons/scarlett-commons/issues/33) Adapter: VIctory shader recompiler (DXIL) | infra | — |
 
 ## Phase 4: Shared components
 
@@ -223,6 +223,10 @@ Legend: ✅ done · 🔨 in progress · 🟦 ready to take · ⏳ waiting on oth
 | ✅ | [#196](https://github.com/scarlett-commons/scarlett-commons/issues/196) emit, difftest: TLS array reads and tail calls | recomp | @DeSunShine |
 | ✅ | [#198](https://github.com/scarlett-commons/scarlett-commons/issues/198) pipeline: contained native callees, a sharded build and a parallel differential test | recomp | @DeSunShine |
 | ✅ | [#201](https://github.com/scarlett-commons/scarlett-commons/issues/201) Sync victory/ with upstream VIctory (2026-11-25 evening) | unsorted | @DeSunShine |
+| ✅ | [#207](https://github.com/scarlett-commons/scarlett-commons/issues/207) recomp: read ELF64 executables (the PS5's format) as well as PE | recomp | @DeSunShine |
+| ✅ | [#210](https://github.com/scarlett-commons/scarlett-commons/issues/210) PS5 line: an import scout and the plan | recomp | @DeSunShine |
+| ✅ | [#212](https://github.com/scarlett-commons/scarlett-commons/issues/212) victory/: take the fastest open GPL-3.0 runtime (cool_fox) as the base | unsorted | @DeSunShine |
+| ✅ | [#214](https://github.com/scarlett-commons/scarlett-commons/issues/214) victory/: the AvatarManz base with fixes for NVIDIA, measured | unsorted | @DeSunShine |
 
 ## Tasks without a phase
 
@@ -263,6 +267,10 @@ No reports yet. See docs/title-runs.md.
 
 | Date | Pull request | Author |
 |---|---|---|
+| 2026-11-26 | [#215](https://github.com/scarlett-commons/scarlett-commons/pull/215) victory: the AvatarManz base, with fixes for NVIDIA, measured | @DeSunShine |
+| 2026-11-26 | [#213](https://github.com/scarlett-commons/scarlett-commons/pull/213) victory: take cool_fox (CGBJ) as the base, with its history | @DeSunShine |
+| 2026-11-26 | [#211](https://github.com/scarlett-commons/scarlett-commons/pull/211) ps5: an import scout for the PS5 line, and its plan | @DeSunShine |
+| 2026-11-26 | [#209](https://github.com/scarlett-commons/scarlett-commons/pull/209) recomp: ELF64 executables, with functions from their unwind data | @DeSunShine |
 | 2026-11-25 | [#203](https://github.com/scarlett-commons/scarlett-commons/pull/203) emit: lock cmpxchg, lock xadd and xchg with memory | @DeSunShine |
 | 2026-11-25 | [#202](https://github.com/scarlett-commons/scarlett-commons/pull/202) Sync victory/ with upstream VIctory: 84 commits | @DeSunShine |
 | 2026-11-25 | [#200](https://github.com/scarlett-commons/scarlett-commons/pull/200) pipeline: contained native callees, a sharded build and a parallel difftest | @DeSunShine |
@@ -274,15 +282,11 @@ No reports yet. See docs/title-runs.md.
 | 2026-11-25 | [#190](https://github.com/scarlett-commons/scarlett-commons/pull/190) emit: vector shuffles and blends | @DeSunShine |
 | 2026-11-25 | [#189](https://github.com/scarlett-commons/scarlett-commons/pull/189) recomp: track B takes functions that call, to callees that are safe to run | @DeSunShine |
 | 2026-11-25 | [#187](https://github.com/scarlett-commons/scarlett-commons/pull/187) docs/track-b.md: what runs today, and how to build it on your copy | @DeSunShine |
-| 2026-11-25 | [#184](https://github.com/scarlett-commons/scarlett-commons/pull/184) recomp: functions that write globals, compared and undone through a write watch | @DeSunShine |
-| 2026-11-25 | [#183](https://github.com/scarlett-commons/scarlett-commons/pull/183) recomp: loops under a watchdog; track B grows from 54 to 596 functions | @DeSunShine |
-| 2026-11-25 | [#182](https://github.com/scarlett-commons/scarlett-commons/pull/182) recomp: track B built on the player's machine and running in the title | @DeSunShine |
-| 2026-11-25 | [#181](https://github.com/scarlett-commons/scarlett-commons/pull/181) Sync VIctory: 319 upstream commits, with the open fixes for the device removal | @DeSunShine |
 
 ## Contributors
 
 | Contributor | Merged pull requests |
 |---|---:|
-| @DeSunShine | 35 |
+| @DeSunShine | 39 |
 
 Take a ready task: see docs/getting-started.md.
