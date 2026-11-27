@@ -288,7 +288,8 @@ class Results(unittest.TestCase):
 class CheckBuild(unittest.TestCase):
     def test_parse_rejects_escapes(self):
         self.assertEqual(check_build.parse(["# c", "a" * 64 + "  dir/f.bin"]), [("a" * 64, "dir/f.bin")])
-        for bad in ["a" * 64 + "  ../x", "a" * 64 + "  /etc/x", "abc  x"]:
+        for bad in ["a" * 64 + "  ../x", "a" * 64 + "  /etc/x", "a" * 64 + r"  \etc\x", "a" * 64 + "  C:x",
+                    "a" * 64 + r"  C:\x", "a" * 64 + r"  \\host\share\x", "abc  x"]:
             with self.assertRaises(ValueError):
                 check_build.parse([bad])
 
