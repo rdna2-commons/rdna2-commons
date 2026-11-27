@@ -46,8 +46,12 @@ python tools\import_audit.py --libs C:\dev\ext\ab\core\libs\libs --modules <run>
 
 ```powershell
 $env:APS5_PROFILE_DRAW = '1'; $env:APS5_DUMP_FRAMES = '20'; $env:APS5_DUMP_FRAMES_EVERY = '600'
+$env:APS5_OUTPUT_RESOLUTION = '3840x2160'
 cmd /c '.\eboot.exe > run.log 2>&1'
 ```
+
+`APS5_OUTPUT_RESOLUTION=3840x2160` reports a 4K output to the title. Reported as 1080p, which is what AnyPS5 reports
+for any host display under 3840x2160, the title draws its menu into the top-left quarter of the output (#219).
 
 `APS5_TRACE_MEMORY=1` logs every reservation and mapping. `APS5_NO_PAD_INPUT=1` ignores the keyboard.
 

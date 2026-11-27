@@ -10,7 +10,7 @@ the denominator is not known yet.
 | CPU code, track B | 29,218 functions installed | of the 29,314 functions the difftest verified on the ELF, 29,218 are byte for byte unchanged in the relinked executable (`commons-ps5-trackb`) and run as track B; the 96 the relinker rewrote stay native. Two runs each way: same menu, frames bit-identical, no errors | widen the emitter |
 | System functions | 95% complete, 100% exported | `import_audit.py`: 835 of 881 imports implemented, 45 partial (throw only for unknown inputs), 0 stubs, 1 absent; 0 not-implemented calls in a run | — |
 | Memory | runs | the fixed no-overwrite reservation abort is fixed (upstream PR boykopovar/AnyPS5#27543; our fork has the same change) | — |
-| GPU commands (AGC) | reaches the first menu | 30 presents per second in the menu; the image covers a quarter of the output | #219 |
+| GPU commands (AGC) | reaches the first menu, full output in 4K mode | 30 presents per second in the menu. Reported as 1080p (any host display under 3840x2160) the title draws its menu into the top-left quarter; reported as 4K (`APS5_OUTPUT_RESOLUTION=3840x2160`) it fills the output, at 1.3 ms of GPU time per frame instead of 0.4 ms. Runs use 4K until the cause is known (findings in #219) | #219 |
 | Shaders | unknown | 366 shaders not prepared when their pipeline is created (resources indexed from constant buffers); the total the world needs is not known until it loads | #221 |
 | Data | 100% | the player's `app0` archives open | — |
 | Overall stage | first menu | furthest stage reached: start, gpu, menu, world, playable | #220 |
@@ -23,6 +23,7 @@ the denominator is not known yet.
 | 2026-11-27 | + no-overwrite reservation fix | menu | 240 (cap) | 30 | 366 | 0 | none |
 | 2026-11-27 | + `APS5_PRELOAD`, native (2 runs) | menu, steady from 40 s and 50 s | 180 to 240 (cap) | 30 | 366 | 0 | none; one run stopped logging after 70 s |
 | 2026-11-27 | + track B, 29,218 functions (2 runs) | menu, steady from 20 s both times | 180 to 240 (cap) | 30 | 366 | 0 | none |
+| 2026-11-27 | + track B, 4K output mode | menu, full output | 90 (cap) | 30 | 366 | 0 | none |
 
 Track B was installed through AnyPS5's `APS5_PRELOAD` (fork branch `feat-host-preload`) with
 `commons_ps5_preload` from `recomp/preload`. The earlier steady menu with track B was seen in both pairs of runs;
