@@ -14,7 +14,18 @@ that local work safe without publishing it unreviewed.
 4. **Publish.** What is worth keeping becomes an ordinary pull request here: a claimed task, `Closes #N`,
    `Provenance:`, a test, sign-off.
 
-#224 builds the timer and the refusals.
+The tool:
+
+```sh
+python -I tools/workbench.py --repo <local workbench repo> --source <folder> [--source <folder> ...] [--depth 2]
+```
+
+It refuses a repository that has any remote, so nothing it saves can be pushed by accident. A file that turns
+into a refusal later is removed from the next commit. On Windows, run it every 30 minutes with Task Scheduler:
+
+```powershell
+schtasks /Create /TN workbench /SC MINUTE /MO 30 /TR "python -I C:\path\to\tools\workbench.py --repo C:\dev\workbench --source C:\dev\run1"
+```
 
 ## Reviewing the workbench (for agents)
 
