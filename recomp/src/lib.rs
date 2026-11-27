@@ -19,6 +19,7 @@ pub mod elf;
 pub mod harness;
 pub mod pipeline;
 pub mod ps5;
+pub mod relinked;
 
 use std::collections::BTreeMap;
 use std::fmt;
@@ -58,6 +59,10 @@ pub struct Manifest {
     /// A track B library built on this machine (commons-recomp): its functions are installed from it.
     #[serde(default)]
     pub library: Option<String>,
+    /// Where the image the RVAs count from lies inside the running module: the module base plus this. Absent
+    /// (0) when the module is the image itself; a relinked PS5 executable keeps its ELF at `.elf0`.
+    #[serde(default)]
+    pub module_offset: Option<u64>,
     #[serde(default, rename = "function")]
     pub functions: Vec<Function>,
 }

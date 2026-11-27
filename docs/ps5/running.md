@@ -51,7 +51,24 @@ cmd /c '.\eboot.exe > run.log 2>&1'
 
 `APS5_TRACE_MEMORY=1` logs every reservation and mapping. `APS5_NO_PAD_INPUT=1` ignores the keyboard.
 
-## 6. Score
+## 6. With track B (optional)
+
+Needs the fork's `APS5_PRELOAD` (branch `feat-host-preload`, or `ps5-line`). Build track B from the ELF, keep the
+functions the relinker left unchanged, and let AnyPS5 load the installer:
+
+```powershell
+cd recomp
+cargo run --release --bin commons-recomp -- <dir>\eboot.elf --work <elf work folder>
+cargo run --release --bin commons-ps5-trackb -- <dir>\eboot.elf <run>\eboot.exe <elf work folder>\<elf build>.toml --out <relinked folder>
+cargo build --release --manifest-path preload\Cargo.toml
+$env:APS5_PRELOAD = "$PWD\preload\target\release\commons_ps5_preload.dll"
+$env:COMMONS_RECOMP_DIR = '<relinked folder>'
+```
+
+The log then shows `track B        N function(s) installed` and `[preload] ... aps5_preload returned N`.
+`COMMONS_TRACK=a` with the same variables installs nothing, for a native run in the same setup.
+
+## 7. Score
 
 Score every run and copy the row into [status.md](status.md) (#223 automates this): the furthest stage, seconds
 alive, presents per second, unprepared shaders, not-implemented calls and the first error.
