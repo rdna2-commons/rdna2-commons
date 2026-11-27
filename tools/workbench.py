@@ -1,10 +1,13 @@
 """Save local work into a private workbench repository, refusing anything that may be title data or a secret.
 
     python -I tools/workbench.py --repo <local repo> --source <dir> [--source <dir> ...] [--depth 2]
+                                 [--push <owner>/<private repo>]
 
 Copies files with an allowed extension from each source into <repo>/<source folder name>/..., commits them on
-the `workbench` branch, and never pushes: a repository with any remote is refused. Each refused file is printed
-with its reason. Review the branch before publishing anything (docs/workbench.md).
+the `workbench` branch. Without --push a repository with any remote is refused. With --push the only remote
+allowed is that GitHub repository, and every push first asks GitHub (`gh api`) that it is private; a public or
+unknown repository is never pushed to. Each refused file is printed with its reason. Review the branch before
+publishing anything (docs/workbench.md).
 """
 
 import argparse
@@ -57,19 +60,42 @@ def git(repo, *args, check=True):
     return subprocess.run(["git", "-C", repo, *args], capture_output=True, text=True, check=check).stdout
 
 
-def prepare(repo):
+def remote_url(full_name):
+    return f"https://github.com/{full_name}.git"
+
+
+def is_private(full_name, run=subprocess.run):
+    """True only when GitHub answers that the repository exists and is private."""
+    result = run(["gh", "api", f"repos/{full_name}", "--jq", ".private"], capture_output=True, text=True)
+    return result.returncode == 0 and result.stdout.strip() == "true"
+
+
+def prepare(repo, push=None):
     if not os.path.isdir(os.path.join(repo, ".git")):
         os.makedirs(repo, exist_ok=True)
         git(repo, "init", "-q", "-b", "workbench")
-    if git(repo, "remote").strip():
-        raise SystemExit(f"{repo} has a remote; the workbench never pushes, so it refuses to run there")
+    remotes = git(repo, "remote").split()
+    if push is None:
+        if remotes:
+            raise SystemExit(f"{repo} has a remote; without --push the workbench refuses to run there")
+    else:
+        if remotes not in ([], ["origin"]) or (remotes and git(repo, "remote", "get-url", "origin").strip() != remote_url(push)):
+            raise SystemExit(f"{repo} has a remote other than {remote_url(push)}; refusing")
+        if not remotes:
+            git(repo, "remote", "add", "origin", remote_url(push))
     if git(repo, "symbolic-ref", "--short", "HEAD").strip() != "workbench":
         git(repo, "checkout", "-q", "-B", "workbench")
 
 
-def save(repo, sources, depth=2):
+def push_private(repo, full_name, private=is_private):
+    if not private(full_name):
+        raise SystemExit(f"{full_name} is not a private repository (or GitHub did not answer); not pushing")
+    git(repo, "push", "-q", "origin", "workbench")
+
+
+def save(repo, sources, depth=2, push=None):
     """Copy allowed files, commit them, and return (copied, refused) where refused is a list of (path, reason)."""
-    prepare(repo)
+    prepare(repo, push)
     copied, refused = 0, []
     for source in sources:
         prefix = os.path.basename(os.path.normpath(source)) or "root"
@@ -98,11 +124,15 @@ def main():
     parser.add_argument("--repo", required=True)
     parser.add_argument("--source", action="append", required=True)
     parser.add_argument("--depth", type=int, default=2)
+    parser.add_argument("--push", metavar="OWNER/REPO", help="a private GitHub repository to push the branch to")
     args = parser.parse_args()
-    copied, refused = save(args.repo, args.source, args.depth)
+    copied, refused = save(args.repo, args.source, args.depth, args.push)
     print(f"{copied} files saved, {len(refused)} refused")
     for path, reason in refused:
         print(f"REFUSED {path}: {reason}")
+    if args.push:
+        push_private(args.repo, args.push)
+        print(f"pushed to {args.push} (private)")
 
 
 if __name__ == "__main__":
