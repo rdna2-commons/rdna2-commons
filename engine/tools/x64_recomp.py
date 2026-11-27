@@ -516,6 +516,8 @@ def decode_one(buf, pos, end, addr):
                    "r": (~p0 >> 7) & 1, "x": (~p0 >> 6) & 1, "b": (~p0 >> 5) & 1,
                    "w": (p1 >> 7) & 1, "vvvv": (~p1 >> 3) & 0xF, "pp": p1 & 3}
             pos += 4
+            if pos >= end:
+                raise DecodeError("truncated after evex")
             b0 = buf[pos]
     elif b0 in (0xC4, 0xC5) and pos + 1 < end:
         if b0 == 0xC5:
@@ -524,11 +526,15 @@ def decode_one(buf, pos, end, addr):
                    "w": 0, "vvvv": (~b1 >> 3) & 0xF, "pp": b1 & 3}
             pos += 2
         else:
+            if pos + 2 >= end:
+                raise DecodeError("truncated vex")
             b1, b2 = buf[pos + 1], buf[pos + 2]
             vex = {"evex": False, "map": b1 & 0x1F, "r": (~b1 >> 7) & 1,
                    "x": (~b1 >> 6) & 1, "b": (~b1 >> 5) & 1,
                    "w": (b2 >> 7) & 1, "vvvv": (~b2 >> 3) & 0xF, "pp": b2 & 3}
             pos += 3
+        if pos >= end:
+            raise DecodeError("truncated after vex")
         b0 = buf[pos]
 
     rex = 0

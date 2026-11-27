@@ -128,6 +128,7 @@ Details: [docs/architecture.md](docs/architecture.md).
 | [`tools/check_build.py`](tools/check_build.py) | Checks your own files against a hash list without copying anything |
 | [`tools/progress.py`](tools/progress.py) | Builds the progress page, chart and badges |
 | [`tools/local_run.py`](tools/local_run.py) | Builds your own copy with the engine, runs it, writes a scrubbed title-run report |
+| [`tools/local_analyze.py`](tools/local_analyze.py) | Maps what your copy needs from the engine (imports, runtime classes, CPU features, recompiler coverage), scrubbed |
 | [`tools/title_runs.py`](tools/title_runs.py) | Validates title-run reports and confirms stages by agreement |
 | [`tools/scan_history.py`](tools/scan_history.py) | Runs the game-data guard over every file version in a range of history |
 
