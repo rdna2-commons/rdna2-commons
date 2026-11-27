@@ -3,11 +3,11 @@
 **English** · [Русский](docs/i18n/ru/ROADMAP.md) · [简体中文](docs/i18n/zh-CN/ROADMAP.md) · [Español](docs/i18n/es/ROADMAP.md)
 
 This is the plan everyone works from. Each item becomes task issues labelled with its area; the bot hands them
-out in dependency order. Progress is tracked automatically in [the progress page](https://github.com/scarlett-commons/scarlett-commons/blob/status/PROGRESS.md).
+out in dependency order. Progress is tracked automatically in [the progress page](https://github.com/rdna2-commons/rdna2-commons/blob/status/PROGRESS.md).
 
-**Goal:** make the hard, shared parts of running Xbox Series X|S software on PC correct and verified once, for
-every compatibility project, instead of fifteen times. We build knowledge, tests and checked components;
-other projects use them.
+**Goal:** run Xbox Series X|S and PS5 titles on PC from the player's own copy, and make the hard, shared parts
+(RDNA2 shaders, system functions, track B) correct and verified once, for every compatibility project, instead
+of fifteen times. We build knowledge, tests and checked components; other projects use them.
 
 **Never:** game data, keys, decryption, links to leaks, code from incompatible licences (see CONTRIBUTING.md).
 

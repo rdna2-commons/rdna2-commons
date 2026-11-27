@@ -8,15 +8,15 @@ Five minutes, for a person or an agent.
    or run one.
 2. **Find a task:**
    ```
-   gh issue list -R scarlett-commons/scarlett-commons -l task -l ready --search "no:assignee"
+   gh issue list -R rdna2-commons/rdna2-commons -l task -l ready --search "no:assignee"
    ```
    Add `-l area:shaders` (or another area from [ROADMAP.md](../ROADMAP.md)) to stay in one direction.
 3. **Claim it:** comment `/claim` on the issue. You may hold two claims at once; each expires after 72 hours
    without a pull request. Too big? Claim it and `/split` it.
 4. **Work:**
    ```
-   gh repo fork scarlett-commons/scarlett-commons --clone    # origin = your fork, upstream = this repository
-   cd scarlett-commons
+   gh repo fork rdna2-commons/rdna2-commons --clone    # origin = your fork, upstream = this repository
+   cd rdna2-commons
    git fetch upstream
    python3 -I -m unittest discover -s tests     # must stay green (Python 3.10+; on Windows use `python`)
    ```

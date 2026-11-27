@@ -1,3 +1,5 @@
+<p align="center"><img src="../images/banner-ps5.svg" alt="RDNA2 Commons, the PS5 line" width="100%"></p>
+
 # The PS5 line
 
 The same game ships for Xbox Series and for PS5, and both machines run x86-64 on an RDNA2 GPU. The PS5 line
@@ -29,7 +31,7 @@ quoting them. Tools read the player's copy on the player's machine and print cou
 ## Licences
 
 AnyPS5 is GPL-2.0-only and cannot be combined with this repository's GPL-3.0. Its code is never copied here.
-We work in a fork of it (`scarlett-commons/anyps5`), send fixes upstream to `boykopovar/AnyPS5`, and run it as a
+We work in a fork of it (`rdna2-commons/anyps5-ps5-line`), send fixes upstream to `boykopovar/AnyPS5`, and run it as a
 separate program. This repository holds what is ours: the plan, the measurements, track B and our tools.
 
 ## Tools here

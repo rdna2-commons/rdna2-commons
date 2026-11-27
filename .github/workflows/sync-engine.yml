@@ -44,7 +44,7 @@ jobs:
         if: steps.token.outputs.skip != '1'
         run: |
           set -e
-          git config user.name "scarlett-commons sync"
+          git config user.name "rdna2-commons sync"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch --quiet /tmp/upstream HEAD:refs/heads/engine-upstream
           if git merge-base --is-ancestor engine-upstream HEAD; then echo "up to date"; exit 0; fi

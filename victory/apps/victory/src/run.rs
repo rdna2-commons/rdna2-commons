@@ -73,7 +73,7 @@ pub fn run(
     drop(original);
     victory_hle::runtime::set_main_image(image.base());
     victory_hle::runtime::set_image_path(image.base(), exe);
-    // Scarlett Commons: track B installs its recompiled functions over the mapped image before anything runs
+    // RDNA2 Commons: track B installs its recompiled functions over the mapped image before anything runs
     // (recomp/, `cargo commons`); a build without a manifest runs as track A alone.
     #[cfg(feature = "recomp")]
     {

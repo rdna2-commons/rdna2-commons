@@ -1,6 +1,6 @@
 # 路线图
 
-[English](../../../ROADMAP.md) · 译文仅供参考，以英文原文为准。进度见[进度页](https://github.com/scarlett-commons/scarlett-commons/blob/status/PROGRESS.md)。
+[English](../../../ROADMAP.md) · 译文仅供参考，以英文原文为准。进度见[进度页](https://github.com/rdna2-commons/rdna2-commons/blob/status/PROGRESS.md)。
 
 **目标：** 把在 PC 上运行 Xbox Series X|S 软件时最难、各项目共通的部分，一次性做对并验证，供所有兼容项目使用，
 而不是重复做十五次。我们产出知识、测试和经过验证的组件，其他项目来使用。

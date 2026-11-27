@@ -4,7 +4,7 @@ Usage:
   python -I tools/fetch_bcpack_tables.py [--out DIR]
 
 The VIctory runtime (victory/) decodes BCPack textures with a table file that its upstream ships as an asset-policy
-exception, outside its licence. Scarlett Commons does not distribute it. This script downloads it from the upstream
+exception, outside its licence. RDNA2 Commons does not distribute it. This script downloads it from the upstream
 repository at a pinned commit, checks its SHA-256, and writes it as `bcpack-tables.bin` in DIR (default: next to
 victory.exe in the cargo target directory), where the runtime reads it. Only the address, the commit and the hash are
 kept here.
@@ -55,7 +55,7 @@ def write(data, out_dir):
 
 
 def fetch(opener=urllib.request.urlopen):
-    req = urllib.request.Request(url(), headers={"User-Agent": "scarlett-commons-fetch"})
+    req = urllib.request.Request(url(), headers={"User-Agent": "rdna2-commons-fetch"})
     with opener(req, timeout=60) as r:
         return r.read(SIZE + 1)
 

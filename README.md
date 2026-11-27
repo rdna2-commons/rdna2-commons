@@ -1,14 +1,14 @@
 <p align="center">
-  <img src="docs/images/banner.svg" alt="Scarlett Commons: shared tests, specs and tools for Xbox Series X|S to PC compatibility" width="100%">
+  <img src="docs/images/banner.svg" alt="RDNA2 Commons: Xbox Series X|S and PS5 titles on PC, one open RDNA2 core" width="100%">
 </p>
 
 <p align="center">
-  <a href="https://github.com/scarlett-commons/scarlett-commons/blob/status/PROGRESS.md"><img src="https://raw.githubusercontent.com/scarlett-commons/scarlett-commons/status/badges/phase.svg" alt="phase"></a>
-  <a href="https://github.com/scarlett-commons/scarlett-commons/blob/status/PROGRESS.md"><img src="https://raw.githubusercontent.com/scarlett-commons/scarlett-commons/status/badges/tasks.svg" alt="tasks"></a>
-  <a href="https://github.com/scarlett-commons/scarlett-commons/issues?q=is%3Aissue+is%3Aopen+label%3Atask+label%3Aready+no%3Aassignee"><img src="https://raw.githubusercontent.com/scarlett-commons/scarlett-commons/status/badges/ready.svg" alt="ready to take"></a>
-  <a href="cases"><img src="https://raw.githubusercontent.com/scarlett-commons/scarlett-commons/status/badges/cases.svg" alt="test cases"></a>
-  <a href="docs/results.md"><img src="https://raw.githubusercontent.com/scarlett-commons/scarlett-commons/status/badges/results.svg" alt="confirmed on hardware"></a>
-  <a href="https://github.com/scarlett-commons/scarlett-commons/actions/workflows/ci.yml"><img src="https://github.com/scarlett-commons/scarlett-commons/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/rdna2-commons/rdna2-commons/blob/status/PROGRESS.md"><img src="https://raw.githubusercontent.com/rdna2-commons/rdna2-commons/status/badges/phase.svg" alt="phase"></a>
+  <a href="https://github.com/rdna2-commons/rdna2-commons/blob/status/PROGRESS.md"><img src="https://raw.githubusercontent.com/rdna2-commons/rdna2-commons/status/badges/tasks.svg" alt="tasks"></a>
+  <a href="https://github.com/rdna2-commons/rdna2-commons/issues?q=is%3Aissue+is%3Aopen+label%3Atask+label%3Aready+no%3Aassignee"><img src="https://raw.githubusercontent.com/rdna2-commons/rdna2-commons/status/badges/ready.svg" alt="ready to take"></a>
+  <a href="cases"><img src="https://raw.githubusercontent.com/rdna2-commons/rdna2-commons/status/badges/cases.svg" alt="test cases"></a>
+  <a href="docs/results.md"><img src="https://raw.githubusercontent.com/rdna2-commons/rdna2-commons/status/badges/results.svg" alt="confirmed on hardware"></a>
+  <a href="https://github.com/rdna2-commons/rdna2-commons/actions/workflows/ci.yml"><img src="https://github.com/rdna2-commons/rdna2-commons/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0--or--later-blue" alt="GPL-3.0-or-later"></a>
   <a href="AGENTS.md"><img src="https://img.shields.io/badge/AI%20agents-welcome-8250df" alt="AI agents welcome"></a>
 </p>
@@ -26,7 +26,7 @@
   <a href="#tools">Tools</a> ·
   <a href="#faq">FAQ</a> ·
   <a href="ROADMAP.md">Roadmap</a> ·
-  <a href="https://github.com/scarlett-commons/scarlett-commons/blob/status/PROGRESS.md">Live progress</a>
+  <a href="https://github.com/rdna2-commons/rdna2-commons/blob/status/PROGRESS.md">Live progress</a>
 </p>
 
 > [!IMPORTANT]
@@ -40,10 +40,17 @@ Consoles and PCs are built from similar parts, but software made for one does no
 console's graphics programs (shaders) and system functions work differently. More than a dozen open projects
 are each solving the same problems on their own, and each one rediscovers the same bugs.
 
-We build **an open hybrid recompiler for Xbox Series X|S** (native execution now, static recompilation function by function in parallel) ([engine/](engine/README.md)): it translates the
-console's graphics programs to the PC's (RDNA2 → SPIR-V), loads the title's own code, and stands in for the
-console's system functions (D3D12 → Vulkan and the rest). It starts from the Leonida project's engine, with its
-full history and authors, and follows it automatically.
+Xbox Series X|S and PS5 are both x86-64 machines with an RDNA2 GPU. We run **their titles on PC from the player's
+own copy**, two lines on one shared core:
+
+- **Xbox line** ([docs/xbox.md](docs/xbox.md), code in [victory/](victory/)): an open runtime that loads the title's own code natively, stands in for
+  the console's system functions, and translates its RDNA2 shaders and D3D12 command lists for the PC's GPU.
+- **PS5 line** ([docs/ps5/](docs/ps5/README.md)): the PS5 build converted by a fork of AnyPS5 and run beside
+  this repository as a separate program, measured and driven from here.
+- **Track B** ([recomp/](recomp/)), shared by both: functions statically recompiled into our own code, each one
+  checked against the native code before it is used.
+- **The engine track** ([engine/](engine/README.md)): the Leonida project's recompiler, with its full history
+  and authors, followed automatically.
 
 Around it sits what makes it trustworthy: **a library of small tests that say exactly how the console behaves**,
 checked on real hardware by several people independently, which any project can run against its own code. When
@@ -54,14 +61,21 @@ The recompiler, broken into tasks with the ready-made tools for each: [docs/engi
 
 ## Status
 
-**Priority now: a stable, playable build as fast as possible.** Tasks on that path carry the label [`priority:playable`](https://github.com/scarlett-commons/scarlett-commons/issues?q=is%3Aissue+is%3Aopen+label%3Apriority%3Aplayable): comparing with and porting from VIctory where it is ahead (#137), function swap for patching crash sites (#55, #56, #58), shaders translated on first use (#75), texture tiling (#81), title memory uploads (#86), DirectStorage and BCPack (#110, #111), audio (#115-#117), input (#121, #122), the open GPU bug (#130), and the title-run loop (#124 done, #125). Take these first.
+**Priority now: a stable, playable build as fast as possible.** Tasks on that path carry the label [`priority:playable`](https://github.com/rdna2-commons/rdna2-commons/issues?q=is%3Aissue+is%3Aopen+label%3Apriority%3Aplayable): comparing with and porting from VIctory where it is ahead (#137), function swap for patching crash sites (#55, #56, #58), shaders translated on first use (#75), texture tiling (#81), title memory uploads (#86), DirectStorage and BCPack (#110, #111), audio (#115-#117), input (#121, #122), the open GPU bug (#130), and the title-run loop (#124 done, #125). Take these first.
+
+**Where the titles are today** (player's own copies, an RTX 4090 test machine):
+
+| Line | Furthest stage | Numbers | Next |
+|---|---|---|---|
+| **Xbox** | in the world, walking | about 11 fps walking with ray-traced light; GPU-bound at about 94 ms a frame | GPU time per pipeline, wave64 compute, large mesh outputs |
+| **PS5** | first menu | 30 fps in the menu; 0 missing system functions; 366 shaders still prepared late | the menu fills a quarter of the output (#219), then into the world (#220); readiness per component in [docs/ps5/status.md](docs/ps5/status.md) |
 
 **Phase 0 (foundation) is done; the engine track is active.** The rules, the bot, the docs, engine CI, the crash report and the one-command local run are in; the first test cases are in.
-Live numbers, every task and who is on it: **[progress page](https://github.com/scarlett-commons/scarlett-commons/blob/status/PROGRESS.md)**
+Live numbers, every task and who is on it: **[progress page](https://github.com/rdna2-commons/rdna2-commons/blob/status/PROGRESS.md)**
 (regenerated every 6 hours).
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/scarlett-commons/scarlett-commons/status/images/progress.svg" alt="Tasks by area" width="640">
+  <img src="https://raw.githubusercontent.com/rdna2-commons/rdna2-commons/status/images/progress.svg" alt="Tasks by area" width="640">
 </p>
 
 | Area | State | What exists | Next |
@@ -111,10 +125,10 @@ Details: [docs/architecture.md](docs/architecture.md).
 
 | You are | Start here |
 |---|---|
-| **A developer** | [Getting started](docs/getting-started.md): pick a [ready task](https://github.com/scarlett-commons/scarlett-commons/issues?q=is%3Aissue+is%3Aopen+label%3Atask+label%3Aready+no%3Aassignee), `/claim` it, open a PR |
+| **A developer** | [Getting started](docs/getting-started.md): pick a [ready task](https://github.com/rdna2-commons/rdna2-commons/issues?q=is%3Aissue+is%3Aopen+label%3Atask+label%3Aready+no%3Aassignee), `/claim` it, open a PR |
 | **An AI agent, or its operator** | [AGENTS.md](AGENTS.md): roles, the review form, the one rule ("you are not right because you wrote it") |
 | **Someone with a GPU** | [docs/results.md](docs/results.md): run the cases, submit a result; it counts when a second person agrees |
-| **A reviewer** | Comment `/reviewer on` in the [reviewer pool](https://github.com/scarlett-commons/scarlett-commons/issues/1); you will be drawn at random |
+| **A reviewer** | Comment `/reviewer on` in the [reviewer pool](https://github.com/rdna2-commons/rdna2-commons/issues/1); you will be drawn at random |
 | **A maintainer of another project** | [docs/landscape.md](docs/landscape.md): how your translator can be plugged into the shared cases without sharing code |
 
 ## Tools
@@ -137,7 +151,8 @@ Details: [docs/architecture.md](docs/architecture.md).
 <details><summary><b>Can I play anything with this?</b></summary>
 
 Not yet, and never from this repository alone: it contains no game. The recompiler turns your own copy into a
-PC build; how far that gets today is on the progress page under "Title runs" (no confirmed reports yet).
+PC build; how far that gets today is under [Status](#status): the Xbox line reaches the world, the PS5 line its
+first menu. Not playable yet.
 </details>
 
 <details><summary><b>Is this legal?</b></summary>

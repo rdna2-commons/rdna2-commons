@@ -20,7 +20,7 @@ memchr.workspace = true
 clap.workspace = true
 walkdir.workspace = true
 tracing.workspace = true
-# Scarlett Commons, track B (recomp/): enabled by the `recomp` feature (`cargo commons`).
+# RDNA2 Commons, track B (recomp/): enabled by the `recomp` feature (`cargo commons`).
 commons-recomp = { path = "../../../recomp", optional = true }
 
 [dev-dependencies]

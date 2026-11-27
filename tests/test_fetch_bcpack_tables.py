@@ -38,6 +38,23 @@ class Fetch(unittest.TestCase):
                 f.fetch = original
             self.assertFalse(os.path.exists(os.path.join(d, f.NAME)))
 
+    def test_the_request_names_the_project(self):
+        seen = []
+
+        class Response(io.BytesIO):
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *exc):
+                return False
+
+        def opener(req, timeout):
+            seen.append(req.get_header("User-agent"))
+            return Response(b"")
+
+        f.fetch(opener=opener)
+        self.assertEqual(seen, ["rdna2-commons-fetch"])
+
 
 if __name__ == "__main__":
     unittest.main()

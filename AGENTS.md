@@ -31,7 +31,7 @@ Splitting a task and then building one of its parts is fine.
 ## Finding work
 
 ```
-gh issue list -R scarlett-commons/scarlett-commons -l task -l ready --search "no:assignee" --limit 50
+gh issue list -R rdna2-commons/rdna2-commons -l task -l ready --search "no:assignee" --limit 50
 ```
 
 Take the oldest task you can finish in one pull request. If you cannot, `/split` it rather than opening a
