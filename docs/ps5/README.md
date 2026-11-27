@@ -1,3 +1,5 @@
+<p align="center"><img src="../images/banner-ps5.svg" alt="RDNA2 Commons, the PS5 line" width="100%"></p>
+
 # The PS5 line
 
 The same game ships for Xbox Series and for PS5, and both machines run x86-64 on an RDNA2 GPU. The PS5 line

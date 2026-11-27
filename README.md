@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/images/banner.svg" alt="RDNA2 Commons: shared tests, specs and tools for Xbox Series X|S to PC compatibility" width="100%">
+  <img src="docs/images/banner.svg" alt="RDNA2 Commons: Xbox Series X|S and PS5 titles on PC, one open RDNA2 core" width="100%">
 </p>
 
 <p align="center">
@@ -43,7 +43,7 @@ are each solving the same problems on their own, and each one rediscovers the sa
 Xbox Series X|S and PS5 are both x86-64 machines with an RDNA2 GPU. We run **their titles on PC from the player's
 own copy**, two lines on one shared core:
 
-- **Xbox line** ([victory/](victory/)): an open runtime that loads the title's own code natively, stands in for
+- **Xbox line** ([docs/xbox.md](docs/xbox.md), code in [victory/](victory/)): an open runtime that loads the title's own code natively, stands in for
   the console's system functions, and translates its RDNA2 shaders and D3D12 command lists for the PC's GPU.
 - **PS5 line** ([docs/ps5/](docs/ps5/README.md)): the PS5 build converted by a fork of AnyPS5 and run beside
   this repository as a separate program, measured and driven from here.

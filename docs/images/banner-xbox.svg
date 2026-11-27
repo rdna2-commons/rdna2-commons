@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="320" viewBox="0 0 1280 320" role="img" aria-label="RDNA2 Commons, the Xbox line: Xbox Series X|S titles on PC">
+  <rect width="1280" height="320" fill="#f4efe4"/>
+  <rect x="0" y="0" width="16" height="320" fill="#c6f432"/>
+  <text x="72" y="118" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="86" font-weight="900" letter-spacing="-3" fill="#111111">RDNA2</text>
+  <text x="72" y="196" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="86" font-weight="900" letter-spacing="-3" fill="#111111">COMMONS<tspan fill="#c6f432" stroke="#111111" stroke-width="2">.</tspan></text>
+  <rect x="76" y="222" width="120" height="6" fill="#111111"/>
+  <text x="76" y="262" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="24" font-weight="600" fill="#111111">The Xbox line: Series X|S titles, on PC.</text>
+  <text x="76" y="290" font-family="Consolas, Menlo, monospace" font-size="14" fill="#555555">your own copy  /  one open RDNA2 core  /  no game data, ever</text>
+  <g>
+    <rect x="860" y="72" width="34" height="34" rx="6" fill="#c6f432"/><rect x="902" y="72" width="34" height="34" rx="6" fill="#c6f432"/><rect x="944" y="72" width="34" height="34" rx="6" fill="#111111"/><rect x="986" y="72" width="34" height="34" rx="6" fill="#111111"/><rect x="1028" y="72" width="34" height="34" rx="6" fill="#c6f432"/><rect x="1070" y="72" width="34" height="34" rx="6" fill="#111111"/><rect x="1112" y="72" width="34" height="34" rx="6" fill="#c6f432"/><rect x="1154" y="72" width="34" height="34" rx="6" fill="#111111"/><rect x="860" y="114" width="34" height="34" rx="6" fill="#111111"/><rect x="902" y="114" width="34" height="34" rx="6" fill="#c6f432"/><rect x="944" y="114" width="34" height="34" rx="6" fill="#c6f432"/><rect x="986" y="114" width="34" height="34" rx="6" fill="#111111"/><rect x="1028" y="114" width="34" height="34" rx="6" fill="#111111"/><rect x="1070" y="114" width="34" height="34" rx="6" fill="#c6f432"/><rect x="1113.5" y="115.5" width="31" height="31" rx="5" fill="none" stroke="#111111" stroke-width="3" stroke-dasharray="5 4"/><rect x="1154" y="114" width="34" height="34" rx="6" fill="#111111"/><rect x="860" y="156" width="34" height="34" rx="6" fill="#c6f432"/><rect x="902" y="156" width="34" height="34" rx="6" fill="#111111"/><rect x="944" y="156" width="34" height="34" rx="6" fill="#111111"/><rect x="986" y="156" width="34" height="34" rx="6" fill="#c6f432"/><rect x="1029.5" y="157.5" width="31" height="31" rx="5" fill="none" stroke="#111111" stroke-width="3" stroke-dasharray="5 4"/><rect x="1070" y="156" width="34" height="34" rx="6" fill="#111111"/><rect x="1112" y="156" width="34" height="34" rx="6" fill="#c6f432"/><rect x="1154" y="156" width="34" height="34" rx="6" fill="#c6f432"/><rect x="860" y="198" width="34" height="34" rx="6" fill="#111111"/><rect x="903.5" y="199.5" width="31" height="31" rx="5" fill="none" stroke="#111111" stroke-width="3" stroke-dasharray="5 4"/><rect x="944" y="198" width="34" height="34" rx="6" fill="#c6f432"/><rect x="986" y="198" width="34" height="34" rx="6" fill="#c6f432"/><rect x="1028" y="198" width="34" height="34" rx="6" fill="#111111"/><rect x="1070" y="198" width="34" height="34" rx="6" fill="#c6f432"/><rect x="1113.5" y="199.5" width="31" height="31" rx="5" fill="none" stroke="#111111" stroke-width="3" stroke-dasharray="5 4"/><rect x="1155.5" y="199.5" width="31" height="31" rx="5" fill="none" stroke="#111111" stroke-width="3" stroke-dasharray="5 4"/>
+  </g>
+  <g font-family="Consolas, Menlo, monospace" font-size="13" fill="#111111">
+    <rect x="860" y="256" width="14" height="14" rx="3" fill="#c6f432" stroke="#111111" stroke-width="1.5"/>
+    <text x="882" y="268">verified on hardware</text>
+    <rect x="1048" y="256" width="14" height="14" rx="3" fill="#111111"/>
+    <text x="1070" y="268">running</text>
+    <rect x="1140" y="256" width="14" height="14" rx="3" fill="none" stroke="#111111" stroke-width="2" stroke-dasharray="3 2"/>
+    <text x="1162" y="268">to do</text>
+  </g>
+</svg>
