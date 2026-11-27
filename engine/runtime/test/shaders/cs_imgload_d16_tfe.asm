@@ -1,8 +1,7 @@
-; tfe status VGPR on a d16 image_load (SHADER-1266): cs_imgload_d16 with tfe on both loads. Under d16 one
-; component fills one VGPR, and with tfe the fetch status follows it, so vdata is v[7:8] and v[11:12]. Every texel is
-; resident, so the status is 0. Each status VGPR is seeded with 1000 and added into the result, so a stale status
-; moves every texel by 2000. The unpacking and the result are cs_imgload_d16's, checked by vk_store_test load-d16
-; (including its saturation row). Suggested by @nnonno91, who ran the same companion on gfx1036 and an RTX 5090 in #8968.
+; TFE on d16 image_load (SHADER-1266): one component uses the low half of one VGPR and the status follows
+; in a separate word. Resident reads preserve both status seeds, so check them independently before writing the
+; sum. vk_store_test load-d16 also checks the unpacked result and its saturation row. The D16 companion was
+; suggested by @nnonno91, who ran it on gfx1036 and an RTX 5090 in #8968.
 v_and_b32_e32 v1, 7, v0
 v_lshrrev_b32_e32 v2, 3, v0
 v_cvt_f32_u32_e32 v3, v1
@@ -38,14 +37,18 @@ s_mov_b32 s28, 0x33
 s_mov_b32 s29, 0x33
 s_mov_b32 s30, 0x33
 s_mov_b32 s31, 0x33
-v_mov_b32_e32 v12, 0x3e8
+v_mov_b32_e32 v12, 0xa5a5ffe1
 image_load v[11:12], v[1:2], s[24:31] dmask:0x1 dim:SQ_RSRC_IMG_2D unorm tfe d16
 s_waitcnt vmcnt(0)
 v_and_b32_e32 v7, 0xffff, v7
 v_bfe_i32 v11, v11, 0, 16
 v_add_nc_u32_e32 v11, v7, v11
-v_add_nc_u32_e32 v11, v8, v11
-v_add_nc_u32_e32 v11, v12, v11
+v_xor_b32_e32 v8, 0x3e8, v8
+v_xor_b32_e32 v12, 0xa5a5ffe1, v12
+v_or_b32_e32 v8, v8, v12
+v_cmp_ne_u32_e32 0, v8
+v_mov_b32_e32 v8, 0x7fffffff
+v_cndmask_b32_e64 v11, v11, v8, vcc_lo
 v_mov_b32_e32 v12, 0
 v_mov_b32_e32 v13, 0
 v_mov_b32_e32 v14, 0

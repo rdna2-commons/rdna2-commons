@@ -52,10 +52,13 @@ binaries).
 | `engine-translator` | translator tests (pytest + llvm-mc), semantic tests, standard-library tests | changes under `engine/` |
 | `engine-runtime` | Windows build + CTest; Linux build, CTest and GPU tests on llvmpipe; macOS build, CTest and GPU tests on MoltenVK | changes under `engine/runtime`, `engine/scripts`, `engine/third_party` and the translator files it uses |
 
-Known red, tracked as tasks: the TFE image-load GPU fixtures on llvmpipe (#130) and a timer-granularity flake in
-`crt_timed_wait` on hosted Windows (#132). Engine stdlib tests that need parts not imported here (the title
-build pipeline and its docs) are listed in `.github/engine-known-gaps.txt`; only a failure outside that list fails
-the job, and a listed test that starts passing is reported.
+Known red: a timer-granularity flake in `crt_timed_wait` on hosted Windows (#132). Engine stdlib tests that need
+parts not imported here (the title build pipeline and its docs) are listed in `.github/engine-known-gaps.txt`;
+only a failure outside that list fails the job, and a listed test that starts passing is reported.
+
+The TFE image-load fixtures (#130) check that resident reads preserve the seeded status VGPR, following the
+[raw RDNA2 measurements and fixture correction](https://github.com/LeonidaReforge/Leonida/issues/9).
+Sparse-page faults are outside these fixtures.
 
 ## What an engine pull request needs
 
