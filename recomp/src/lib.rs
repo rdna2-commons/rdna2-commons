@@ -1,4 +1,4 @@
-//! Track B of Scarlett Commons: functions of a title that are statically recompiled into our own code and
+//! Track B of RDNA2 Commons: functions of a title that are statically recompiled into our own code and
 //! installed over the native ones when the runtime has mapped the executable. Everything a build's manifest does not
 //! list runs natively under track A (the VIctory runtime in `victory/`).
 //!

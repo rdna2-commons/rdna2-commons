@@ -1,7 +1,7 @@
 # Hoja de ruta
 
 [English](../../../ROADMAP.md) · Traducción de cortesía; vale el original en inglés. Progreso en la
-[página de progreso](https://github.com/scarlett-commons/scarlett-commons/blob/status/PROGRESS.md).
+[página de progreso](https://github.com/rdna2-commons/rdna2-commons/blob/status/PROGRESS.md).
 
 **Objetivo:** hacer correctas y verificadas, una sola vez y para todos los proyectos de compatibilidad, las partes
 difíciles y comunes de ejecutar software de Xbox Series X|S en PC, en lugar de quince veces. Producimos

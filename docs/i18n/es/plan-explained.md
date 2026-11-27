@@ -29,5 +29,5 @@ Desde la fase 1 todo avanza en paralelo: cada tarea solo espera a aquellas de la
 **Lo que nunca hacemos:** compartir nada de ningún juego (archivos, código, imágenes, sonidos), romper
 protecciones ni enlazar filtraciones. Todo lo que probamos está escrito a mano para la prueba.
 
-**Cómo seguirlo:** la [página de progreso](https://github.com/scarlett-commons/scarlett-commons/blob/status/PROGRESS.md)
+**Cómo seguirlo:** la [página de progreso](https://github.com/rdna2-commons/rdna2-commons/blob/status/PROGRESS.md)
 se actualiza sola cada seis horas. Cada tarea es una issue en GitHub; cualquiera puede tomarla.

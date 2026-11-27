@@ -5,14 +5,14 @@
 1. **阅读规则：** 英文的 CONTRIBUTING.md，以及 AGENTS.md（如果你是代理或运行代理）。具有约束力的是英文原文。
 2. **找任务：**
    ```
-   gh issue list -R scarlett-commons/scarlett-commons -l task -l ready --search "no:assignee"
+   gh issue list -R rdna2-commons/rdna2-commons -l task -l ready --search "no:assignee"
    ```
    加上 `-l area:shaders`（或 [ROADMAP](ROADMAP.md) 中的其他方向）可以只看一个方向。
 3. **认领：** 在任务下评论 `/claim`。同时最多两个；72 小时内没有 PR，认领自动失效。任务太大？认领后用 `/split` 拆分。
 4. **开发：**
    ```
-   gh repo fork scarlett-commons/scarlett-commons --clone    # origin 是你的 fork，upstream 是本仓库
-   cd scarlett-commons
+   gh repo fork rdna2-commons/rdna2-commons --clone    # origin 是你的 fork，upstream 是本仓库
+   cd rdna2-commons
    git fetch upstream
    python3 -I -m unittest discover -s tests     # 必须保持通过（Python 3.10+；Windows 上用 `python`）
    ```

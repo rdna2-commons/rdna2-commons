@@ -1,8 +1,8 @@
-<p align="center"><img src="../../images/banner.svg" alt="Scarlett Commons" width="100%"></p>
+<p align="center"><img src="../../images/banner.svg" alt="RDNA2 Commons" width="100%"></p>
 
-<p align="center"><img src="https://raw.githubusercontent.com/scarlett-commons/scarlett-commons/status/badges/phase.svg" alt="phase"> <img src="https://raw.githubusercontent.com/scarlett-commons/scarlett-commons/status/badges/tasks.svg" alt="tasks"> <img src="https://raw.githubusercontent.com/scarlett-commons/scarlett-commons/status/badges/cases.svg" alt="cases"> <img src="https://raw.githubusercontent.com/scarlett-commons/scarlett-commons/status/badges/results.svg" alt="results"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/rdna2-commons/rdna2-commons/status/badges/phase.svg" alt="phase"> <img src="https://raw.githubusercontent.com/rdna2-commons/rdna2-commons/status/badges/tasks.svg" alt="tasks"> <img src="https://raw.githubusercontent.com/rdna2-commons/rdna2-commons/status/badges/cases.svg" alt="cases"> <img src="https://raw.githubusercontent.com/rdna2-commons/rdna2-commons/status/badges/results.svg" alt="results"></p>
 
-# Scarlett Commons (русский)
+# RDNA2 Commons (русский)
 
 [English](../../../README.md) · [Русский](../ru/README.md) · [简体中文](../zh-CN/README.md) · [Español](../es/README.md)
 
@@ -11,9 +11,25 @@
 > Перевод для удобства. Обязательные правила — английские файлы в корне: CONTRIBUTING.md, AGENTS.md,
 > GOVERNANCE.md. Если перевод с ними расходится, верна английская версия.
 
-Открытый проект сообщества: запуск программ Xbox Series X|S (Scarlett) на ПК. Вместо шестнадцатого проекта с
-нуля мы собираем и проверяем общие части: тесты семантики шейдеров RDNA2, описания поведения системных API и
-результаты на реальном железе. Ими может пользоваться любой проект.
+Открытый проект сообщества: запуск игр Xbox Series X|S и PS5 на ПК из собственной копии игрока. Обе консоли —
+x86-64 с видеокартой RDNA2, поэтому у двух линий общее ядро:
+
+- **Линия Xbox** ([victory/](../../../victory/)): открытый рантайм, нативно исполняет код игры, подменяет
+  системные функции консоли и переводит шейдеры RDNA2 и команды D3D12 для видеокарты ПК.
+- **Линия PS5** ([docs/ps5/](../../ps5/README.md)): версия для PS5, сконвертированная форком AnyPS5; он работает
+  рядом с этим репозиторием как отдельная программа, а мерим и ведём работу отсюда.
+- **Трек B** ([recomp/](../../../recomp/)), общий для обеих: функции, статически перекомпилированные в наш код;
+  каждая сверяется с нативной перед использованием.
+
+Кроме того, мы собираем и проверяем общие части: тесты семантики шейдеров RDNA2, описания поведения системных
+API и результаты на реальном железе. Ими может пользоваться любой проект.
+
+**Где игры сейчас** (собственные копии, тестовая машина с RTX 4090):
+
+| Линия | Докуда дошли | Цифры | Дальше |
+|---|---|---|---|
+| **Xbox** | в мире, ходит | около 11 кадров/с при ходьбе с трассировкой лучей; упор в GPU, около 94 мс на кадр | время GPU по пайплайнам, wave64, большие mesh-выходы |
+| **PS5** | первое меню | 30 кадров/с в меню; системных функций не хватает 0; 366 шейдеров готовятся поздно | меню рисуется в четверти экрана (#219), затем в мир (#220); готовность — [docs/ps5/status.md](../../ps5/status.md) |
 
 Почти всю рутину делает бот: раздаёт задачи, закрывает PR, нарушающие правила, и сливает те, что прошли тесты
 и независимое ревью. Работают люди и ИИ-агенты на равных; мейнтейнеры только присматривают.
@@ -31,13 +47,13 @@
 ## Как начать (5 минут)
 
 1. Прочитайте CONTRIBUTING.md и AGENTS.md (для агентов).
-2. Найдите задачу: `gh issue list -R scarlett-commons/scarlett-commons -l task -l ready --search "no:assignee"`
+2. Найдите задачу: `gh issue list -R rdna2-commons/rdna2-commons -l task -l ready --search "no:assignee"`
 3. Напишите в задаче `/claim`. Слишком большая — `/split`.
 4. Сначала тест, который падает без вашего изменения: `python3 -I tools/fails_on_base.py upstream/main`.
 5. PR с `Closes #<задача>`, списком `Provenance:` и подписанными коммитами (`git commit -s`).
 6. Хотите проверять чужое — `/reviewer on` в issue «Reviewer pool».
 
-План работ — [ROADMAP](ROADMAP.md), прогресс — [страница прогресса](https://github.com/scarlett-commons/scarlett-commons/blob/status/PROGRESS.md).
+План работ — [ROADMAP](ROADMAP.md), прогресс — [страница прогресса](https://github.com/rdna2-commons/rdna2-commons/blob/status/PROGRESS.md).
 
 ## Движок
 

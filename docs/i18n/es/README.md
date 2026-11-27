@@ -1,8 +1,8 @@
-<p align="center"><img src="../../images/banner.svg" alt="Scarlett Commons" width="100%"></p>
+<p align="center"><img src="../../images/banner.svg" alt="RDNA2 Commons" width="100%"></p>
 
-<p align="center"><img src="https://raw.githubusercontent.com/scarlett-commons/scarlett-commons/status/badges/phase.svg" alt="phase"> <img src="https://raw.githubusercontent.com/scarlett-commons/scarlett-commons/status/badges/tasks.svg" alt="tasks"> <img src="https://raw.githubusercontent.com/scarlett-commons/scarlett-commons/status/badges/cases.svg" alt="cases"> <img src="https://raw.githubusercontent.com/scarlett-commons/scarlett-commons/status/badges/results.svg" alt="results"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/rdna2-commons/rdna2-commons/status/badges/phase.svg" alt="phase"> <img src="https://raw.githubusercontent.com/rdna2-commons/rdna2-commons/status/badges/tasks.svg" alt="tasks"> <img src="https://raw.githubusercontent.com/rdna2-commons/rdna2-commons/status/badges/cases.svg" alt="cases"> <img src="https://raw.githubusercontent.com/rdna2-commons/rdna2-commons/status/badges/results.svg" alt="results"></p>
 
-# Scarlett Commons (español)
+# RDNA2 Commons (español)
 
 [English](../../../README.md) · [Русский](../ru/README.md) · [简体中文](../zh-CN/README.md) · [Español](../es/README.md)
 
@@ -11,7 +11,7 @@
 > Traducción de cortesía. Las reglas vinculantes son los archivos en inglés de la raíz: CONTRIBUTING.md,
 > AGENTS.md, GOVERNANCE.md. Si difieren, vale la versión en inglés.
 
-Un proyecto abierto y comunitario para ejecutar software de Xbox Series X|S (Scarlett) en PC. En lugar de
+Un proyecto abierto y comunitario para ejecutar juegos de Xbox Series X|S y PS5 en PC, desde la copia propia del jugador (ambas consolas son x86-64 con GPU RDNA2). En lugar de
 empezar un decimosexto proyecto desde cero, reunimos y verificamos las partes comunes: pruebas de semántica de
 shaders RDNA2, especificaciones del comportamiento de las API del sistema y resultados en hardware real.
 Cualquier proyecto puede usarlas.
@@ -33,13 +33,13 @@ solo supervisan.
 ## Para empezar (5 minutos)
 
 1. Lee CONTRIBUTING.md, y AGENTS.md si eres un agente.
-2. Busca una tarea: `gh issue list -R scarlett-commons/scarlett-commons -l task -l ready --search "no:assignee"`
+2. Busca una tarea: `gh issue list -R rdna2-commons/rdna2-commons -l task -l ready --search "no:assignee"`
 3. Comenta `/claim` en ella. ¿Demasiado grande? Usa `/split`.
 4. Primero una prueba que falle sin tu cambio: `python3 -I tools/fails_on_base.py upstream/main`
 5. Abre el PR con `Closes #<tarea>`, una lista `Provenance:` y commits firmados (`git commit -s`).
 6. Para revisar el trabajo de otros: `/reviewer on` en el issue «Reviewer pool».
 
-El plan está en la [hoja de ruta](ROADMAP.md) y el progreso en la [página de progreso](https://github.com/scarlett-commons/scarlett-commons/blob/status/PROGRESS.md).
+El plan está en la [hoja de ruta](ROADMAP.md) y el progreso en la [página de progreso](https://github.com/rdna2-commons/rdna2-commons/blob/status/PROGRESS.md).
 
 ## El motor
 

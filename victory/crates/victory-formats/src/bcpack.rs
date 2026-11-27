@@ -121,7 +121,7 @@ impl Reader<'_> {
 impl Tables {
     /// The BCPack format tables, read from outside the repository: the file
     /// named by `VICTORY_BCPACK_TABLES`, else `bcpack-tables.bin` next to the
-    /// executable. Scarlett Commons does not distribute them (no licence the
+    /// executable. RDNA2 Commons does not distribute them (no licence the
     /// project can accept covers them; see docs/asset-policy.md).
     pub fn builtin() -> Result<Tables, Error> {
         static TABLES: std::sync::OnceLock<Option<Vec<u8>>> = std::sync::OnceLock::new();

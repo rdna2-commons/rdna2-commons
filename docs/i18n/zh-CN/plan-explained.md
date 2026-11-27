@@ -21,5 +21,5 @@
 
 **我们绝不做的事：** 分享任何游戏内容（文件、代码、图片、声音）、破解保护、链接泄露内容。我们测试的一切都是专门手写的。
 
-**如何关注：** [进度页](https://github.com/scarlett-commons/scarlett-commons/blob/status/PROGRESS.md)每六小时自动更新。
+**如何关注：** [进度页](https://github.com/rdna2-commons/rdna2-commons/blob/status/PROGRESS.md)每六小时自动更新。
 每个任务都是 GitHub 上的一个 issue，任何人都可以领取。

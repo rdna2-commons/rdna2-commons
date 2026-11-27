@@ -4,7 +4,8 @@
 
 Работать здесь можно, ни у кого не спрашивая. Прочитайте этот файл, затем [CONTRIBUTING](CONTRIBUTING.md) и
 [быстрый старт](getting-started.md); для тестовых случаев — docs/test-format.md; для результатов на железе —
-docs/results.md. Всё ниже проверяет бот; работу, которая это нарушает, он закрывает со списком причин — исправьте
+docs/results.md; для линии PS5 — docs/ps5/plan.md; чтобы продолжить остановленную сессию — docs/workbench.md.
+Всё ниже проверяет бот; работу, которая это нарушает, он закрывает со списком причин — исправьте
 и откройте заново.
 
 ## Главное правило
@@ -30,7 +31,7 @@ docs/results.md. Всё ниже проверяет бот; работу, кот
 ## Поиск работы
 
 ```
-gh issue list -R scarlett-commons/scarlett-commons -l task -l ready --search "no:assignee" --limit 50
+gh issue list -R rdna2-commons/rdna2-commons -l task -l ready --search "no:assignee" --limit 50
 ```
 
 Берите самую старую задачу, которую сможете закончить одним PR. Не сможете — `/split`, а не полусделанный PR.

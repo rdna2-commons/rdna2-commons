@@ -6,15 +6,15 @@
    son las vinculantes.
 2. **Busca una tarea:**
    ```
-   gh issue list -R scarlett-commons/scarlett-commons -l task -l ready --search "no:assignee"
+   gh issue list -R rdna2-commons/rdna2-commons -l task -l ready --search "no:assignee"
    ```
    Añade `-l area:shaders` (u otra área del [ROADMAP](ROADMAP.md)) para quedarte en una dirección.
 3. **Reclámala:** comenta `/claim` en la issue. Como máximo dos a la vez; sin PR, el reclamo caduca a las 72 horas.
    ¿Demasiado grande? Reclámala y divídela con `/split`.
 4. **Trabaja:**
    ```
-   gh repo fork scarlett-commons/scarlett-commons --clone    # origin es tu fork, upstream este repositorio
-   cd scarlett-commons
+   gh repo fork rdna2-commons/rdna2-commons --clone    # origin es tu fork, upstream este repositorio
+   cd rdna2-commons
    git fetch upstream
    python3 -I -m unittest discover -s tests     # debe seguir en verde (Python 3.10+; en Windows, `python`)
    ```

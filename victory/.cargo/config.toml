@@ -1,4 +1,4 @@
 [alias]
 xtask = "run --quiet --package xtask --"
-# Scarlett Commons: the runtime with track B (recomp/) built in. `cargo commons run <exe> --execute`.
+# RDNA2 Commons: the runtime with track B (recomp/) built in. `cargo commons run <exe> --execute`.
 commons = "run --release --package victory --features recomp --"

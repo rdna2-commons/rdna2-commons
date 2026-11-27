@@ -5,7 +5,7 @@ How to build and test it: [engine-dev.md](engine-dev.md).
 
 ## Priority
 
-**Priority now: a stable, playable build as fast as possible.** Tasks on that path carry the label [`priority:playable`](https://github.com/scarlett-commons/scarlett-commons/issues?q=is%3Aissue+is%3Aopen+label%3Apriority%3Aplayable): comparing with and porting from VIctory where it is ahead (#137), function swap for patching crash sites (#55, #56, #58), shaders translated on first use (#75), texture tiling (#81), title memory uploads (#86), DirectStorage and BCPack (#110, #111), audio (#115-#117), input (#121, #122), the open GPU bug (#130), and the title-run loop (#124 done, #125). Take these first.
+**Priority now: a stable, playable build as fast as possible.** Tasks on that path carry the label [`priority:playable`](https://github.com/rdna2-commons/rdna2-commons/issues?q=is%3Aissue+is%3Aopen+label%3Apriority%3Aplayable): comparing with and porting from VIctory where it is ahead (#137), function swap for patching crash sites (#55, #56, #58), shaders translated on first use (#75), texture tiling (#81), title memory uploads (#86), DirectStorage and BCPack (#110, #111), audio (#115-#117), input (#121, #122), the open GPU bug (#130), and the title-run loop (#124 done, #125). Take these first.
 
 ## Two tracks at once
 

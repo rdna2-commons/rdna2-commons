@@ -5,7 +5,7 @@ Paths below are examples; set your own.
 ## 1. Build the AnyPS5 fork
 
 ```powershell
-git clone --recurse-submodules https://github.com/scarlett-commons/anyps5 C:\dev\ext\anyps5
+git clone --recurse-submodules https://github.com/rdna2-commons/anyps5 C:\dev\ext\anyps5
 ```
 
 Windows needs MinGW-w64 GCC (WinLibs UCRT, the version AnyPS5's CI uses) and the system CMake (the CMake
