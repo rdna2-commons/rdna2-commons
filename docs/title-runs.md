@@ -18,6 +18,16 @@ How far the engine gets on a real title, reported without naming or sharing anyt
    `<folder>/report/<login>.json` from an allow-list: the stage reached (up to first-frame it is detected; pass
    `--stage-reached` for menu, in-world or playable), fps, where it stopped as module+offset, and shader counts by
    failure reason. Read it before sending it.
+   **Map what it needs, without running it:**
+
+   ```
+   python3 -I tools/local_analyze.py --game <your copy> --exe <its executable> --work <folder> [--runtime <out>/gta6rt.exe]
+   ```
+
+   Runs the engine's analysis tools over the executable and writes `<folder>/analysis/needs.md`: unimplemented
+   imports, GDK runtime classes the code calls that the engine does not serve, CPU features to emulate, and how
+   much the recompiler covers. Names of platform APIs and counts only. Attach it to a `finding` issue: it turns
+   straight into tasks.
 4. **Report:** add `title-runs/<build id>/<engine commit>/<your login>.json` in a pull request (format in
    `tools/title_runs.py`): the furthest **stage**, fps, where it **stopped** (`module+0xOFFSET reason`), and short
    notes. The bot rejects a report not named after its author.
