@@ -1,0 +1,15 @@
+[package]
+name = "commons-ps5-preload"
+description = "Installs track B into a relinked PS5 executable when AnyPS5 loads it through APS5_PRELOAD."
+version = "0.1.0"
+edition = "2024"
+license = "GPL-3.0-or-later"
+publish = false
+
+[lib]
+name = "commons_ps5_preload"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+commons-recomp = { path = ".." }
+blake3 = "1"

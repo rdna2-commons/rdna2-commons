@@ -1,2 +1,4 @@
 __pycache__/
 *.pyc
+recomp/target/
+recomp/preload/target/
