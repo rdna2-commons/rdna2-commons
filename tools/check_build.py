@@ -28,7 +28,9 @@ def parse(lines):
             continue
         digest, _, rel = line.partition(" ")
         rel = rel.strip().lstrip("*")
-        if len(digest) != 64 or not rel or os.path.isabs(rel) or ".." in rel.replace("\\", "/").split("/"):
+        parts = rel.replace("\\", "/")
+        rooted = parts.startswith("/") or (len(parts) > 1 and parts[1] == ":") or os.path.isabs(rel)
+        if len(digest) != 64 or not rel or rooted or ".." in parts.split("/"):
             raise ValueError(f"bad line: {line}")
         out.append((digest.lower(), rel))
     return out
