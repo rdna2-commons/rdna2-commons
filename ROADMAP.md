@@ -15,6 +15,15 @@ other projects use them.
 
 First a stable, playable build, as fast as possible: tasks labelled `priority:playable` (docs/engine-plan.md, "Priority"). Everything else supports it or follows it.
 
+The shortest path to a playable title runs through the PS5 line today, so its tasks (`area:ps5`) come first:
+[docs/ps5/plan.md](docs/ps5/plan.md), with readiness per component in [docs/ps5/status.md](docs/ps5/status.md).
+
+## The PS5 line
+
+The PS5 build of the same game, converted by a fork of AnyPS5 (GPL-2.0-only, kept as a separate program) and
+measured here. Its code lands in the fork and upstream; this repository holds the plan, the measurements,
+track B and our tools. Start at [docs/ps5/README.md](docs/ps5/README.md).
+
 ## The engine track (alongside every phase)
 
 The recompiler in `engine/`, imported from the Leonida continuation with its history and kept in step with it
