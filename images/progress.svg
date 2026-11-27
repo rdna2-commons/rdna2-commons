@@ -1,10 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="640" height="590" viewBox="0 0 640 590" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13">
-<rect width="640" height="590" fill="#ffffff"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="616" viewBox="0 0 640 616" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13">
+<rect width="640" height="616" fill="#ffffff"/>
 <text x="10" y="24" font-size="15" font-weight="600" fill="#1f2328">Tasks by area</text>
 <text x="10" y="55" fill="#1f2328">shaders</text>
-<rect x="110.0" y="43" width="94.0" height="16" fill="#2da44e"/>
-<rect x="204.0" y="43" width="376.0" height="16" fill="#0969da"/>
-<text x="588" y="55" fill="#57606a">2/10</text>
+<rect x="110.0" y="43" width="85.5" height="16" fill="#2da44e"/>
+<rect x="195.5" y="43" width="384.5" height="16" fill="#0969da"/>
+<text x="588" y="55" fill="#57606a">2/11</text>
 <text x="10" y="81" fill="#1f2328">results</text>
 <rect x="110.0" y="69" width="235.0" height="16" fill="#0969da"/>
 <rect x="345.0" y="69" width="235.0" height="16" fill="#d0d7de"/>
@@ -34,26 +34,25 @@
 <rect x="110.0" y="225" width="470.0" height="16" fill="#d0d7de"/>
 <text x="588" y="237" fill="#57606a">0/2</text>
 <text x="10" y="263" fill="#1f2328">infra</text>
-<rect x="110.0" y="251" width="261.1" height="16" fill="#2da44e"/>
-<rect x="371.1" y="251" width="52.2" height="16" fill="#bf8700"/>
-<rect x="423.3" y="251" width="78.3" height="16" fill="#0969da"/>
-<rect x="501.7" y="251" width="78.3" height="16" fill="#d0d7de"/>
-<text x="588" y="263" fill="#57606a">10/18</text>
+<rect x="110.0" y="251" width="313.3" height="16" fill="#2da44e"/>
+<rect x="423.3" y="251" width="89.5" height="16" fill="#0969da"/>
+<rect x="512.9" y="251" width="67.1" height="16" fill="#d0d7de"/>
+<text x="588" y="263" fill="#57606a">14/21</text>
 <text x="10" y="289" fill="#1f2328">docs</text>
-<rect x="110.0" y="277" width="402.9" height="16" fill="#2da44e"/>
-<rect x="512.9" y="277" width="67.1" height="16" fill="#0969da"/>
-<text x="588" y="289" fill="#57606a">6/7</text>
+<rect x="110.0" y="277" width="423.0" height="16" fill="#2da44e"/>
+<rect x="533.0" y="277" width="47.0" height="16" fill="#0969da"/>
+<text x="588" y="289" fill="#57606a">9/10</text>
 <text x="10" y="315" fill="#1f2328">i18n</text>
-<rect x="110.0" y="303" width="470.0" height="16" fill="#bf8700"/>
+<rect x="110.0" y="303" width="470.0" height="16" fill="#0969da"/>
 <text x="588" y="315" fill="#57606a">0/1</text>
 <text x="10" y="341" fill="#1f2328">cpu</text>
 <rect x="110.0" y="329" width="313.3" height="16" fill="#0969da"/>
 <rect x="423.3" y="329" width="156.7" height="16" fill="#d0d7de"/>
 <text x="588" y="341" fill="#57606a">0/6</text>
 <text x="10" y="367" fill="#1f2328">diagnostics</text>
-<rect x="110.0" y="355" width="117.5" height="16" fill="#2da44e"/>
-<rect x="227.5" y="355" width="352.5" height="16" fill="#0969da"/>
-<text x="588" y="367" fill="#57606a">1/4</text>
+<rect x="110.0" y="355" width="94.0" height="16" fill="#2da44e"/>
+<rect x="204.0" y="355" width="376.0" height="16" fill="#0969da"/>
+<text x="588" y="367" fill="#57606a">1/5</text>
 <text x="10" y="393" fill="#1f2328">difftest</text>
 <rect x="110.0" y="381" width="156.7" height="16" fill="#2da44e"/>
 <rect x="266.7" y="381" width="313.3" height="16" fill="#d0d7de"/>
@@ -74,23 +73,27 @@
 <rect x="110.0" y="485" width="313.3" height="16" fill="#0969da"/>
 <rect x="423.3" y="485" width="156.7" height="16" fill="#d0d7de"/>
 <text x="588" y="497" fill="#57606a">0/3</text>
-<text x="10" y="523" fill="#1f2328">recomp</text>
-<rect x="110.0" y="511" width="251.8" height="16" fill="#2da44e"/>
-<rect x="361.8" y="511" width="33.6" height="16" fill="#0969da"/>
-<rect x="395.4" y="511" width="184.6" height="16" fill="#d0d7de"/>
-<text x="588" y="523" fill="#57606a">15/28</text>
-<text x="10" y="549" fill="#1f2328">unsorted</text>
-<rect x="110.0" y="537" width="195.8" height="16" fill="#2da44e"/>
-<rect x="305.8" y="537" width="78.3" height="16" fill="#bf8700"/>
-<rect x="384.2" y="537" width="117.5" height="16" fill="#0969da"/>
-<rect x="501.7" y="537" width="78.3" height="16" fill="#d0d7de"/>
-<text x="588" y="549" fill="#57606a">5/12</text>
-<rect x="10" y="564" width="12" height="12" fill="#2da44e"/>
-<text x="27" y="574" fill="#57606a">done</text>
-<rect x="72" y="564" width="12" height="12" fill="#bf8700"/>
-<text x="89" y="574" fill="#57606a">in progress</text>
-<rect x="190" y="564" width="12" height="12" fill="#0969da"/>
-<text x="207" y="574" fill="#57606a">ready to take</text>
-<rect x="324" y="564" width="12" height="12" fill="#d0d7de"/>
-<text x="341" y="574" fill="#57606a">waiting on other tasks</text>
+<text x="10" y="523" fill="#1f2328">ps5</text>
+<rect x="110.0" y="511" width="235.0" height="16" fill="#bf8700"/>
+<rect x="345.0" y="511" width="235.0" height="16" fill="#d0d7de"/>
+<text x="588" y="523" fill="#57606a">0/2</text>
+<text x="10" y="549" fill="#1f2328">recomp</text>
+<rect x="110.0" y="537" width="266.3" height="16" fill="#2da44e"/>
+<rect x="376.3" y="537" width="31.3" height="16" fill="#0969da"/>
+<rect x="407.7" y="537" width="172.3" height="16" fill="#d0d7de"/>
+<text x="588" y="549" fill="#57606a">17/30</text>
+<text x="10" y="575" fill="#1f2328">unsorted</text>
+<rect x="110.0" y="563" width="195.8" height="16" fill="#2da44e"/>
+<rect x="305.8" y="563" width="39.2" height="16" fill="#bf8700"/>
+<rect x="345.0" y="563" width="156.7" height="16" fill="#0969da"/>
+<rect x="501.7" y="563" width="78.3" height="16" fill="#d0d7de"/>
+<text x="588" y="575" fill="#57606a">5/12</text>
+<rect x="10" y="590" width="12" height="12" fill="#2da44e"/>
+<text x="27" y="600" fill="#57606a">done</text>
+<rect x="72" y="590" width="12" height="12" fill="#bf8700"/>
+<text x="89" y="600" fill="#57606a">in progress</text>
+<rect x="190" y="590" width="12" height="12" fill="#0969da"/>
+<text x="207" y="600" fill="#57606a">ready to take</text>
+<rect x="324" y="590" width="12" height="12" fill="#d0d7de"/>
+<text x="341" y="600" fill="#57606a">waiting on other tasks</text>
 </svg>
