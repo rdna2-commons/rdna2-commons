@@ -8,6 +8,7 @@ How to build and test `engine/` locally, and what an engine pull request needs. 
 | Path | What it is | Tests |
 |---|---|---|
 | `engine/tools/rdna2spirv.py` | RDNA2 → SPIR-V shader translator (Python) | `engine/tests/` (pytest and stdlib), `engine/tests/semantic/` |
+| `engine/tools/shader_on_demand.py` | Translate one compute shader and cache its ShaderLibrary entry | `engine/tests/test_shader_on_demand.py` |
 | `engine/runtime/src/` | Loader (`pe_loader`), TLS host, CPU emulation, entry point `main.cpp` | `engine/runtime/test/` (CTest) |
 | `engine/runtime/shims/` | Console API replacements: kernel, runtime classes, D3D12.X, D3D12 → Vulkan, storage, input, audio, crash report | `engine/runtime/test/` |
 | `engine/runtime/test/shaders/` | Hand-written RDNA2 GPU fixtures | `engine/scripts/run_gpu_tests.py` |
@@ -44,6 +45,22 @@ python -I scripts/run_gpu_tests.py --build runtime/build --llvm-mc "$LLVM_MC" --
 
 Build output (`engine/runtime/build/`) is ignored by git; never commit it (the bot closes pull requests with
 binaries).
+
+## On-demand compute shader worker
+
+Run these from `engine/` with a source-built compute DXBC/FSSM container and a
+local cache directory:
+
+```sh
+python -I tools/shader_on_demand.py shader.dxbc --cache /tmp/compute-shader-cache
+python -I -m unittest discover -s tests -p test_shader_on_demand.py
+```
+
+The worker prints JSON with the absolute `directory` of the ShaderLibrary
+entry and a `cache_hit` flag. A cold request requires `spirv-val` and publishes
+the module and index together after translation. The key covers the input
+container and the tool sources. A warm request checks the entry and skips the
+translator. Runtime scheduling and pipeline retries are tracked in [#75](https://github.com/scarlett-commons/scarlett-commons/issues/75).
 
 ## What CI runs
 
