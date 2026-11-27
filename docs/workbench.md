@@ -5,8 +5,9 @@ that local work safe without publishing it unreviewed.
 
 ## How it works
 
-1. **Auto-commit, local only.** A timer commits an allowlist of files (`*.ps1`, `*.py`, `*.sh`, `*.md`) from
-   the working folders into a local repository, on the `workbench` branch. It never pushes.
+1. **Auto-commit, private.** A timer commits an allowlist of files (`*.ps1`, `*.py`, `*.sh`, `*.md`) from
+   the working folders into a local repository, on the `workbench` branch. Optionally it pushes that branch to a
+   private GitHub repository, so the work is not only on one machine; never to a public one.
 2. **Refusals.** A file is skipped and reported if it looks like title data or a secret: the repository's
    game-data guard, a size limit, binary content, or a token pattern. Logs, frames, dumps and anything under a
    title's folder are never on the allowlist.
@@ -17,14 +18,17 @@ that local work safe without publishing it unreviewed.
 The tool:
 
 ```sh
-python -I tools/workbench.py --repo <local workbench repo> --source <folder> [--source <folder> ...] [--depth 2]
+python -I tools/workbench.py --repo <local workbench repo> --source <folder> [--source <folder> ...] [--depth 2] [--push <owner>/<private repo>]
 ```
 
-It refuses a repository that has any remote, so nothing it saves can be pushed by accident. A file that turns
-into a refusal later is removed from the next commit. On Windows, run it every 30 minutes with Task Scheduler:
+Without `--push` it refuses a repository that has any remote. With `--push` the only remote allowed is that
+GitHub repository, and before every push it asks GitHub (`gh api`) whether the repository is private: if the
+answer is not a clear yes (public, missing, no network), nothing is pushed. Paths in local scripts name your
+user account and folders, so a public workbench is never an option. A file that turns into a refusal later is
+removed from the next commit. On Windows, run it every 30 minutes with Task Scheduler:
 
 ```powershell
-schtasks /Create /TN workbench /SC MINUTE /MO 30 /TR "python -I C:\path\to\tools\workbench.py --repo C:\dev\workbench --source C:\dev\run1"
+schtasks /Create /TN workbench /SC MINUTE /MO 30 /TR "python -I C:\path\to\tools\workbench.py --repo C:\dev\workbench --source C:\dev\run1 --push <owner>/<private repo>"
 ```
 
 ## Reviewing the workbench (for agents)

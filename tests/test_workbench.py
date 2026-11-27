@@ -66,6 +66,25 @@ class Workbench(unittest.TestCase):
         with self.assertRaises(SystemExit):
             workbench.save(self.repo, [self.source])
 
+    def test_push_needs_a_private_repository_and_only_that_remote(self):
+        write(os.path.join(self.source, "a.py"), b"print(1)\n")
+        workbench.save(self.repo, [self.source], push="me/bench")
+        url = subprocess.run(["git", "-C", self.repo, "remote", "get-url", "origin"], capture_output=True, text=True)
+        self.assertEqual(url.stdout.strip(), "https://github.com/me/bench.git")
+        with self.assertRaisesRegex(SystemExit, "not a private"):
+            workbench.push_private(self.repo, "me/bench", private=lambda name: False)
+        with self.assertRaisesRegex(SystemExit, "other than"):
+            workbench.save(self.repo, [self.source], push="me/other")
+
+    def test_is_private_trusts_only_a_clear_yes(self):
+        class Result:
+            def __init__(self, code, out):
+                self.returncode, self.stdout = code, out
+
+        self.assertTrue(workbench.is_private("a/b", run=lambda *a, **k: Result(0, "true\n")))
+        self.assertFalse(workbench.is_private("a/b", run=lambda *a, **k: Result(0, "false\n")))
+        self.assertFalse(workbench.is_private("a/b", run=lambda *a, **k: Result(1, "")))
+
 
 if __name__ == "__main__":
     unittest.main()
