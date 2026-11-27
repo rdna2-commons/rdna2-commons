@@ -29,6 +29,14 @@ class Fetch(unittest.TestCase):
 
         data = f.fetch(opener=lambda req, timeout: Response(b"\0" * f.SIZE))
         self.assertIsNotNone(f.check(data))
+        with tempfile.TemporaryDirectory() as d:
+            original = f.fetch
+            f.fetch = lambda: data
+            try:
+                self.assertEqual(f.main(["--out", d]), 1)
+            finally:
+                f.fetch = original
+            self.assertFalse(os.path.exists(os.path.join(d, f.NAME)))
 
     def test_the_request_names_the_project(self):
         seen = []
@@ -46,14 +54,6 @@ class Fetch(unittest.TestCase):
 
         f.fetch(opener=opener)
         self.assertEqual(seen, ["rdna2-commons-fetch"])
-        with tempfile.TemporaryDirectory() as d:
-            original = f.fetch
-            f.fetch = lambda: data
-            try:
-                self.assertEqual(f.main(["--out", d]), 1)
-            finally:
-                f.fetch = original
-            self.assertFalse(os.path.exists(os.path.join(d, f.NAME)))
 
 
 if __name__ == "__main__":
