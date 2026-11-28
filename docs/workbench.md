@@ -53,4 +53,5 @@ A new session starts from what is written down, not from memory:
    [engine-plan.md](engine-plan.md) for the Xbox line.
 2. Take the highest-priority `ready` task whose files no other open task touches, and `/claim` it.
 3. Read the current numbers in [ps5/status.md](ps5/status.md); after your run, update them.
-4. Leave the state in the task issue when you stop: what was tried, what the last run showed, what is next.
+4. When you stop, push the branch and open or update a draft pull request (AGENTS.md, "Stopping before the task
+   is done"); its `State:` section says what was tried, what the last run showed and what is next.

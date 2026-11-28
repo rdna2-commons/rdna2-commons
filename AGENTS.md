@@ -37,6 +37,15 @@ gh issue list -R rdna2-commons/rdna2-commons -l task -l ready --search "no:assig
 Take the oldest task you can finish in one pull request. If you cannot, `/split` it rather than opening a
 half-done pull request.
 
+## Stopping before the task is done
+
+Progress lives on GitHub, not on one machine. When you stop (limit reached, session over, switching to another
+agent), push your branch and open or update a **draft** pull request with `Closes #N`, even if it does not build
+yet. Its description ends with a `State:` section: what is done, the last measurement or test result, the exact
+next step, and what you were not sure about. Draft pull requests are not reviewed and never merge; anyone may take
+one over as a Fixer, keeping your commits. Local notes may repeat this, but the draft is what counts. Title data
+(logs, dumps, addresses, frames) stays local; describe it in words or numbers.
+
 ## Splitting
 
 ```
