@@ -21,7 +21,7 @@ pub mod pipeline;
 pub mod ps5;
 pub mod relinked;
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, HashMap};
 use std::fmt;
 
 use serde::Deserialize;
@@ -155,6 +155,10 @@ pub fn install_with(
     writer: &mut dyn CodeWriter,
 ) -> Report {
     let mut report = Report::default();
+    let mut indexed = HashMap::with_capacity(registry.len());
+    for replacement in registry {
+        indexed.entry(replacement.name).or_insert(replacement);
+    }
     for f in &manifest.functions {
         let skip = |why: String, report: &mut Report| {
             report.skipped.insert(f.name.clone(), why);
@@ -163,7 +167,7 @@ pub fn install_with(
             skip(why.to_string(), &mut report);
             continue;
         }
-        let Some(replacement) = registry.iter().find(|r| r.name == f.name) else {
+        let Some(replacement) = indexed.get(f.name.as_str()) else {
             skip("no implementation in this build of commons-recomp".into(), &mut report);
             continue;
         };
@@ -249,30 +253,34 @@ pub fn install(base: u64, build: &str, manifest_dir: &std::path::Path) -> Report
         return Report::default();
     };
     match Manifest::parse(&text) {
-        Ok(m) if m.build.eq_ignore_ascii_case(build) => {
-            let registry = match &m.library {
-                Some(lib) => match library_registry(std::path::Path::new(lib), base) {
-                    Ok(r) => r,
-                    Err(e) => {
-                        let mut r = Report::default();
-                        r.skipped.insert(lib.clone(), e);
-                        return r;
-                    }
-                },
-                None => REGISTRY.iter().map(|r| Replacement { name: r.name, code: r.code }).collect(),
-            };
-            install_with(&m, base, &registry, &Selection::from_env(), &mut process::Process)
-        }
-        Ok(_) => {
-            let mut r = Report::default();
-            r.skipped.insert(path.display().to_string(), "the manifest names another build".into());
-            r
-        }
+        Ok(manifest) => install_manifest(base, build, &path, &manifest),
         Err(e) => {
             let mut r = Report::default();
             r.skipped.insert(path.display().to_string(), e);
             r
         }
+    }
+}
+
+#[cfg(windows)]
+pub fn install_manifest(base: u64, build: &str, path: &std::path::Path, manifest: &Manifest) -> Report {
+    if !manifest.build.eq_ignore_ascii_case(build) {
+        let mut report = Report::default();
+        report.skipped.insert(path.display().to_string(), "the manifest names another build".into());
+        return report;
+    }
+    let selection = Selection::from_env();
+    let mut process = process::Process;
+    match &manifest.library {
+        Some(lib) => match library_registry(std::path::Path::new(lib), base) {
+            Ok(registry) => install_with(manifest, base, &registry, &selection, &mut process),
+            Err(error) => {
+                let mut report = Report::default();
+                report.skipped.insert(lib.clone(), error);
+                report
+            }
+        },
+        None => install_with(manifest, base, REGISTRY, &selection, &mut process),
     }
 }
 
@@ -319,6 +327,19 @@ mod tests {
         let mut mem = image();
         let r = install_with(&manifest("verified", PROLOGUE), mem.base, REG, &Selection::default(), &mut mem);
         assert_eq!(r.installed, vec!["sample".to_string()]);
+        assert_eq!(&mem.bytes[0x100..0x100 + JUMP_LEN], &jump_to(ours as usize as u64));
+    }
+
+    #[test]
+    fn duplicate_replacement_names_keep_the_first_implementation() {
+        unsafe extern "C" fn another() {}
+        let registry = [
+            Replacement { name: "sample", code: ours },
+            Replacement { name: "sample", code: another },
+        ];
+        let mut mem = image();
+        let report = install_with(&manifest("verified", PROLOGUE), mem.base, &registry, &Selection::default(), &mut mem);
+        assert_eq!(report.installed, ["sample"]);
         assert_eq!(&mem.bytes[0x100..0x100 + JUMP_LEN], &jump_to(ours as usize as u64));
     }
 

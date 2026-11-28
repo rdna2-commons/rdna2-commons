@@ -39,7 +39,7 @@ pub extern "C" fn aps5_preload() -> i32 {
         let manifest = commons_recomp::Manifest::parse(&text)?;
         // SAFETY: a null name asks for the module the process was started from.
         let module = unsafe { GetModuleHandleW(core::ptr::null()) } as u64;
-        let report = commons_recomp::install(image_base(module, &manifest), &build, dir);
+        let report = commons_recomp::install_manifest(image_base(module, &manifest), &build, &path, &manifest);
         eprintln!("{report}");
         for (name, why) in report.skipped.iter().take(5) {
             eprintln!("track B        not installed: {name}: {why}");
