@@ -1,8 +1,8 @@
 # Progress
 
-Generated 2026-11-27 21:37 UTC from the task board by `tools/progress.py`. Do not edit by hand.
+Generated 2026-11-28 08:25 UTC from the task board by `tools/progress.py`. Do not edit by hand.
 
-**51 of 174 tasks done** `██████··············` · 3 in progress · 60 ready to take · 60 waiting on others · 48 pull requests merged by 1 contributors
+**51 of 176 tasks done** `██████··············` · 4 in progress · 61 ready to take · 60 waiting on others · 48 pull requests merged by 1 contributors
 
 ![Tasks by area](images/progress.svg)
 
@@ -41,7 +41,7 @@ Legend: ✅ done · 🔨 in progress · 🟦 ready to take · ⏳ waiting on oth
 | gpu | `··········` | 0 | 1 | 2 | 10 |
 | hooking | `··········` | 0 | 0 | 1 | 3 |
 | memory | `··········` | 0 | 0 | 2 | 1 |
-| ps5 | `··········` | 0 | 1 | 0 | 1 |
+| ps5 | `··········` | 0 | 2 | 1 | 1 |
 | recomp | `██████····` | 17 | 0 | 2 | 11 |
 | unsorted | `████······` | 5 | 1 | 4 | 2 |
 
@@ -236,6 +236,7 @@ Legend: ✅ done · 🔨 in progress · 🟦 ready to take · ⏳ waiting on oth
 |---|---|---|---|
 | 🔨 | [#153](https://github.com/rdna2-commons/rdna2-commons/issues/153) Translate one compute shader out of process and atomically cache its ShaderLibrary entry \| depends: | unsorted | @avt0m4t48 |
 | 🔨 | [#219](https://github.com/rdna2-commons/rdna2-commons/issues/219) PS5-A: the first menu fills the whole output, not the top-left quarter | ps5 | @DeSunShine |
+| 🔨 | [#237](https://github.com/rdna2-commons/rdna2-commons/issues/237) PS5: find what makes start-up take about 20 seconds before the first menu | ps5 | @DeSunShine |
 | 🟦 | [#146](https://github.com/rdna2-commons/rdna2-commons/issues/146) runtime: CreateCommandListX is refused on the PC (list type vs allocator type) | unsorted | — |
 | 🟦 | [#162](https://github.com/rdna2-commons/rdna2-commons/issues/162) commons CLI in Rust: title run, report, BCPack fetch and build check in one binary | infra | — |
 | 🟦 | [#163](https://github.com/rdna2-commons/rdna2-commons/issues/163) Say which code is ours to rewrite and which is synced from upstream | docs | — |
@@ -244,6 +245,7 @@ Legend: ✅ done · 🔨 in progress · 🟦 ready to take · ⏳ waiting on oth
 | 🟦 | [#206](https://github.com/rdna2-commons/rdna2-commons/issues/206) Finish #143: Live board and badges; banner layout; full current translations | unsorted | — |
 | 🟦 | [#221](https://github.com/rdna2-commons/rdna2-commons/issues/221) PS5-C: shader recompiler resolves resources indexed from constant buffers | shaders | — |
 | 🟦 | [#223](https://github.com/rdna2-commons/rdna2-commons/issues/223) PS5-E: readiness is measured after every run and the table updates itself | diagnostics | — |
+| 🟦 | [#236](https://github.com/rdna2-commons/rdna2-commons/issues/236) PS5: a local patch so the title renders at the host's aspect and size (ultrawide, cheaper than 4K) | ps5 | — |
 | ⏳ | [#154](https://github.com/rdna2-commons/rdna2-commons/issues/154) Schedule translation on runtime pipeline cache misses and retain the placeholder while pending | unsorted | — |
 | ⏳ | [#155](https://github.com/rdna2-commons/rdna2-commons/issues/155) Retry pipeline creation with completed shader entries and verify cold and warm runtime execution | unsorted | — |
 | ⏳ | [#220](https://github.com/rdna2-commons/rdna2-commons/issues/220) PS5-B: get from the first menu into the world and record the first blocker | ps5 | — |

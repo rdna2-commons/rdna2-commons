@@ -75,8 +75,9 @@
 <text x="588" y="497" fill="#57606a">0/3</text>
 <text x="10" y="523" fill="#1f2328">ps5</text>
 <rect x="110.0" y="511" width="235.0" height="16" fill="#bf8700"/>
-<rect x="345.0" y="511" width="235.0" height="16" fill="#d0d7de"/>
-<text x="588" y="523" fill="#57606a">0/2</text>
+<rect x="345.0" y="511" width="117.5" height="16" fill="#0969da"/>
+<rect x="462.5" y="511" width="117.5" height="16" fill="#d0d7de"/>
+<text x="588" y="523" fill="#57606a">0/4</text>
 <text x="10" y="549" fill="#1f2328">recomp</text>
 <rect x="110.0" y="537" width="266.3" height="16" fill="#2da44e"/>
 <rect x="376.3" y="537" width="31.3" height="16" fill="#0969da"/>
